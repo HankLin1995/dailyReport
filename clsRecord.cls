@@ -546,8 +546,8 @@ With shtDiary
     
         If recDate = DiaryDate Then
         
-            .Cells(r, 5) = s1
-            .Cells(r, 6) = s2
+            If s1 <> "" Then .Cells(r, 5) = s1
+            If s2 <> "" Then .Cells(r, 6) = s2
             
             Exit For
         

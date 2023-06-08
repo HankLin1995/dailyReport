@@ -1,0 +1,90 @@
+﻿'Private Sub Worksheet_Activate()
+'
+'Call ReportRun
+'
+'End Sub
+'
+'Private Sub Worksheet_Change(ByVal Target As Range)
+'
+'If Target.Row = 2 And Target.Column = 11 Then Call ReportRun
+'
+'End Sub
+
+'------20221122 處理剩餘零星數量--------
+
+Sub getOverNumberFromLastDay()
+
+reportNum = InputBox("請輸入理應為100%的報表編號")
+allowence = InputBox("請輸入校正回歸允許值", , 1)
+prompt = "***校正回歸完成項目***" & vbNewLine
+
+With Sheets("Report")
+
+    .Range("K2") = reportNum
+
+    Call ReportRun
+    
+    For r = 8 To getReportLastRow
+    
+        conNum = .Cells(r, "F")
+        sumNum = .Cells(r, "I")
+        
+        If conNum <> sumNum Then
+        
+            itemName = .Cells(r, "B")
+            numDiff = Round(sumNum - conNum, 4)
+            
+            If Abs(numDiff) < allowence Then
+            
+                Call dealOverNum(itemName, numDiff)
+            
+                prompt = prompt & vbNewLine & itemName & ":" & numDiff
+        
+            End If
+        
+        End If
+    
+    Next
+    
+    MsgBox prompt, vbInformation
+
+End With
+
+End Sub
+
+Sub dealOverNum(ByVal itemName As String, ByVal numDiff As Double)
+
+With Sheets("Records")
+
+    lr = .Cells(.Rows.count, 1).End(xlUp).Row
+    
+    For r = lr To 3 Step -1
+    
+        recName = .Cells(r, "E")
+        
+        If recName = itemName Then
+        
+            originNum = .Cells(r, "F")
+            
+            adjustNum = originNum - numDiff
+            
+            If adjustNum > 0 Then
+            
+                Debug.Print itemName & ",原數量=" & originNum & ">>校正=" & adjustNum
+            
+                .Cells(r, "F").AddComment "originNum=" & .Cells(r, "F") & ">>adjustNum=" & adjustNum
+            
+                .Cells(r, "F") = adjustNum
+                .Cells(r, "F").Font.ColorIndex = 7
+                
+                Exit For
+            
+            End If
+        
+        End If
+        
+    Next
+
+End With
+
+End Sub

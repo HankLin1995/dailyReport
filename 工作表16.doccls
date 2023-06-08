@@ -1,0 +1,26 @@
+﻿Private Sub Worksheet_Activate()
+
+Call cmdMixComplete
+
+End Sub
+
+Sub hideCases()
+
+Dim obj As New clsMixData
+
+obj.hideCompleteItem
+
+End Sub
+
+Sub calcMixData()
+
+Dim obj As New clsMixData
+
+Dim collItem As New Collection
+Dim collIndex As New Collection
+
+Call obj.clearMixSum
+Call obj.getSpecificItem(collItem, collIndex)
+Call obj.calcMixData(collItem, collIndex)
+
+End Sub

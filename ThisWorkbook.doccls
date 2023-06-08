@@ -1,0 +1,23 @@
+﻿Private Sub Workbook_BeforeClose(Cancel As Boolean)
+
+'frm_Report.Show
+
+End Sub
+
+Private Sub Workbook_Open()
+
+'Dim obj As New clsFetchURL
+'If obj.checkAccessByIP = False Then frm_login.Show
+
+MsgBox "設計者：林宗漢(Hank Lin) @2018" & vbNewLine & _
+       "" & vbNewLine & _
+        "手機：0912052274" & vbNewLine & _
+       "電子郵件：apple84026113@gmail.com" & vbNewLine & _
+       "部落格：https://hankvba.blogspot.com/" & vbNewLine & _
+       "版權聲明"
+
+On Error Resume Next
+
+'Application.StatusBar = "設計者：林宗漢(Hank Lin) @2021"
+
+End Sub

@@ -1,0 +1,56 @@
+﻿Private Sub Worksheet_Activate()
+
+Call cmdExportToDiary
+
+Dim obj As New clsBasicData
+
+obj.DiartReset
+
+End Sub
+
+Sub test()
+
+Set sht = Workbooks(1).Sheets("Diary")
+
+With sht
+
+    lr = .Cells(.Rows.count, 1).End(xlUp).Row
+    
+    For r = 2 To lr
+    
+        If IsRained(.Cells(r, 2)) Then .Cells(r, 3) = "雨"
+    
+    Next
+
+End With
+
+End Sub
+Function IsRained(ByVal targetDate) As Boolean
+
+'Dim rain As Double
+
+IsRained = False
+
+tmp = Split(targetDate, "/")
+
+m = tmp(1)
+d = tmp(2)
+
+With Workbooks(2).Sheets("降雨量年紀錄表-108年 ")
+
+    c = m + 1
+    r = d + 4
+    
+    On Error GoTo errorhandler
+    
+    rain = CDbl(.Cells(r, c))
+    
+    'Debug.Print m & "/" & d & " r:" & rain
+    
+    If rain > 1 Then IsRained = True: 'Debug.Print rain
+
+End With
+
+errorhandler:
+
+End Function

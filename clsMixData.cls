@@ -190,6 +190,9 @@ With shtMix
         er = collr(i + 1) - 1
         
         targetMix = .Cells(sr, 1)
+        
+        'If targetMix Like "*~*" Then MsgBox ("請避免「" & targetMix & "」含有特殊字符「~」"), vbInformation
+        
         targetSum = .Cells(sr, 3)
         
         MixSum = getMixSum(targetMix)
@@ -202,6 +205,35 @@ With shtMix
             .Cells(sr, 1).Font.ColorIndex = 3
             '.Rows(sr).Resize(er - sr + 1).Hidden = True
             
+        End If
+        
+    Next
+
+End With
+
+End Sub
+
+Sub CheckUnfoundMixName() '確認是否存在找不到名稱的MixName
+
+With shtMix
+
+    Set collr = getSeperateRows()
+
+    For i = 1 To collr.count - 1
+    
+        sr = collr(i)
+        er = collr(i + 1) - 1
+        
+        targetMix = .Cells(sr, 1)
+        
+        'If targetMix Like "*~*" Then MsgBox ("請避免「" & targetMix & "」含有特殊字符「~」"), vbInformation
+        
+        Set rng = .Cells.Find(targetMix)
+        
+        If rng Is Nothing Then
+        
+             MsgBox "這個字「" & targetMix & "」搜尋找不到，請更換!"
+        
         End If
         
     Next

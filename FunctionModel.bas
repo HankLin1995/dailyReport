@@ -231,6 +231,7 @@ Sub cmdMixComplete()
 Dim obj As New clsMixData
 
 obj.CheckComplete
+obj.CheckUnfoundMixName
 
 End Sub
 

@@ -1,5 +1,11 @@
 Attribute VB_Name = "test"
+Sub test_getUserDefinedPlotOrder()
 
+Set collMixItems = getMixItems
+
+myIndexs = getShowIndex(collMixItems)
+
+End Sub
 
 Sub checkTestCompleted() '20230225 add
 

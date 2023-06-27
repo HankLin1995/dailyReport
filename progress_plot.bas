@@ -35,7 +35,7 @@ specific_date = Format(Now(), "yyyy/m/d")
 Call clearAllShape
 
 X_gap = 120
-Y_origin = 28500
+Y_origin = CDbl(InputBox("請輸入起始樁號")) - 50
 
 Set collMixItems = getMixItems
 
@@ -89,6 +89,10 @@ End Sub
 
 Function getShowIndex(ByVal collMixItems)
 
+'TODO:create a tmp plot orders
+
+plot_order = Sheets("Records").Range("J1")
+
 For Each it In collMixItems
 
     j = j + 1
@@ -99,7 +103,21 @@ For Each it In collMixItems
 
 Next
 
-getShowIndex = Split(InputBox(prompt, "顯示序位選擇器", mid(k, 2)), ",")
+If plot_order = "" Then
+    indexDefault = mid(k, 2)
+Else
+    indexDefault = plot_order
+End If
+
+getShowIndex = Split(InputBox(prompt, "顯示序位選擇器", indexDefault), ",")
+
+For Each it In getShowIndex
+
+    prompt2 = prompt2 & it & "." & collMixItems(CInt(it)) & vbNewLine
+
+Next
+
+MsgBox "預定繪製順序：" & vbNewLine & prompt2, , "Plot_Progress"
 
 End Function
 
@@ -237,7 +255,7 @@ Function getMixItems()
 
 Dim coll As New Collection
 
-With Sheets("Records")
+With Sheets("Records") 'get item orders by records
 
     lr = .Cells(.Rows.count, 1).End(xlUp).Row
     
@@ -260,4 +278,8 @@ With Sheets("Records")
 End With
 
 End Function
+
+'TODO:create a tmp sheet to keyin plot order
+
+
 

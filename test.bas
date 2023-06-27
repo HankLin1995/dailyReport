@@ -1,16 +1,5 @@
 Attribute VB_Name = "test"
-Sub getItemsByGAS()
 
-Dim o As New clsFetchURL_getItem
-
-s = o.ExecHTTP("")
-
-Stop
-
-Debug.Print s
-
-
-End Sub
 
 Sub checkTestCompleted() '20230225 add
 

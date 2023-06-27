@@ -107,6 +107,78 @@ Call ResetItem
 End Sub
 
 
+Private Sub CommandButton1_Click()
+
+like_string = InputBox("請輸入查找關鍵字")
+
+Dim coll As New Collection
+
+For Each it In Me.cboItem.List
+
+    If it Like "*" & like_string & "*" Then
+    
+        coll.Add it
+    
+    End If
+
+Next
+
+Me.cboItem.Clear
+
+For Each it_like In coll
+
+    Me.cboItem.AddItem it_like
+
+Next
+
+End Sub
+
+Private Sub CommandButton2_Click() '20230205
+
+strLoc = txtWhere.Text
+
+If strLoc Like "*、*" Then
+
+    loc_tmp = Split(strLoc, "、")
+    
+    For Each it In loc_tmp
+    
+        sumL = sumL + calcLoc(it)
+        
+    Next
+
+Else
+
+    sumL = calcLoc(strLoc)
+
+End If
+
+Debug.Print sumL
+
+txtAmount = sumL
+
+'On Error GoTo ERRORHANDLE
+'
+'tmp = Split(txtWhere.Text, "~")
+'
+'tmp2 = Split(tmp(0), "+")
+'
+'sloc = tmp2(0) * 1000 + tmp2(1)
+'
+'tmp3 = Split(tmp(1), "+")
+'
+'eloc = tmp3(0) * 1000 + tmp3(1)
+'
+'txtAmount = eloc - sloc
+'
+'Exit Sub
+'
+'ERRORHANDLE:
+'
+'MsgBox "格式不符合0+000~0+100", vbCritical
+
+End Sub
+
 Private Sub txtAmount_Change()
 
 With frmData
@@ -128,6 +200,7 @@ Private Sub txtDay_Change()
 Call ResetItem
 
 End Sub
+
 
 Private Sub UserForm_Initialize()
 

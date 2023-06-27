@@ -49,7 +49,7 @@ wb_path = Application.GetOpenFilename
 
 If wb_path = "False" Then GoTo ERRHANDLE
 
-Workbooks.Open filename:=wb_path
+Workbooks.Open Filename:=wb_path
 
 Set wbBudget = Workbooks(TranWbName(wb_path))
 

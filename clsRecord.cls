@@ -363,6 +363,8 @@ With shtDiary
 
     For r = 2 To lr
     
+        'If r = 14 Then Stop
+    
         For c = 5 To 6
     
             If .Cells(r, c).Interior.ColorIndex = -4142 Then .Cells(r, c).ClearContents '網底變色即鎖住
@@ -381,7 +383,10 @@ With Sheets("Records")
 
 Set rng = .Columns("B").Find(recDate)
 
+Debug.Assert Not rng Is Nothing
+
 sr = rng.Row
+
 lr = .Cells(.Rows.count, 1).End(xlUp).Row
 
 For r = sr To lr
@@ -446,6 +451,8 @@ lr = .Cells(Rows.count, 1).End(xlUp).Row
 For i = 1 To UBound(RecDateArr, 1)
     
     recDate = RecDateArr(i, 1)
+    
+    If recDate = 0 Then Exit Sub
     
     sr = RecDateArr(i, 2)
     
@@ -545,6 +552,8 @@ With shtDiary
         DiaryDate = .Cells(r, 2)
     
         If recDate = DiaryDate Then
+        
+            'If r = 15 Then Stop
         
             If s1 <> "" Then .Cells(r, 5) = s1
             If s2 <> "" Then .Cells(r, 6) = s2

@@ -7,7 +7,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
-Private filename As String
+Private Filename As String
 Private sht As Object
 
 Sub BeforePrintCheck()
@@ -43,7 +43,7 @@ For i = sr To er
         
         On Error Resume Next
         
-        ActiveSheet.ExportAsFixedFormat Type:=xlTypePDF, filename:= _
+        ActiveSheet.ExportAsFixedFormat Type:=xlTypePDF, Filename:= _
         wbpath & "\" & "監造日報表Output\" & Range("K2"), Quality:= _
         xlQualityStandard, IncludeDocProperties:=True, IgnorePrintAreas:=False, _
         OpenAfterPublish:=False
@@ -99,7 +99,7 @@ Sub ToPDF_Check(ByVal sht As Worksheet, ByVal fname As String, ByVal mode) '查驗
     
     On Error Resume Next
     
-    sht.ExportAsFixedFormat Type:=xlTypePDF, filename:= _
+    sht.ExportAsFixedFormat Type:=xlTypePDF, Filename:= _
     wbpath & "\" & "查驗表Output\" & fname, Quality:= _
     xlQualityStandard, IncludeDocProperties:=True, IgnorePrintAreas:=False, _
     OpenAfterPublish:=False
@@ -216,5 +216,28 @@ wb.Sheets("工作表1").Delete
 Application.DisplayAlerts = True
 
 End Sub
+
+Sub SpecificShtToXLS(ByVal shtName As String)
+
+Application.DisplayAlerts = False
+
+Set wb = Workbooks.Add
+    
+    ThisWorkbook.Sheets(shtName).Copy (wb.Sheets(1))
+    
+    Set sht = wb.Sheets(1)
+    
+    With sht
+        
+        .Name = shtName
+    
+    End With
+
+wb.Sheets("工作表1").Delete
+
+Application.DisplayAlerts = True
+
+End Sub
+
 
 

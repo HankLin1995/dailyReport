@@ -315,7 +315,7 @@ With ThisWorkbook.Sheets("Check")
     
         '==============基本資料取入===============
     
-        shtname = .Cells(r, 1)
+        shtName = .Cells(r, 1)
         CheckNum = .Cells(r, 3)
         CheckDate = .Cells(r, 4)
         CheckLoc = .Cells(r, "F")
@@ -338,7 +338,7 @@ With ThisWorkbook.Sheets("Check")
         '==============從查驗TMP裡面取範本copy到成果=======
 
         Application.DisplayAlerts = False
-        wb.Sheets(shtname).Copy wbnew.Sheets(1)
+        wb.Sheets(shtName).Copy wbnew.Sheets(1)
         Application.DisplayAlerts = True
         
         Set shtCheckNew = wbnew.Sheets(1)
@@ -353,7 +353,7 @@ With ThisWorkbook.Sheets("Check")
             If a(3) <> "" Then .Range(a(3)) = CheckDate
             If a(4) <> "" Then .Range(a(4)) = prompt
         
-            .Name = shtname & "-" & CheckNum
+            .Name = shtName & "-" & CheckNum
         
         End With
         

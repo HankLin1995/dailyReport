@@ -1,9 +1,9 @@
 Attribute VB_Name = "test_ItemsAddChange"
-Function getDiffItems(ByVal shtname As String, ByVal sr As Integer, ByVal col_eng As String)
+Function getDiffItems(ByVal shtName As String, ByVal sr As Integer, ByVal col_eng As String)
 
 Dim coll As New Collection
 
-With Sheets(shtname)
+With Sheets(shtName)
 
 lr = .Cells(.Rows.count, 1).End(xlUp).Row
 

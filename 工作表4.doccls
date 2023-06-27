@@ -1,4 +1,13 @@
-ï»¿'Private Sub Worksheet_Activate()
+VERSION 1.0 CLASS
+BEGIN
+  MultiUse = -1  'True
+END
+Attribute VB_Name = "¤u§@ªí4"
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = False
+Attribute VB_PredeclaredId = True
+Attribute VB_Exposed = True
+'Private Sub Worksheet_Activate()
 '
 'Call ReportRun
 '
@@ -10,13 +19,13 @@
 '
 'End Sub
 
-'------20221122 è™•ç†å‰©é¤˜é›¶æ˜Ÿæ•¸é‡--------
+'------20221122 ³B²z³Ñ¾l¹s¬P¼Æ¶q--------
 
 Sub getOverNumberFromLastDay()
 
-reportNum = InputBox("è«‹è¼¸å…¥ç†æ‡‰ç‚º100%çš„å ±è¡¨ç·¨è™Ÿ")
-allowence = InputBox("è«‹è¼¸å…¥æ ¡æ­£å›æ­¸å…è¨±å€¼", , 1)
-prompt = "***æ ¡æ­£å›æ­¸å®Œæˆé …ç›®***" & vbNewLine
+reportNum = InputBox("½Ğ¿é¤J²zÀ³¬°100%ªº³øªí½s¸¹")
+allowence = InputBox("½Ğ¿é¤J®Õ¥¿¦^Âk¤¹³\­È", , 1)
+prompt = "***®Õ¥¿¦^Âk§¹¦¨¶µ¥Ø***" & vbNewLine
 
 With Sheets("Report")
 
@@ -70,7 +79,7 @@ With Sheets("Records")
             
             If adjustNum > 0 Then
             
-                Debug.Print itemName & ",åŸæ•¸é‡=" & originNum & ">>æ ¡æ­£=" & adjustNum
+                Debug.Print itemName & ",­ì¼Æ¶q=" & originNum & ">>®Õ¥¿=" & adjustNum
             
                 .Cells(r, "F").AddComment "originNum=" & .Cells(r, "F") & ">>adjustNum=" & adjustNum
             

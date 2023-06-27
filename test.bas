@@ -1,5 +1,42 @@
 Attribute VB_Name = "test"
+Sub getItemsByGAS()
 
+Dim o As New clsFetchURL_getItem
+
+s = o.ExecHTTP("")
+
+Stop
+
+Debug.Print s
+
+
+End Sub
+
+Sub checkTestCompleted() '20230225 add
+
+With Sheets("Test")
+
+    lr = .Cells(.Rows.count, "C").End(xlUp).Row
+    
+    For r = 2 To lr
+    
+        TestName = .Cells(r, "E")
+        calcTest = .Cells(r, "G")
+        doTest = .Cells(r, "H")
+        
+        If doTest > calcTest Then
+        
+            prompt = prompt & TestName & "©|¤í¯Ê" & doTest - calcTest & "²Õ" & vbNewLine & vbNewLine
+        
+        End If
+    
+    Next
+
+    MsgBox prompt
+
+End With
+
+End Sub
 
 Sub t()
 With Sheets("Num")

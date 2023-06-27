@@ -52,3 +52,6 @@ Unload frm_signup
 
 End Sub
 
+Private Sub UserForm_Click()
+
+End Sub

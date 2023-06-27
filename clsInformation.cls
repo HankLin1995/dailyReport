@@ -192,21 +192,29 @@ X:
 
 With shtDiary
 
-    r = 2
-    u = 1
+
+    For u = 1 To jc + 1
+
+        r = u + 1
+
+   'r = 2
+    'u = 1
     
-    Debug.Print .Cells(r, 2)
-    
-    Do Until .Cells(r, 2) = ""
-    
+    .Cells(r, 1) = u
+    .Cells(r, 2) = arr(u, 1)
+    .Cells(r, 3) = "´¸"
     .Cells(r, 4) = arr(u, 2)
-    
     .Cells(r, 4).NumberFormatLocal = "0.00%"
     
-    r = r + 1
-    u = u + 1
+    Next
     
-    Loop
+'    Do Until .Cells(r, 2) = ""
+'
+'    .Cells(r, 4) = arr(u, 2)
+'
+'    .Cells(r, 4).NumberFormatLocal = "0.00%"
+'
+'    Loop
 
 End With
 

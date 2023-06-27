@@ -301,7 +301,7 @@ With shtReport
     .Range("F6") = pgs_today
     .Range("I6") = pgs_total
     
-    'Call KeyInPGS(.Range("C2").Value, pgs_total)
+    Call KeyInPGS(.Range("C2").Value, pgs_total)
 
 End With
 

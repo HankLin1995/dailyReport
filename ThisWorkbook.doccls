@@ -1,4 +1,13 @@
-ï»¿Private Sub Workbook_BeforeClose(Cancel As Boolean)
+VERSION 1.0 CLASS
+BEGIN
+  MultiUse = -1  'True
+END
+Attribute VB_Name = "ThisWorkbook"
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = False
+Attribute VB_PredeclaredId = True
+Attribute VB_Exposed = True
+Private Sub Workbook_BeforeClose(Cancel As Boolean)
 
 'frm_Report.Show
 
@@ -9,15 +18,18 @@ Private Sub Workbook_Open()
 'Dim obj As New clsFetchURL
 'If obj.checkAccessByIP = False Then frm_login.Show
 
-MsgBox "è¨­è¨ˆè€…ï¼šæ—å®—æ¼¢(Hank Lin) @2018" & vbNewLine & _
+MsgBox "³]­pªÌ¡GªL©vº~(Hank Lin) @2018" & vbNewLine & _
        "" & vbNewLine & _
-        "æ‰‹æ©Ÿï¼š0912052274" & vbNewLine & _
-       "é›»å­éƒµä»¶ï¼šapple84026113@gmail.com" & vbNewLine & _
-       "éƒ¨è½æ ¼ï¼šhttps://hankvba.blogspot.com/" & vbNewLine & _
-       "ç‰ˆæ¬Šè²æ˜"
+        "¤â¾÷¡G0912052274" & vbNewLine & _
+       "¹q¤l¶l¥ó¡Gapple84026113@gmail.com" & vbNewLine & _
+       "³¡¸¨®æ¡Ghttps://hankvba.blogspot.com/" & vbNewLine & _
+       "ª©ÅvÁn©ú"
 
 On Error Resume Next
 
-'Application.StatusBar = "è¨­è¨ˆè€…ï¼šæ—å®—æ¼¢(Hank Lin) @2021"
+Call checkTestCompleted
+
+'Application.StatusBar = "³]­pªÌ¡GªL©vº~(Hank Lin) @2021"
 
 End Sub
+

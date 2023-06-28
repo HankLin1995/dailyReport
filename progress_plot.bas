@@ -34,14 +34,12 @@ specific_date = Format(Now(), "yyyy/m/d")
 
 Call clearAllShape
 
-X_gap = 120
-Y_origin = CDbl(InputBox("請輸入起始樁號")) - 50
-
 Set collMixItems = getMixItems
 
 myIndexs = getShowIndex(collMixItems)
 
-'For Each it In collMixItems
+X_gap = 120
+Y_origin = CDbl(InputBox("請輸入起始樁號")) - 50
 
 For Each i In myIndexs
 
@@ -110,6 +108,8 @@ Else
 End If
 
 getShowIndex = Split(InputBox(prompt, "顯示序位選擇器", indexDefault), ",")
+
+If UBound(getShowIndex) = -1 Then MsgBox "取消操作!", vbCritical: End
 
 For Each it In getShowIndex
 
@@ -222,6 +222,12 @@ With Sheets("Records")
         myContent = .Cells(r, "D")
     
         If myMixName = MixName Then
+        
+        If Not myContent Like "*~*" Then
+        
+            error_prompt = error_prompt & "第" & r & "列:樁號區間" & myContent & "未含~" & vbNewLine
+        
+        End If
     
             tmp = Split(myContent, "、")
             
@@ -242,6 +248,13 @@ With Sheets("Records")
     Set getDoLocationsByMix = coll
 
 End With
+
+If error_prompt <> "" Then
+
+    MsgBox error_prompt, vbCritical
+    End
+
+End If
 
 Exit Function
 

@@ -26,6 +26,8 @@ End Sub
 
 Sub getSLocAndELoc(ByVal strLocation As String, ByRef sloc, ByRef eloc)
 
+'If Not strLocation Like "*~*" Then MsgBox ("不允許的值:" & vbNewLine & strLocation & vbNewLine & "請使用「~」進行分割" & vbNewLine & "EX:0+000~0+100"), vbCritical: End
+
 loc_split = Split(strLocation, "~")
 
 sloc = TranLoc(loc_split(0))

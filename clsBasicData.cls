@@ -29,6 +29,8 @@ Private t_change As Integer
 
 Private Sub Class_Initialize()
 
+ThisWorkbook.Activate
+
 Set shtMain = Sheets("Main")
 Set shtRec = Sheets("Records")
 Set shtBudget = Sheets("Budget")

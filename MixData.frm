@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} MixData 
    Caption         =   "組合工項"
-   ClientHeight    =   6150
+   ClientHeight    =   6615
    ClientLeft      =   120
    ClientTop       =   465
-   ClientWidth     =   8145
+   ClientWidth     =   8130
    OleObjectBlob   =   "MixData.frx":0000
    StartUpPosition =   1  '所屬視窗中央
 End
@@ -80,6 +80,7 @@ Call obj.AppendData(MixName, MixDefine, MixDefineTotal, tmp)
 'End With
 
 End Sub
+
 
 Private Sub UserForm_Initialize()
 

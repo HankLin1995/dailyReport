@@ -458,4 +458,45 @@ End Function
 '
 'End Function
 
+Function tranDate(ByVal mydatestr) As Date
+
+Y = mid(mydatestr, 1, 3)
+m = mid(mydatestr, 4, 2)
+d = mid(mydatestr, 6, 2)
+
+tranDate = CDate(1911 + Y & "/" & m & "/" & d)
+
+End Function
+
+Function tranCharcter(ByVal s As String)
+
+If s Like "*~*" Then
+
+    For i = 1 To Len(s)
+    
+        ch = mid(s, i, 1)
+        If ch = "~" Then ch = "-"
+        new_ch = new_ch & ch
+    
+    Next
+    
+    tranCharcter = new_ch
+    
+Else
+
+    tranCharcter = s
+
+End If
+
+End Function
+
+Function tranCharcter_NUM(ByVal s As String)
+
+s = Replace(s, "(", "[")
+s = Replace(s, ")", "]")
+
+tranCharcter_NUM = s
+
+End Function
+
 

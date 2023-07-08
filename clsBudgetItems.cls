@@ -34,16 +34,16 @@ With Sheets("Budget")
         Sep = .Cells(r, "A")
         Item = .Cells(r, "B")
         unit = .Cells(r, "C")
-        Num = .Cells(r, c) 'D
-        Price = .Cells(r, c).Offset(0, 1)
+        num = .Cells(r, c) 'D
+        price = .Cells(r, c).Offset(0, 1)
         CNum = .Cells(r, c + 4) 'H
         CPrice = .Cells(r, c + 4).Offset(0, 1)
         
         collSep.Add Sep '主要分類項
         collItem.Add Item, Item '工程項目
         collUnit.Add unit '單位
-        collPrice.Add Price '單價
-        collNum.Add Num '數量
+        collPrice.Add price '單價
+        collNum.Add num '數量
         collCPrice.Add CPrice '更改後單價
         collCNum.Add CNum '更改後數量
     

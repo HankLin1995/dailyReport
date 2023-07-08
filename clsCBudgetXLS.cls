@@ -174,20 +174,20 @@ Sub WriteData(ByVal i As Integer, ByVal r As Integer)
 
 Item = obj.collItem(i)
 unit = obj.collUnit(i)
-Num = obj.collNum(i)
+num = obj.collNum(i)
 Num_ch = obj.collCNum(i)
 money = obj.collPrice(i)
-totalmoney = Num * money
+totalmoney = num * money
 totalmoney_ch = obj.collCNum(i) * obj.collCPrice(i)
 
 With shtCBudget
 
 .Cells(r, 2) = Item
 .Cells(r, 3) = unit '.Cells(r, 3)
-.Cells(r, 4) = Num '.Cells(r, 5)
+.Cells(r, 4) = num '.Cells(r, 5)
 .Cells(r, 5) = Num_ch '.Cells(r, 4)
 
-Call getDiff(r, Num, Num_ch, "F", "G")
+Call getDiff(r, num, Num_ch, "F", "G")
 
 .Cells(r, "H") = money '.Cells(r, 6)
 .Cells(r, "I") = totalmoney '.Cells(r, 8)
@@ -484,9 +484,9 @@ Private Function getSumFormula(ByVal count As Integer, ByVal col As String, Opti
 
 For i = scount To count
 
-    f = f & "+" & col & collAddress(i)
+    F = F & "+" & col & collAddress(i)
 
-    getSumFormula = "=SUM(" & mid(f, 2) & ")"
+    getSumFormula = "=SUM(" & mid(F, 2) & ")"
 
 Next
 

@@ -167,11 +167,11 @@ With shtRec
         MixItem = .Cells(r, "J")
         MixAmount = .Cells(r, "K")
     
-        If .Cells(r, "J") = TargetItem Then Num = Num + MixAmount: 'Debug.Print "¦C¦ì:" & r & "num=" & num
+        If .Cells(r, "J") = TargetItem Then num = num + MixAmount: 'Debug.Print "¦C¦ì:" & r & "num=" & num
         
     Next
 
-    frm.lblLast = frm.lblLast - Num
+    frm.lblLast = frm.lblLast - num
     frm.lblStore = frm.lblLast
 
 End With

@@ -342,6 +342,8 @@ End Sub
 
 Sub ExportToReport() '¶×¥X¦ÜMain
 
+'change PCCES index ,should try
+
 c_Main = 6
 c_Diff = 6 - 2
 
@@ -409,6 +411,7 @@ For i = 1 To collTitle.count
     End Select
 
 Next
+
 
 End With
 

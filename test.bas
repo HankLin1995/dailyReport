@@ -1,4 +1,14 @@
 Attribute VB_Name = "test"
+Sub test_getPCCESContents()
+
+Dim o As New clsPCCES
+
+o.getFileName ("D:\Users\USER\Desktop\(預算書)單期一號分線等改善工程雲林111A54_ap_bdgt.xls")
+o.getShtContentName
+o.getAllContents
+
+End Sub
+
 Sub test_getUserDefinedPlotOrder()
 
 Set collMixItems = getMixItems

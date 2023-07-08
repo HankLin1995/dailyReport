@@ -176,9 +176,9 @@ For Each it In coll
             
             If Item = it Then
             
-                Num = .Cells(r, 3) / mylen
+                num = .Cells(r, 3) / mylen
                 
-                Sum = Sum + Num
+                Sum = Sum + num
             
             End If
             
@@ -287,7 +287,7 @@ Dim obj As New clsBudget
 
 obj.CollectTitle
 obj.ClearOldReport
-obj.ExportToReport
+obj.ExportToReport 'should change something
 
 End Sub
 

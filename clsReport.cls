@@ -175,7 +175,7 @@ For i = 1 To UBound(ItemArr, 1)
     ItemMoney = ItemArr(i, 4)
     ItemSep = ItemArr(i, 7)
 
-    If ItemSep = 3 Then totalMoney = totalMoney + ItemContractNum * ItemMoney
+    If ItemSep = 3 Then totalmoney = totalmoney + ItemContractNum * ItemMoney
 
 Next
 
@@ -193,7 +193,7 @@ For i = 1 To UBound(ItemArr, 1)
         ReportMoney_P = ReportMoney_P + ItemAmount * ItemMoney
         SumReportMoney_P = SumReportMoney_P + ItemSumAmount * ItemMoney
 
-        arr = Array(ReportMoney_P / totalMoney, SumReportMoney_P / totalMoney)
+        arr = Array(ReportMoney_P / totalmoney, SumReportMoney_P / totalmoney)
 
     End If
 
@@ -274,7 +274,7 @@ With shtReport
         .Range("G" & r) = ItemAmount
         .Range("I" & r) = ItemSumAmount
     
-        totalMoney = totalMoney + ItemContractNum * ItemMoney
+        totalmoney = totalmoney + ItemContractNum * ItemMoney
         ReportMoney = ReportMoney + ItemAmount * ItemMoney
         SumReportMoney = SumReportMoney + ItemSumAmount * ItemMoney
         
@@ -291,7 +291,7 @@ With shtReport
     Next
     
     .Range("B" & lr) = "發包工作費總額"
-    .Range("F" & lr) = totalMoney
+    .Range("F" & lr) = totalmoney
     .Range("G" & lr) = WorksheetFunction.RoundDown(ReportMoney, 0)
     .Range("I" & lr) = WorksheetFunction.RoundDown(SumReportMoney, 0)
     

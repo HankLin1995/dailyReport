@@ -408,10 +408,10 @@ If rng.MergeCells = True Then
     Set ma = rng.MergeArea
     tmp = Split(ma.Address, ":")
     
-    row1 = Val(mid(tmp(0), InStr(2, tmp(0), "$") + 1))
-    row2 = Val(mid(tmp(1), InStr(2, tmp(1), "$") + 1))
+    Row1 = Val(mid(tmp(0), InStr(2, tmp(0), "$") + 1))
+    Row2 = Val(mid(tmp(1), InStr(2, tmp(1), "$") + 1))
     
-    Set rng_last = Range(tmp(0)) '.Offset(row1 - row2, 1)
+    Set rng_last = Range(tmp(0)) '.Offset(Row1 - Row2, 1)
 
 Else
 

@@ -703,11 +703,11 @@ For c = 1 To .Cells(1, .Columns.count).End(xlToLeft).Column Step 2
                 
                     On Error Resume Next
                     
-                    lastrow = myrow
-                    myrow = colltmp(total_item)
+                    lastRow = myRow
+                    myRow = colltmp(total_item)
                     
-                    If lastrow <> myrow Then
-                        myAmount = shtTmp.Cells(myrow, c + 1)
+                    If lastRow <> myRow Then
+                        myAmount = shtTmp.Cells(myRow, c + 1)
                         .Cells(total_r, total_c + 1) = myAmount
                     End If
                 Next

@@ -15,6 +15,7 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 
 
+
 Private Sub cboItem_Change()
 
 If Me.cboItem = "" Then Exit Sub
@@ -60,7 +61,7 @@ Call obj.AppendData(MixName, MixDefine, MixDefineTotal, tmp)
 '
 '    .UsedRange.EntireRow.Hidden = False '摺疊會出問題!
 '
-'    lr = .Cells(Rows.count, 4).End(xlUp).row + 1
+'    lr = .Cells(Rows.count, 4).End(xlUp).Row + 1
 '
 '    .Cells(lr, 1) = MixName
 '    .Cells(lr, 2) = MixDefine

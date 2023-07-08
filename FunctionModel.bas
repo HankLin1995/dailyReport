@@ -176,9 +176,9 @@ For Each it In coll
             
             If Item = it Then
             
-                num = .Cells(r, 3) / mylen
+                Num = .Cells(r, 3) / mylen
                 
-                Sum = Sum + num
+                Sum = Sum + Num
             
             End If
             

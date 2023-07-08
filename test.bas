@@ -118,7 +118,7 @@ lr = .Cells(1, 1).End(xlDown).Row
 
 For Each checkday In checkdaylist
 
-myrow = 15
+myRow = 15
 
 i = i + 1
 
@@ -141,12 +141,12 @@ End With
         
             With Sheets("CheckList")
             
-                .Range("A" & myrow) = checkch
-                .Range("G" & myrow) = checkday
-                .Range("M" & myrow) = CheckLoc
-                .Range("R" & myrow) = checkitem
+                .Range("A" & myRow) = checkch
+                .Range("G" & myRow) = checkday
+                .Range("M" & myRow) = CheckLoc
+                .Range("R" & myRow) = checkitem
             
-                myrow = myrow + 1
+                myRow = myRow + 1
             
             End With
         
@@ -154,7 +154,7 @@ End With
         
     Next
 
-    If myrow = 15 Then
+    If myRow = 15 Then
         i = i - 1
     Else
         Sheets("CheckList").PrintOut

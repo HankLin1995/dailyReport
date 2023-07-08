@@ -94,7 +94,7 @@ End With
 
 End Sub
 
-Private Sub Init_InsertTestRow(ByVal count As Integer, ByVal targetrow As Integer)
+Private Sub Init_InsertTestRow(ByVal count As Integer, ByVal targetRow As Integer)
 
 With shtReport
 
@@ -102,9 +102,9 @@ i = 0
 
 Do Until i = count
 
-    .Rows(targetrow).Insert
+    .Rows(targetRow).Insert
     
-    .Range("D" & targetrow & ":E" & targetrow).Merge
+    .Range("D" & targetRow & ":E" & targetRow).Merge
     
     i = i + 1
     

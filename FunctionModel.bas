@@ -286,7 +286,7 @@ Sub cmdExportToReport()
 Dim obj As New clsBudget
 
 obj.CollectTitle
-obj.ClearOldReport
+obj.clearOldReport
 obj.ExportToReport 'should change something
 
 End Sub
@@ -305,6 +305,7 @@ Dim obj As New clsBudget
 obj.FindWorkbook
 If obj.IsError = True Then Exit Sub
 obj.DealBudget
+obj.clearBudget
 obj.CollectBudget
 obj.ArrangeTitle
 

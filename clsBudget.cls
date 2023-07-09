@@ -117,6 +117,20 @@ Next
 
 End Sub
 
+Sub clearBudget()
+
+With ThisWorkbook.Sheets("Budget")
+
+    Set rng = .Cells.SpecialCells(xlCellTypeLastCell)
+    
+    Debug.Print rng.Address
+    
+    .Range("A3:" & rng.Address).Clear
+    
+End With
+
+End Sub
+
 Sub CollectBudget()
 
 Dim BudgetArr(1 To 50, 1 To 2)
@@ -328,7 +342,7 @@ End With
 
 End Sub
 
-Sub ClearOldReport() '請除舊有Main工作表報表資料
+Sub clearOldReport() '請除舊有Main工作表報表資料
 
 With shtMain
 

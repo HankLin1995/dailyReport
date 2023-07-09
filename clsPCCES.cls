@@ -49,9 +49,13 @@ End Function
 
 Sub getAllContents()
 
+Call clearBudget
+
 Dim coll As New Collection
 
 With wb.Sheets(getShtContentName)
+
+    '.Unprotect ("RATSWVNXYRCMPIZ") 'only read it's ok
 
     lr = .Cells(.Rows.count, "F").End(xlUp).Row
     
@@ -65,10 +69,9 @@ With wb.Sheets(getShtContentName)
         
         If item_num <> "" Then 'And item_amount <> 0 Then
         
-
             item_cont = getFullName(r)
-'
-'            'Call getData(item_num, item_cont, item_unit, item_amount, item_cost)
+
+            Call getData(item_num, item_cont, item_unit, item_amount, item_cost)
 
             myResult = Join(Array(item_num, item_cont, item_unit, item_amount, item_cost), ":")
 
@@ -119,44 +122,102 @@ End Function
 
 Private Sub getData(ByVal num As String, ByVal cont As String, ByVal unit As String, ByVal amount As String, ByVal cost As String)
 
-    With ThisWorkbook.Sheets("契約詳細表")
+    With ThisWorkbook.Sheets("Budget")
     
         lr = .Cells(.Rows.count, 1).End(xlUp).Row
         
-        r = lr + 1
+        r_Main = lr + 1
         
-        .Cells(r, 2) = num
-        .Cells(r, 3) = cont
-        .Cells(r, 4) = unit
-        .Cells(r, 5) = amount
-        .Cells(r, 6) = cost
+        .Cells(r_Main, 1) = num
+        .Cells(r_Main, 2) = cont
+        .Cells(r_Main, 3) = unit
+        .Cells(r_Main, 4) = amount
+        .Cells(r_Main, 5) = cost
         
-        .Cells(r, 1) = "=RC[1]&"">""&RC[2]" ' num & ">" & cont
-        .Cells(r, 1).WrapText = False
-        
-        If unit = "" Then .Range("A" & r & ":F" & r).Interior.ColorIndex = 22
+        .Cells(r_Main, 6) = "=D" & r_Main & "*E" & r_Main
+            
+        .Range("A" & r_Main & ":F" & r_Main).HorizontalAlignment = xlLeft
+        .Range("A" & r_Main & ":F" & r_Main).Borders.LineStyle = xlContinuous
+        .Range("D" & r_Main & ":F" & r_Main).NumberFormatLocal = "0.00"
+        .Range("D" & r_Main & ":E" & r_Main).Interior.ColorIndex = 40 '鎖定儲存格用
+        .Range("D" & r_Main & ":F" & r_Main).Font.Name = "Times New Roman"
+
     
     End With
 
 End Sub
 
+Sub clearBudget()
+
+With ThisWorkbook.Sheets("Budget")
+
+    Set rng = .Cells.SpecialCells(xlCellTypeLastCell)
+    
+    Debug.Print rng.Address
+    
+    .Range("A3:" & rng.Address).Clear
+    
+End With
+
+End Sub
+
+Sub settingColorRules()
+
+targetCnt = CInt(InputBox("請輸入之後為百分比項目之序位", , 3))
+
+With Sheets("Budget")
+
+    lr = .Cells(.Rows.count, 1).End(xlUp).Row
+    
+    For r = 3 To lr
+    
+        item_num = .Cells(r, 1)
+        tmp = Split(item_num, ".")
+        item_cont = .Cells(r, 2)
+        item_amount = .Cells(r, 5)
+        
+        If UBound(tmp) + 1 = 2 Then second_cnt = second_cnt + 1
+        If UBound(tmp) + 1 = 1 Then first_cnt = first_cnt + 1
+
+        If item_amount <> 0 Then
+        
+            .Cells(r, 7) = 3
+            
+            If second_cnt >= targetCnt Then .Cells(r, 7) = 5
+            If first_cnt > 1 Then .Cells(r, 7) = 7
+        
+        End If
+        
+        If item_cont Like "*工程保險*" Then .Cells(r, 7) = 3
+    
+    Next
+
+End With
+
+Dim myBudgetObj As New clsBudget
+
+myBudgetObj.ReArrangeTitle
+
+End Sub
+
 Function getSumMoney()
 
-With Sheets("契約詳細表")
+With Sheets("Budget")
 
 lr = .Cells(.Rows.count, 1).End(xlUp).Row
 
-Set rng = .Rows("1").Find("數量")
+Set rng = .Rows("2").Find("契約數量")
 
 c = rng.Column
 
-For r = 2 To lr
+For r = 3 To lr
     
+    item_rule = .Cells(r, c - 3).Font.ColorIndex
     amount = .Cells(r, c)
     price = .Cells(r, c + 1)
     note = .Cells(r, c + 2)
     
-    If note = "" Then getSumMoney = getSumMoney + amount * price
+    If item_rule = 3 Or item_rule = 5 Then getSumMoney = getSumMoney + amount * price
 
 Next
 
@@ -209,9 +270,9 @@ lr = .Cells(.Rows.count, 1).End(xlUp).Row
 
 For r = 2 To lr
 
-    mykey = .Cells(r, 1)
+    myKey = .Cells(r, 1)
     On Error GoTo ERRORHANDLE
-    coll.Add mykey, mykey
+    coll.Add myKey, myKey
 
 Next
 
@@ -227,7 +288,7 @@ Exit Sub
 End With
 
 ERRORHANDLE:       ' 錯誤處理用的程式碼
-  s = s & "列數=" & r & ",項目=" & mykey & "已經被使用!請修正!" & vbNewLine
+  s = s & "列數=" & r & ",項目=" & myKey & "已經被使用!請修正!" & vbNewLine
   Resume Next
 
 End Sub

@@ -283,31 +283,45 @@ End Sub
 
 Sub cmdExportToReport()
 
-Dim obj As New clsBudget
+'Dim obj As New clsBudget
+'
+'obj.CollectTitle
+'obj.clearOldReport
+'obj.ExportToReport 'should change something
 
-obj.CollectTitle
+Dim obj As New clsPCCES
+
 obj.clearOldReport
-obj.ExportToReport 'should change something
+obj.getRecordingItems
+obj.getPercentageItems
+
+Sheets("Main").Activate
 
 End Sub
 
 Sub cmdReArrange()
 
-Dim obj As New clsBudget
+Dim obj As New clsPCCES
 
 obj.ReArrangeTitle
 
 End Sub
 Sub cmdFindBudget()
 
-Dim obj As New clsBudget
+'Dim obj As New clsBudget
+'
+'obj.FindWorkbook
+'If obj.IsError = True Then Exit Sub
+'obj.DealBudget
+'obj.clearBudget
+'obj.CollectBudget
+'obj.ArrangeTitle
 
-obj.FindWorkbook
-If obj.IsError = True Then Exit Sub
-obj.DealBudget
-obj.clearBudget
-obj.CollectBudget
-obj.ArrangeTitle
+Dim o As New clsPCCES
+
+o.getFileName '"D:\Users\USER\Desktop\(預算書)單期一號分線等改善工程雲林111A54_ap_bdgt.xls")
+o.getAllContents
+o.settingColorRules
 
 End Sub
 

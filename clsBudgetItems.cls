@@ -39,13 +39,18 @@ With Sheets("Budget")
         CNum = .Cells(r, c + 4) 'H
         CPrice = .Cells(r, c + 4).Offset(0, 1)
         
-        collSep.Add Sep '主要分類項
-        collItem.Add Item, Item '工程項目
-        collUnit.Add unit '單位
-        collPrice.Add price '單價
-        collNum.Add num '數量
-        collCPrice.Add CPrice '更改後單價
-        collCNum.Add CNum '更改後數量
+        If price <> 0 Then
+        
+            collSep.Add Sep '主要分類項
+            'collSep.Add test_getParentItem(Sep) '主要分類項
+            collItem.Add Item, Item '工程項目
+            collUnit.Add unit '單位
+            collPrice.Add price '單價
+            collNum.Add num '數量
+            collCPrice.Add CPrice '更改後單價
+            collCNum.Add CNum '更改後數量
+    
+        End If
     
     Next
 
@@ -137,6 +142,87 @@ Function sumSpecificCPrice(ByVal s As Integer, ByVal e As Integer)
 For i = s To e
     sumSpecificCPrice = sumSpecificCPrice + collsumCSep(i)
 Next
+
+End Function
+
+Function CBudget_changeIndex()
+
+With Sheets("Budget")
+
+    lr = .Cells(.Rows.count, 1).End(xlUp).Row
+
+    For r = lr To 3 Step -1
+    
+        item_index = .Cells(r, 1)
+        
+        On Error Resume Next
+        .Cells(r, 1).Comment.Delete
+        On Error GoTo 0
+        
+        .Cells(r, 1).AddComment
+        .Cells(r, 1).Comment.Text Text:=item_index
+        .Cells(r, 1) = getParentItem(item_index)
+        
+    Next
+    
+
+End With
+
+End Function
+
+Function CBudget_recover()
+
+With Sheets("Budget")
+
+    lr = .Cells(.Rows.count, 1).End(xlUp).Row
+
+    For r = 3 To lr
+    
+        item_index = .Cells(r, 1).Comment.Text
+        
+        On Error Resume Next
+        .Cells(r, 1).Comment.Delete
+        On Error GoTo 0
+        
+
+        .Cells(r, 1) = item_index
+    
+    Next
+    
+End With
+
+End Function
+
+Function getParentItem(ByVal item_index As String)
+
+With Sheets("Budget")
+    
+    s = item_index ' .Range("A19")
+    
+    tmp = Split(s, ".")
+    
+    If UBound(tmp) > 1 Then
+    
+        For i = 0 To UBound(tmp) - 1
+        
+            ch = ch & "." & tmp(i)
+        
+        Next
+        
+        item_index = mid(ch, 2, Len(ch) - 1)
+        
+        Set rng = .Columns("A").Find(item_index)
+        
+        getParentItem = rng.Offset(0, 1).Value
+    
+    ElseIf UBound(tmp) = 1 Or UBound(tmp) = 0 Then
+    
+        Set rng = .Columns("A").Find(item_index)
+        getParentItem = rng.Offset(0, 1).Value
+        
+    End If
+
+End With
 
 End Function
 

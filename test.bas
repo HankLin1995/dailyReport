@@ -1,96 +1,5 @@
 Attribute VB_Name = "test"
 
-
-Sub test_getPCCESContents()
-
-Dim o As New clsPCCES
-
-o.getFileName ("D:\Users\USER\Desktop\(預算書)單期一號分線等改善工程雲林111A54_ap_bdgt.xls")
-o.getAllContents
-o.settingColorRules
-
-End Sub
-
-Sub checkSeconedNameByItemIndex()
-
-Set collSeconedName = getCollSeconedName
-
-Debug.Print "========百分比項目========"
-
-For Each it In collSeconedName
-
-    sum_cost = 0
-
-    With Sheets("Budget")
-    
-        lr = .Cells(.Rows.count, 1).End(xlUp).Row
-    
-        For r = 3 To lr
-        
-            item_rule = .Cells(r, 1).Font.ColorIndex
-        
-            If item_rule = 5 Then
-            
-                item_num = .Cells(r, 1)
-                item_name = .Cells(r, 2)
-                item_sum_cost = .Cells(r, 6)
-            
-                tmp = Split(item_num, ".")
-                
-                If UBound(tmp) >= 1 Then
-                
-                    If collSeconedName(Join(Array(tmp(0), tmp(1)), ".")) = it Then
-                    
-                        sum_cost = sum_cost + item_sum_cost
-                    
-                    End If
-                
-                End If
-            
-            End If
-        
-        Next
-        
-        Debug.Print it & ">" & sum_cost
-        
-    End With
-
-Next
-
-End Sub
-
-Function getCollSeconedName()
-
-Dim coll As New Collection
-
-With Sheets("Budget")
-
-    lr = .Cells(.Rows.count, 1).End(xlUp).Row
-
-    For r = 3 To lr
-    
-        item_num = .Cells(r, 1)
-        item_name = .Cells(r, 2)
-        
-        tmp = Split(item_num, ".")
-        
-        If UBound(tmp) = 1 Then
-        
-            coll.Add item_name, item_num
-        
-        End If
-    
-    Next
-
-End With
-
-Set getCollSeconedName = coll
-
-End Function
-
-
-'===========================
-
 Sub test_getUserDefinedPlotOrder()
 
 Set collMixItems = getMixItems
@@ -119,7 +28,7 @@ With Sheets("Test")
     
     Next
 
-    MsgBox prompt
+    If prompt <> "" Then MsgBox prompt
 
 End With
 

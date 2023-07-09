@@ -21,6 +21,8 @@ Private ratio As Double
 
 Private Sub Class_Initialize()
 
+obj.CBudget_changeIndex
+
 Set shtBudget = Sheets("Budget")
 Set shtCBudget = Sheets("CBudget")
 
@@ -628,3 +630,9 @@ With shtCBudget
 End With
 
 End Function
+
+Private Sub Class_Terminate()
+
+obj.CBudget_recover
+
+End Sub

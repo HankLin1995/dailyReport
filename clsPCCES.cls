@@ -13,7 +13,7 @@ Private myfun As New clsMyfunction
 
 Private Sub Class_Initialize()
 
-Application.ScreenUpdating = False
+'Application.ScreenUpdating = False
 
 End Sub
 
@@ -194,9 +194,7 @@ With Sheets("Budget")
 
 End With
 
-Dim myBudgetObj As New clsBudget
-
-myBudgetObj.ReArrangeTitle
+Call ReArrangeTitle
 
 End Sub
 
@@ -225,73 +223,226 @@ End With
 
 End Function
 
-Function getMoneyByItemKey(ByVal item_key)
+Sub getPercentageItems()
 
-With Sheets("契約詳細表")
+Set collSeconedName = getCollSeconedName
 
-r = .Columns("A").Find(item_key).Row
-c = .Rows("1").Find("數量").Column
+'Debug.Print "========百分比項目========"
+
+For Each it In collSeconedName
+
+    sum_cost = 0
+
+    With Sheets("Budget")
     
-getMoneyByItemKey = .Cells(r, c + 1)
-
-End With
-
-End Function
-
-Function getAllItems()
-
-Dim coll As New Collection
-
-With Sheets("契約詳細表")
-
-lr = .Cells(.Rows.count, 1).End(xlUp).Row
-
-For r = 2 To lr
+        lr = .Cells(.Rows.count, 1).End(xlUp).Row
     
-    Item = .Cells(r, 1)
-    note = .Cells(r, "G")
-    If note = "" Then coll.Add Item, Item
+        For r = 3 To lr
+        
+            item_rule = .Cells(r, 1).Font.ColorIndex
+        
+            If item_rule = 5 Then
+            
+                item_num = .Cells(r, 1)
+                item_name = .Cells(r, 2)
+                item_sum_cost = .Cells(r, 6)
+            
+                tmp = Split(item_num, ".")
+                
+                If UBound(tmp) >= 1 Then
+                
+                    If collSeconedName(Join(Array(tmp(0), tmp(1)), ".")) = it Then
+                    
+                        sum_cost = sum_cost + item_sum_cost
+                    
+                    End If
+                
+                End If
+            
+            End If
+        
+        Next
+        
+        If sum_cost <> 0 Then
+           ' Debug.Print it & ">" & sum_cost
+            arr = Array(it, "式", "1", sum_cost, sum_cost)
+            Call exportToMain(arr, 5)
+        End If
+        
+    End With
 
 Next
-
-End With
-
-Set getAllItems = coll
-
-End Function
-
-Sub checkIsRepeat()
-
-Dim coll As New Collection
-
-With Sheets("契約詳細表")
-
-lr = .Cells(.Rows.count, 1).End(xlUp).Row
-
-For r = 2 To lr
-
-    myKey = .Cells(r, 1)
-    On Error GoTo ERRORHANDLE
-    coll.Add myKey, myKey
-
-Next
-
-If s <> "" Then
-    MsgBox s, vbCritical
-    .Range("A2").Resize(lr, 7).Clear
-Else
-    Debug.Print "契約詳細表皆為唯一值!"
-End If
-
-Exit Sub
-
-End With
-
-ERRORHANDLE:       ' 錯誤處理用的程式碼
-  s = s & "列數=" & r & ",項目=" & myKey & "已經被使用!請修正!" & vbNewLine
-  Resume Next
 
 End Sub
+
+Private Function getCollSeconedName()
+
+Dim coll As New Collection
+
+With Sheets("Budget")
+
+    lr = .Cells(.Rows.count, 1).End(xlUp).Row
+
+    For r = 3 To lr
+    
+        item_num = .Cells(r, 1)
+        item_name = .Cells(r, 2)
+        
+        tmp = Split(item_num, ".")
+        
+        If UBound(tmp) = 1 Then
+        
+            coll.Add item_name, item_num
+        
+        End If
+    
+    Next
+
+End With
+
+Set getCollSeconedName = coll
+
+End Function
+
+Sub getRecordingItems()
+
+With Sheets("Budget")
+
+    lr = .Cells(.Rows.count, 1).End(xlUp).Row
+
+    For r = 3 To lr
+    
+        item_rule = .Cells(r, 1).Font.ColorIndex
+    
+        If item_rule = 3 Then
+        
+            item_num = .Cells(r, 1)
+            item_name = .Cells(r, 2)
+            item_unit = .Cells(r, 3)
+            item_amount = .Cells(r, 4)
+            item_cost = .Cells(r, 5)
+            item_sum_cost = .Cells(r, 6)
+        
+            arr = Array(item_name, item_unit, item_amount, item_cost, item_sum_cost)
+        
+            Call exportToMain(arr, 3)
+        
+        End If
+    
+    Next
+
+    
+End With
+
+End Sub
+
+Sub exportToMain(arr, myColorindex)
+
+With Sheets("Main")
+
+    r = .Cells(.Rows.count, "F").End(xlUp).Row
+    
+    .Range("F" & r + 1 & ":J" & r + 1) = arr
+    .Range("F" & r + 1 & ":J" & r + 1).Borders.LineStyle = 1
+    .Range("F" & r + 1).Font.ColorIndex = myColorindex
+    
+End With
+
+End Sub
+
+Sub ReArrangeTitle() '重整準則
+
+With Sheets("Budget")
+
+For r = 3 To .Cells(1, 1).End(xlDown).Row
+
+    .Cells(r, 1).Font.ColorIndex = .Cells(r, 7)
+
+Next
+
+End With
+
+End Sub
+
+Sub clearOldReport() 'clear舊有Main工作表報表資料
+
+With Sheets("Main")
+
+    lr = .Cells(.Rows.count, 6).End(xlUp).Row
+    
+    .Cells(3, 6).Resize(lr, 5).Clear
+
+End With
+
+End Sub
+
+'Function getMoneyByItemKey(ByVal item_key)
+'
+'With Sheets("契約詳細表")
+'
+'r = .Columns("A").Find(item_key).Row
+'c = .Rows("1").Find("數量").Column
+'
+'getMoneyByItemKey = .Cells(r, c + 1)
+'
+'End With
+'
+'End Function
+
+'Function getAllItems()
+'
+'Dim coll As New Collection
+'
+'With Sheets("契約詳細表")
+'
+'lr = .Cells(.Rows.count, 1).End(xlUp).Row
+'
+'For r = 2 To lr
+'
+'    Item = .Cells(r, 1)
+'    note = .Cells(r, "G")
+'    If note = "" Then coll.Add Item, Item
+'
+'Next
+'
+'End With
+'
+'Set getAllItems = coll
+'
+'End Function
+
+'Sub checkIsRepeat()
+'
+'Dim coll As New Collection
+'
+'With Sheets("契約詳細表")
+'
+'lr = .Cells(.Rows.count, 1).End(xlUp).Row
+'
+'For r = 2 To lr
+'
+'    myKey = .Cells(r, 1)
+'    On Error GoTo ERRORHANDLE
+'    coll.Add myKey, myKey
+'
+'Next
+'
+'If s <> "" Then
+'    MsgBox s, vbCritical
+'    .Range("A2").Resize(lr, 7).Clear
+'Else
+'    Debug.Print "契約詳細表皆為唯一值!"
+'End If
+'
+'Exit Sub
+'
+'End With
+'
+'ERRORHANDLE:       ' 錯誤處理用的程式碼
+'  s = s & "列數=" & r & ",項目=" & myKey & "已經被使用!請修正!" & vbNewLine
+'  Resume Next
+'
+'End Sub
 
 Function checkCollection(ByRef coll, ByVal coll_key As String)
 
@@ -301,6 +452,6 @@ End Function
 
 Private Sub Class_Terminate()
 
-Application.ScreenUpdating = True
+'Application.ScreenUpdating = True
 
 End Sub

@@ -107,7 +107,68 @@ Function getSumDiff(ByVal Sum As Double, ByVal CSum As Double)
     
 End Function
 
+Sub addNewChangeItems()
 
+With Sheets("Budget")
 
+    lr = .Cells(.Rows.count, 1).End(xlUp).Row
+    lc = .Cells(2, .Columns.count).End(xlToLeft).Column
+    
+    .Range("D2:F" & lr).Copy .Cells(2, lc + 1)
+    cnt = InputBox("請輸入本次為第幾次變更設計")
+    changeDate = InputBox("請輸入變更設計日期", , Format(Now(), "yyyy/mm/dd"))
+    .Cells(1, lc + 1) = "第" & cnt & "次變更" & ">" & CDate(changeDate)
+    .Cells(1, lc + 1).Resize(1, 3).Merge
+    .Cells(1, lc + 1).Resize(1, 3).EntireColumn.AutoFit
+    
+
+End With
+
+End Sub
+
+'Sub test_budgetStored()
+'
+'Dim o As New clsBudgetDB
+'
+'If o.IsExisted("B", "契約") Then
+'
+'    msg = MsgBox("已經存有契約資料,是否覆蓋?", vbYesNo)
+'
+'    If msg = vbYes Then
+'
+'        Call o.clearRows("B", "契約")
+'
+'    Else
+'
+'        MsgBox "動作已結束!": Exit Sub
+'
+'    End If
+'
+'End If
+'
+'With Sheets("Budget")
+'
+'    lr = .Cells(.Rows.count, 1).End(xlUp).Row
+'
+'    For r = 3 To lr
+'
+'        item_index = .Cells(r, 1)
+'        item_name = .Cells(r, 2)
+'        item_unit = .Cells(r, 3)
+'        item_num = .Cells(r, 4)
+'        item_amount = .Cells(r, 5)
+'        item_sum = .Cells(r, 6)
+'
+'        arr = Array("契約", item_index, item_name, item_unit, item_num, item_amount, item_sum)
+'
+'    '    Debug.Print UBound(arr)
+'
+'        o.AppendData (arr)
+'
+'    Next
+'
+'End With
+'
+'End Sub
 
 

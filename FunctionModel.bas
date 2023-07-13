@@ -1,12 +1,12 @@
 Attribute VB_Name = "FunctionModel"
-Sub cmdGetReportIDByDate() '20221125依日期選擇頁數
+Sub cmdGetReportIDByDate(Optional myNewDate As Date) '20221125依日期選擇頁數
 
 With Sheets("Report")
 
     mydate = .Range("C2")
     myID = .Range("K2")
     
-    myNewDate = InputBox("請輸入日期，格式如" & vbNewLine & mydate, , mydate)
+    If myNewDate = 0 Then myNewDate = InputBox("請輸入日期，格式如" & vbNewLine & mydate, , mydate)
     On Error GoTo DATEFORMATERRORHANDLE
     myNewID = myID + CDate(myNewDate) - mydate
     Set rng = Sheets("Diary").Columns("A").Find(myNewID)
@@ -384,4 +384,41 @@ obj.BeforePrintCheck
 obj.ToXLS
 
 End Sub
+
+'=============function===============
+
+Function getTestNeedNum(ByVal num As Double, ByVal s As String)
+
+tmp = Split(s, ",")
+
+For Each it In tmp
+
+    If IsNumeric(it) Then
+
+        If num >= CDbl(it) Then cnt = cnt + 1
+    
+    Else
+    
+        If cnt > 0 Then
+    
+            before_num = CDbl(tmp(j - 1))
+            each_num = CDbl(mid(it, 1, Len(it) - 1))
+         
+            If (num - before_num) <> 0 Then
+        
+            cnt = cnt + Int((num - before_num) / each_num) + 1
+    
+            End If
+    
+        End If
+    
+    End If
+    
+    j = j + 1
+    
+Next
+
+getTestNeedNum = cnt
+
+End Function
 

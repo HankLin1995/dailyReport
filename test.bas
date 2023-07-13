@@ -1,10 +1,17 @@
 Attribute VB_Name = "test"
 
-Sub test_getUserDefinedPlotOrder()
+Sub test_BudgetDB()
 
-Set collMixItems = getMixItems
+Dim o As New clsBudgetDB
 
-myIndexs = getShowIndex(collMixItems)
+Debug.Assert o.IsExisted("B", "«´¬ù") = True
+
+End Sub
+
+Sub test_getUniqueItems()
+
+Dim o As New clsBudgetDB
+Set coll = o.getUniqueItems("B")
 
 End Sub
 
@@ -16,9 +23,9 @@ With Sheets("Test")
     
     For r = 2 To lr
     
-        TestName = .Cells(r, "E")
-        calcTest = .Cells(r, "G")
-        doTest = .Cells(r, "H")
+        TestName = .Cells(r, "A")
+        calcTest = .Cells(r, "F")
+        doTest = .Cells(r, "G")
         
         If doTest > calcTest Then
         
@@ -30,21 +37,6 @@ With Sheets("Test")
 
     If prompt <> "" Then MsgBox prompt
 
-End With
-
-End Sub
-
-Sub t()
-With Sheets("Num")
-For c = .Columns.count To 1 Step -1
-    lr_test = .Cells(1, c).End(xlDown).Row
-    lr = .Rows.count
-    If lr_test <> lr Then Debug.Print .Cells(1, c): Exit For
-    
-    'If .Cells(1, c).End(xlDown).Row <> .Rows.count Then lc = c: Exit For
-Next
-
-Debug.Print lc
 End With
 
 End Sub

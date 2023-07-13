@@ -353,76 +353,91 @@ Next
 
 End Sub
 
-Sub DealDiary() '初始化日誌
+Sub cmdExportToDiary_Main()
 
-With shtDiary
+Dim myFunc As New clsMyfunction
 
-    lr = .Cells(Rows.count, 1).End(xlUp).Row
+Set coll_recDates = myFunc.getUniqueItems("Records", 3, "B")
 
-    .Activate
-
-    For r = 2 To lr
+For Each recDate_Str In coll_recDates
     
-        'If r = 14 Then Stop
+    ItemAndAmount = getRecordsByDate(CDate(recDate_Str))
+    LocAndCheck = "" 'ready
     
-        For c = 5 To 6
-    
-            If .Cells(r, c).Interior.ColorIndex = -4142 Then .Cells(r, c).ClearContents '網底變色即鎖住
-    
-        Next
-    
-    Next
-
-End With
-
-End Sub
-
-Function GetRecDetail_New(ByVal recDate As Date)
-
-With Sheets("Records")
-
-Set rng = .Columns("B").Find(recDate)
-
-Debug.Assert Not rng Is Nothing
-
-sr = rng.Row
-
-lr = .Cells(.Rows.count, 1).End(xlUp).Row
-
-For r = sr To lr
-
-    mydate = .Cells(r, 2)
-    
-    If mydate <> recDate Then Exit For
-    
-    If mid(.Cells(r, 1), 1, 1) = "M" And .Cells(r, "J") <> "" Then
-    
-        If .Cells(r, 4) = "" Then
-        s = s & "," & .Cells(r, 3) & ":" & .Cells(r, "J") & "=" & .Cells(r, "K") & getDetailUnitByMixName(.Cells(r, "J")) ' " 單位"
-               
-        Else
-        s = s & "," & .Cells(r, 3) & "[" & .Cells(r, 4) & "]:" & .Cells(r, "J") & "=" & .Cells(r, "K") & getDetailUnitByMixName(.Cells(r, "J")) ' " 單位"
-        
-        End If
-    
-    ElseIf mid(.Cells(r, 1), 1, 1) = "B" And .Cells(r, "F") <> 0 Then
-        
-        If .Cells(r, 4) = "" Then
-    
-        s = s & "," & .Cells(r, 3) & ":" & .Cells(r, "E") & "=" & .Cells(r, "F") & .Cells(r, "G") 'getDetailUnitByMixName(.Cells(r, "J")) ' " 單位"
-
-        Else
-        s = s & "," & .Cells(r, 3) & "[" & .Cells(r, 4) & "]:" & .Cells(r, "E") & "=" & .Cells(r, "F") & .Cells(r, "G") 'getDetailUnitByMixName(.Cells(r, "J")) ' " 單位"
-   
-        End If
-
-    End If
+    Call FindDate(CDate(recDate_Str), ItemAndAmount, LocAndCheck)
 
 Next
 
-GetRecDetail_New = mid(s, 2)
+End Sub
 
-End With
+
+''        MyRecCheck = Split(.Cells(r, 8), ",")
+''        MyRecCheckImp = Split(.Cells(r, 9), ",")
+''
+''        If UBound(MyRecCheck) <> -1 Then
+''
+''            For j = 0 To UBound(MyRecCheck)
+''
+''                MyRecCheckImp_ch = "施工抽查點"
+''                If MyRecCheckImp(j) = "1" Then MyRecCheckImp_ch = "檢驗停留點"
+''
+''                If RecLoc = "" Then
+''                    LocAndCheck = LocAndCheck & "、[" & RecCanal & "]" & "─" & MyRecCheck(j) & "," & MyRecCheckImp_ch
+''                Else
+''                    If RecCanal <> "" Then
+''                    LocAndCheck = LocAndCheck & "、[" & RecCanal & "," & RecLoc & "]" & "─" & MyRecCheck(j) & "," & MyRecCheckImp_ch
+''                    Else
+''                    LocAndCheck = LocAndCheck & "、[" & RecCanal & "" & RecLoc & "]" & "─" & MyRecCheck(j) & "," & MyRecCheckImp_ch
+''                    End If
+''                End If
+''
+''            Next
+''
+''        End If
+'
+'    Next
+
+
+Function getRecordsByDate(ByVal recDate As Date)
+
+Dim myFunc As New clsMyfunction
+
+Set coll_rows = myFunc.getRowsByUser("Records", "B", recDate)
+
+For i = 1 To coll_rows.count
+
+    r = coll_rows(i)
+    
+    With Sheets("Records")
+
+        If mid(.Cells(r, 1), 1, 1) = "M" And .Cells(r, "J") <> "" Then
+        
+            If .Cells(r, 4) = "" Then
+            s = s & "," & .Cells(r, 3) & ":" & .Cells(r, "J") & "=" & .Cells(r, "K") & getDetailUnitByMixName(.Cells(r, "J")) ' " 單位"
+                   
+            Else
+            s = s & "," & .Cells(r, 3) & "[" & .Cells(r, 4) & "]:" & .Cells(r, "J") & "=" & .Cells(r, "K") & getDetailUnitByMixName(.Cells(r, "J")) ' " 單位"
+            
+            End If
+        
+        ElseIf mid(.Cells(r, 1), 1, 1) = "B" And .Cells(r, "F") <> 0 Then
+            
+            If .Cells(r, 4) = "" Then
+        
+            s = s & "," & .Cells(r, 3) & ":" & .Cells(r, "E") & "=" & .Cells(r, "F") & .Cells(r, "G") 'getDetailUnitByMixName(.Cells(r, "J")) ' " 單位"
+    
+            Else
+            s = s & "," & .Cells(r, 3) & "[" & .Cells(r, 4) & "]:" & .Cells(r, "E") & "=" & .Cells(r, "F") & .Cells(r, "G") 'getDetailUnitByMixName(.Cells(r, "J")) ' " 單位"
+       
+            End If
+    
+        End If
+    
+    End With
+
+Next
+
+getRecordsByDate = mid(s, 2)
 
 End Function
 
@@ -440,129 +455,18 @@ End With
 
 End Function
 
-Sub GetRecDetail()
-
-Dim collRecItem As New Collection
-
-With shtRecord
-
-lr = .Cells(Rows.count, 1).End(xlUp).Row
-
-For i = 1 To UBound(RecDateArr, 1)
-    
-    recDate = RecDateArr(i, 1)
-    
-    If recDate = 0 Then Exit Sub
-    
-    sr = RecDateArr(i, 2)
-    
-    er = lr
-    
-    If i = UBound(RecDateArr, 1) Then
-        er = lr
-    Else
-        er = RecDateArr(i + 1, 2) - 1
-    End If
-    
-    ItemAndAmount = ""
-    LocAndCheck = ""
-
-    For r = sr To er '可加入判斷如果流水號前綴="B" or "M"
-    
-        RecCanal = Trim(.Cells(r, 3))
-        RecLoc = Trim(.Cells(r, 4))
-        RecItem = .Cells(r, 5)
-        RecAmount = .Cells(r, 6)
-        RecUnit = .Cells(r, 7)
-        
-        MyRecCheck = Split(.Cells(r, 8), ",")
-        MyRecCheckImp = Split(.Cells(r, 9), ",")
-        
-'        If RecAmount <> 0 Then
-'
-'            If RecLoc = "" Then
-'
-'                If RecCanal <> "" Then
-'                    ItemAndAMount = ItemAndAMount & "、[" & RecCanal & "]" & RecItem & " " & RecAmount & " " & RecUnit
-'                Else
-'                    ItemAndAMount = ItemAndAMount & "、" & RecItem & " " & RecAmount & " " & RecUnit
-'                End If
-'
-'            Else
-'
-'                If RecCanal <> "" Then
-'                    ItemAndAMount = ItemAndAMount & "、[" & RecCanal & "," & RecLoc & "]" & RecItem & " " & RecAmount & " " & RecUnit
-'                Else
-'                    ItemAndAMount = ItemAndAMount & "、[" & RecLoc & "]" & RecItem & " " & RecAmount & " " & RecUnit
-'                End If
-'
-'            End If
-'
-'        End If
-
-        
-        
-        If UBound(MyRecCheck) <> -1 Then
-        
-            For j = 0 To UBound(MyRecCheck)
-                
-                MyRecCheckImp_ch = "施工抽查點"
-                If MyRecCheckImp(j) = "1" Then MyRecCheckImp_ch = "檢驗停留點"
-                
-                If RecLoc = "" Then
-                    LocAndCheck = LocAndCheck & "、[" & RecCanal & "]" & "─" & MyRecCheck(j) & "," & MyRecCheckImp_ch
-                Else
-                    If RecCanal <> "" Then
-                    LocAndCheck = LocAndCheck & "、[" & RecCanal & "," & RecLoc & "]" & "─" & MyRecCheck(j) & "," & MyRecCheckImp_ch
-                    Else
-                    LocAndCheck = LocAndCheck & "、[" & RecCanal & "" & RecLoc & "]" & "─" & MyRecCheck(j) & "," & MyRecCheckImp_ch
-                    End If
-                End If
-            
-            Next
-        
-        End If
-        
-    Next
-    
-    'ItemAndAMount = mid(ItemAndAMount, 2)
-    
-    ItemAndAmount = GetRecDetail_New(recDate)
-    
-    If ItemAndAmount = "" Then ItemAndAmount = "工地整理"
-    
-    LocAndCheck = mid(LocAndCheck, 2)
-    
-    Call FindDate(recDate, ItemAndAmount, LocAndCheck)
-    
-Next
-
-End With
-
-End Sub
-
 Private Sub FindDate(ByVal recDate As Date, ByVal s1 As String, ByVal s2 As String)
 
 With shtDiary
-
-    lr = .Cells(Rows.count, 2).End(xlUp).Row
     
-    For r = 2 To lr
+    key_value = Format(recDate, "yyyy/mm/dd(aaa)")
+    Set rng = .Columns("B").Find(What:=key_value, LookIn:=xlValues)
     
-        DiaryDate = .Cells(r, 2)
-    
-        If recDate = DiaryDate Then
+    r = rng.Row
         
-            'If r = 15 Then Stop
-        
-            If s1 <> "" Then .Cells(r, 5) = s1
-            If s2 <> "" Then .Cells(r, 6) = s2
+    If s1 <> "" And .Cells(r, "E").Interior.ColorIndex = -4142 Then .Cells(r, 5) = s1
+    If s2 <> "" And .Cells(r, "F").Interior.ColorIndex = -4142 Then .Cells(r, 6) = s2
             
-            Exit For
-        
-        End If
-    
-    Next
 
 End With
 

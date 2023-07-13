@@ -499,4 +499,53 @@ tranCharcter_NUM = s
 
 End Function
 
+Function getRowsByUser(ByVal shtName As String, ByVal col_eng As String, ByVal key_value)
+    
+    Dim coll As New Collection
+    Dim firstAddress As String
+    
+    With Sheets(shtName).Columns(col_eng)
+        Set c = .Find(key_value, LookIn:=xlValues)
+        If Not c Is Nothing Then
+            firstAddress = c.Address
+            Do
+                coll.Add c.Row
+                Set c = .FindNext(c)
+                
+            Loop Until c.Address = firstAddress
+        End If
+    End With
+    
+    Set getRowsByUser = coll
+    
+End Function
+
+Function getUniqueItems(ByVal shtName As String, ByVal sr As Integer, ByVal find_col_eng As String)
+
+Dim coll As New Collection
+
+With Sheets(shtName)
+
+    lr = .Cells(.Rows.count, find_col_eng).End(xlUp).Row
+
+    For r = sr To lr
+    
+        s = .Cells(r, find_col_eng)
+    
+        On Error Resume Next
+        
+        coll.Add CStr(s), CStr(s)
+        
+        On Error GoTo 0
+    
+    Next
+
+End With
+
+Set getUniqueItems = coll
+
+End Function
+
+
+
 

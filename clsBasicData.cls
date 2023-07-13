@@ -91,7 +91,31 @@ End With
 
 End Sub
 
-Sub DiartReset() '重整Diary工作表
+Sub DiaryReset() '重整Diary工作表
+
+'Sub DealDiary() '初始化日誌
+
+With shtDiary
+
+    lr = .Cells(Rows.count, 1).End(xlUp).Row
+
+    .Activate
+
+    For r = 2 To lr
+    
+        'If r = 14 Then Stop
+    
+        For c = 5 To 6
+    
+            If .Cells(r, c).Interior.ColorIndex = -4142 Then .Cells(r, c).ClearContents '網底變色即鎖住
+    
+        Next
+    
+    Next
+
+End With
+
+'End Sub
 
 Exit Sub
 

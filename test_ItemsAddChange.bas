@@ -138,12 +138,12 @@ getSumNumByCollsumNum = 0
 
 End Function
 
-Function getFindRowsByOneCol(ByVal findValue As String, ByVal col_eng As String)
+Function getFindRowsByOneCol(ByVal FindValue As String, ByVal col_eng As String)
     
     Dim coll As New Collection
     
     With Worksheets("Records").Columns(col_eng)
-        Set rng = .Find(findValue, LookIn:=xlValues)
+        Set rng = .Find(FindValue, LookIn:=xlValues)
         
         'Debug.Print rng.Address
         coll.Add rng.Address

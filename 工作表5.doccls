@@ -9,11 +9,14 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Private Sub Worksheet_Activate()
 
-Call cmdExportToDiary
-
 Dim obj As New clsBasicData
+obj.DiaryReset
 
-obj.DiartReset
+Dim obj2 As New clsRecord
+
+obj2.cmdExportToDiary_Main
+
+'Call cmdExportToDiary
 
 End Sub
 

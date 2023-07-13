@@ -352,15 +352,17 @@ obj.ProgressNew
 
 End Sub
 
-Sub cmdExportToDiary()
-
-Dim obj As New clsRecord
-
-obj.CollectRecDate
-obj.DealDiary
-obj.GetRecDetail
-
-End Sub
+'Sub cmdExportToDiary()
+'
+'Dim obj As New clsRecord
+'
+'obj.cmdExportToDiary_Main
+'
+''obj.CollectRecDate
+''obj.DealDiary
+''obj.GetRecDetail
+'
+'End Sub
 Sub cmdShowMixData()
 
 MixData.Show vbModeless

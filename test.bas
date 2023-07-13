@@ -1,19 +1,75 @@
 Attribute VB_Name = "test"
+Sub test_rebuild_cmdExportToDiary()
 
-Sub test_BudgetDB()
+Dim myFunc As New clsMyfunction
 
-Dim o As New clsBudgetDB
+Set coll_recDates = myFunc.getUniqueItems("Records", 3, "B")
 
-Debug.Assert o.IsExisted("B", "契約") = True
+For Each recDate_Str In coll_recDates
+
+    'Set coll_recDate_rows = myFunc.getRowsByUser("Records", "B", CDate(recDate_Str))
+
+    Debug.Print recDate_Str
+    
+    Debug.Print test_getRecordsByDate(CDate(recDate_Str))
+    
+
+'    For Each r In coll_recDate_rows
+'
+'        Debug.Print r
+'
+'    Next
+
+Next
 
 End Sub
 
-Sub test_getUniqueItems()
 
-Dim o As New clsBudgetDB
-Set coll = o.getUniqueItems("B")
+Function test_getRecordsByDate(ByVal recDate As Date)
 
-End Sub
+Dim myFunc As New clsMyfunction
+Dim o As New clsRecord
+
+'rec_date = CDate("2023/6/5")
+
+Set coll_rows = myFunc.getRowsByUser("Records", "B", recDate)
+
+For i = 1 To coll_rows.count
+
+    r = coll_rows(i)
+    
+    With Sheets("Records")
+
+        If mid(.Cells(r, 1), 1, 1) = "M" And .Cells(r, "J") <> "" Then
+        
+            If .Cells(r, 4) = "" Then
+            s = s & "," & .Cells(r, 3) & ":" & .Cells(r, "J") & "=" & .Cells(r, "K") & o.getDetailUnitByMixName(.Cells(r, "J")) ' " 單位"
+                   
+            Else
+            s = s & "," & .Cells(r, 3) & "[" & .Cells(r, 4) & "]:" & .Cells(r, "J") & "=" & .Cells(r, "K") & o.getDetailUnitByMixName(.Cells(r, "J")) ' " 單位"
+            
+            End If
+        
+        ElseIf mid(.Cells(r, 1), 1, 1) = "B" And .Cells(r, "F") <> 0 Then
+            
+            If .Cells(r, 4) = "" Then
+        
+            s = s & "," & .Cells(r, 3) & ":" & .Cells(r, "E") & "=" & .Cells(r, "F") & .Cells(r, "G") 'getDetailUnitByMixName(.Cells(r, "J")) ' " 單位"
+    
+            Else
+            s = s & "," & .Cells(r, 3) & "[" & .Cells(r, 4) & "]:" & .Cells(r, "E") & "=" & .Cells(r, "F") & .Cells(r, "G") 'getDetailUnitByMixName(.Cells(r, "J")) ' " 單位"
+       
+            End If
+    
+        End If
+    
+    End With
+
+Next
+
+test_getRecordsByDate = mid(s, 2)
+
+End Function
 
 Sub checkTestCompleted() '20230225 add
 

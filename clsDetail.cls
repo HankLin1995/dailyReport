@@ -88,11 +88,11 @@ Next
 
 End Sub
 
-Function getUnit(ByVal itemName As String)
+Function getUnit(ByVal ItemName As String)
 
 For i = LBound(arrDetail, 1) To UBound(arrDetail, 1)
 
-    If itemName = arrDetail(i, 1) Then
+    If ItemName = arrDetail(i, 1) Then
     
         getUnit = arrDetail(i, 2)
         Exit For
@@ -103,11 +103,11 @@ Next
 
 End Function
 
-Function getLast(ByVal itemName As String)
+Function getLast(ByVal ItemName As String)
 
 For i = LBound(arrDetail, 1) To UBound(arrDetail, 1)
 
-    If itemName = arrDetail(i, 1) Then
+    If ItemName = arrDetail(i, 1) Then
     
         getLast = arrDetail(i, 3) - arrDetail(i, 5)
         Exit For

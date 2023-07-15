@@ -109,19 +109,23 @@ End Function
 
 Sub addNewChangeItems()
 
+Dim o As New clsInformation
+
+Set coll = o.getContractChanges
+
 With Sheets("Budget")
 
     lr = .Cells(.Rows.count, 1).End(xlUp).Row
     lc = .Cells(2, .Columns.count).End(xlToLeft).Column
     
     .Range("D2:F" & lr).Copy .Cells(2, lc + 1)
-    cnt = InputBox("請輸入本次為第幾次變更設計")
+    cnt = coll.count  'InputBox("請輸入本次為第幾次變更設計", , 1)
     changeDate = InputBox("請輸入變更設計日期", , Format(Now(), "yyyy/mm/dd"))
     .Cells(1, lc + 1) = "第" & cnt & "次變更" & ">" & CDate(changeDate)
+    .Cells(1, lc + 1).Font.ColorIndex = 3
     .Cells(1, lc + 1).Resize(1, 3).Merge
     .Cells(1, lc + 1).Resize(1, 3).EntireColumn.AutoFit
     
-
 End With
 
 End Sub

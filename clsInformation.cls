@@ -7,23 +7,24 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
-Private conName As String
-Private ContractNum As String
-Private ContractMoney As Double
-Private Contractor As String
-Private StartDate As Date
-Private WorkDay As Integer
-Private WorkDayAdd As Integer
-Private EndDate As Date
-Private Superviser As String
-Private Man As String
-Private Sta As String
-Private IsChanged As Boolean
-Private IsEnlarged As Boolean
-Private EnlargedDate As Date
+Public conName As String '工程名稱
+Public contractNum As String '契約編號
+Public contractMoney As Double '契約金額
+Public contractor As String '承攬廠商
+Public startDate As Date '開工日期
+Public workDay As Integer '工期
 
-Dim collContractDay As New Collection
-Dim collContractMoney As New Collection
+Public workDayAdd As Integer
+Public endDate As Date
+'Private Superviser As String
+'Private Man As String
+'Private Sta As String
+Private IsChanged As Boolean
+Public IsEnlarged As Boolean
+Public EnlargedDate As Date
+
+'Dim collContractDay As New Collection
+'Dim collContractMoney As New Collection
 
 Private shtMain As Object
 Private shtDiary As Object
@@ -39,40 +40,112 @@ Private Sub Class_Initialize()
 Set shtMain = Sheets("Main")
 Set shtDiary = Sheets("Diary")
 
-Call GetBasicInformation '讀取Main工作表基本資訊
+'Call GetBasicInformation '讀取Main工作表基本資訊
 
 End Sub
 
-Function ReturnInfoArr() '回傳Main工作表基本資訊
+Function GetStartDate()
+    GetStartDate = startDate
+End Function
 
-Dim arr As Variant
+Function GetEndDate()
+    GetEndDate = startDate + workDay - 1
+End Function
 
-arrdata = Array(conName, ContractName, Contractor, StartDate, WorkDay, Superviser, ContractMoney, _
-                      EnlargedDate, EndDate, IsEnlarged, IsChanged, collContractMoney, collContractDay, WorkDayAdd)
-arrtitle = Array("ConName", "ContractName", "Contractor", "StartDate", "WorkDay", "Superviser", "ContractMoney", _
-                      "EnlargedDate", "EndDate", "IsEnlarged", "IsChanged", "collContractMoney", "collContractDay", "WorkDayAdd")
 
-ReDim arr(1 To UBound(arrdata) + 1, 1 To 2)
+'Function ReturnInfoArr() '回傳Main工作表基本資訊
+'
+'Dim arr As Variant
+'
+'arrdata = Array(conName, contractName, contractor, startDate, workDay, Superviser, contractMoney, _
+'                      EnlargedDate, endDate, IsEnlarged, IsChanged, workDayAdd)
+'arrtitle = Array("ConName", "ContractName", "Contractor", "StartDate", "WorkDay", "Superviser", "ContractMoney", _
+'                      "EnlargedDate", "EndDate", "IsEnlarged", "IsChanged", "WorkDayAdd")
+'
+'ReDim arr(1 To UBound(arrdata) + 1, 1 To 2)
+'
+'For i = 0 To UBound(arrdata)
+'
+'    arr(i + 1, 1) = arrtitle(i)
+'
+'    'If arrtitle(i) Like "coll*" Then
+'        'Set arr(i + 1, 2) = arrdata(i)
+'    'Else
+'        arr(i + 1, 2) = arrdata(i)
+'   ' End If
+'
+'Next
+'
+'InfoArr = arr
+'
+'ReturnInfoArr = InfoArr
+'
+'End Function
 
-For i = 0 To UBound(arrdata)
+Function getContractChanges() 'ByVal recDate As Date)
+
+Dim coll As New Collection
+
+With Sheets("Budget")
+
+lc = .Cells(1, .Columns.count).End(xlToLeft).Column
+
+For c = 1 To lc
+
+    If .Cells(1, c) Like "*>*" Then
     
-    arr(i + 1, 1) = arrtitle(i)
-    
-    If arrtitle(i) Like "coll*" Then
-        Set arr(i + 1, 2) = arrdata(i)
-    Else
-        arr(i + 1, 2) = arrdata(i)
+        'changeName = Split(.Cells(1, c), ">")(0)
+        'changeDate = Split(.Cells(1, c), ">")(1)
+        
+        'If recDate >= CDate(changeDate) Then
+        
+        'cnt = cnt + 1
+        
+        'End If
+
+        coll.Add .Cells(1, c).Value
+
     End If
-    
+
 Next
 
-InfoArr = arr
+End With
 
-ReturnInfoArr = InfoArr
+Set getContractChanges = coll
 
 End Function
 
-Private Sub GetBasicInformation()
+Function getContractChangesByDate(ByVal recDate As Date)
+
+With Sheets("Budget")
+
+lc = .Cells(1, .Columns.count).End(xlToLeft).Column
+
+For c = 1 To lc
+
+    If .Cells(1, c) Like "*>*" Then
+    
+        changeDate = Split(.Cells(1, c), ">")(1)
+        
+        If recDate >= CDate(changeDate) Then
+        
+        cnt = cnt + 1
+        
+        End If
+
+    End If
+
+Next
+
+End With
+
+getContractChangesByDate = cnt - 1
+
+If cnt = 0 Then MsgBox "紀錄日期不在開工日期後!", vbCritical: End
+
+End Function
+
+Public Sub getBasicInformation()
 
 IsEnlarged = False
 IsChanged = False
@@ -80,54 +153,47 @@ IsChanged = False
 With shtMain
 
     conName = .Cells(1, 2)
-    ContractName = .Cells(2, 2)
-    Contractor = .Cells(3, 2)
-    StartDate = .Cells(4, 2)
-    WorkDay = .Cells(5, 2)
-    Superviser = .Cells(7, 2)
+    contractName = .Cells(2, 2)
+    contractor = .Cells(3, 2)
+    startDate = .Cells(4, 2)
+    workDay = .Cells(5, 2)
+    
+    'contractMoney rely on t_change
+    
     EnlargedDate = .Cells(6, 3)
     
     If EnlargedDate <> Empty Then
         IsEnlarged = True
-        WorkDayAdd = .Cells(6, 2) - WorkDay
-        WorkDay = .Cells(6, 2)
+        workDayAdd = .Cells(6, 2) - workDay
+        workDay = .Cells(6, 2)
     End If
 
-    EndDate = StartDate + WorkDay - 1
-
-    For r = 10 To 12
-    
-        If .Cells(r, 3) <> "" Then
-            
-            collContractMoney.Add .Cells(r, 2).Value
-            collContractDay.Add .Cells(r, 3).Value
-            
-            ContractMoney = .Cells(r, 2)
-        Else
-        
-            Exit For
-            
-        End If
-    
-    Next
-    
-    If collContractDay.count > 1 Then IsChanged = True
+    'EndDate = StartDate + WorkDay - 1
+'
+'    For r = 10 To 12
+'
+'        If .Cells(r, 3) <> "" Then
+'
+'            collContractMoney.Add .Cells(r, 2).Value
+'            collContractDay.Add .Cells(r, 3).Value
+'
+'            ContractMoney = .Cells(r, 2)
+'        Else
+'
+'            Exit For
+'
+'        End If
+'
+'    Next
+'
+'    If collContractDay.count > 1 Then IsChanged = True
 
 End With
 
 End Sub
-
-Function GetStartDate()
-    GetStartDate = StartDate
-End Function
-
-Function GetEndDate()
-    GetEndDate = EndDate
-End Function
-
-Function GetcollContractDay()
-    Set GetcollContractDay = collContractDay
-End Function
+'Function GetcollContractDay()
+'    Set GetcollContractDay = collContractDay
+'End Function
 
 Sub ProgressNew() '計算各天數進度傳入Diary工作表
 
@@ -149,7 +215,7 @@ With shtMain
 
 lr = .Cells(PgsRow, 1).End(xlDown).Row
 
-ReDim arr(1 To WorkDay, 1 To 2)
+ReDim arr(1 To workDay, 1 To 2)
 
 For r = PgsRow + 1 To lr
 
@@ -232,11 +298,11 @@ With shtMain
 
     comfinalday = CDate(.Cells(lr, 1))
     
-    If EndDate <> comfinalday Then
+    If endDate <> comfinalday Then
     
         ProgressCheck = False
         
-        MsgBox "正確結束日期應該為 " & EndDate
+        MsgBox "正確結束日期應該為 " & endDate
         
         Exit Function
 

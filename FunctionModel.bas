@@ -38,13 +38,13 @@ Sub getOverNumberFromLastDay() '20221122處理剩餘零星數量
 
 Dim obj As New clsReport
 
-reportNum = InputBox("請輸入理應為100%的報表編號")
+ReportNum = InputBox("請輸入理應為100%的報表編號")
 allowence = InputBox("請輸入校正回歸允許值", , 1)
 prompt = "***校正回歸完成項目***" & vbNewLine
 
 With Sheets("Report")
 
-    .Range("K2") = reportNum
+    .Range("K2") = ReportNum
 
     Call ReportRun
     
@@ -55,14 +55,14 @@ With Sheets("Report")
         
         If conNum <> sumNum Then
         
-            itemName = .Cells(r, "B")
+            ItemName = .Cells(r, "B")
             numDiff = Round(sumNum - conNum, 4)
             
             If Abs(numDiff) < allowence Then
             
-                Call dealOverNum(itemName, numDiff)
+                Call dealOverNum(ItemName, numDiff)
             
-                prompt = prompt & vbNewLine & itemName & ":" & numDiff
+                prompt = prompt & vbNewLine & ItemName & ":" & numDiff
         
             End If
         
@@ -76,7 +76,7 @@ End With
 
 End Sub
 
-Sub dealOverNum(ByVal itemName As String, ByVal numDiff As Double) '20221122處理剩餘零星數量
+Sub dealOverNum(ByVal ItemName As String, ByVal numDiff As Double) '20221122處理剩餘零星數量
 
 With Sheets("Records")
 
@@ -86,7 +86,7 @@ With Sheets("Records")
     
         recName = .Cells(r, "E")
         
-        If recName = itemName Then
+        If recName = ItemName Then
         
             originNum = .Cells(r, "F")
             
@@ -94,7 +94,7 @@ With Sheets("Records")
             
             If adjustNum > 0 Then
             
-                Debug.Print itemName & ",原數量=" & originNum & ">>校正=" & adjustNum
+                Debug.Print ItemName & ",原數量=" & originNum & ">>校正=" & adjustNum
             
                 .Cells(r, "F").AddComment "originNum=" & .Cells(r, "F") & ">>adjustNum=" & adjustNum
             
@@ -210,21 +210,21 @@ MsgBox s
 
 End Sub
 
-Sub cmdgetTmpData()
-
-Dim obj As New clsRecord
-
-'msg = MsgBox("是否要留白?", vbYesNo)
-
-'If msg = vbYes Then
-obj.getTmpData (True)
-'Else
-'obj.getTmpData (False)
-'End If
-
-obj.Tmp2TmpTotal
-
-End Sub
+'Sub cmdgetTmpData()
+'
+'Dim obj As New clsRecord
+'
+''msg = MsgBox("是否要留白?", vbYesNo)
+'
+''If msg = vbYes Then
+'obj.getTmpData (True)
+''Else
+''obj.getTmpData (False)
+''End If
+'
+'obj.Tmp2TmpTotal
+'
+'End Sub
 
 Sub cmdMixComplete()
 
@@ -289,13 +289,41 @@ Sub cmdExportToReport()
 'obj.clearOldReport
 'obj.ExportToReport 'should change something
 
-Dim obj As New clsPCCES
+Dim o As New clsInformation
 
-obj.clearOldReport
-obj.getRecordingItems
-obj.getPercentageItems
+Set coll = o.getContractChanges
 
-Sheets("Main").Activate
+For Each it In coll
+    cnt = cnt + 1
+    prompt = prompt & cnt - 1 & "." & it & vbNewLine
+
+Next
+
+t_change = InputBox("請輸入欲匯出至Main的編號" & vbNewLine & prompt, , cnt - 1)
+
+With Sheets("Main")
+
+    c = 6 + (t_change - 1) * 5
+    
+    If t_change > 0 Then
+    
+        .Cells(1, c).Resize(2, 5).Copy .Cells(1, c + 5)
+        .Cells(1, c + 5) = "第" & t_change & "次變更設計"
+        .Cells(3, c).Resize(1, 5).EntireColumn.AutoFit
+
+    End If
+
+    Dim obj As New clsPCCES
+    
+    Call obj.check_item_name_repeat
+    Call obj.clearOldReport(t_change)
+    Call obj.getRecordingItems_export(t_change)
+    Call obj.getPercentageItems_export(t_change)
+    
+    .Activate
+    .Cells(3, c + 5).Resize(1, 5).EntireColumn.AutoFit
+
+End With
 
 End Sub
 
@@ -319,9 +347,13 @@ Sub cmdFindBudget()
 
 Dim o As New clsPCCES
 
+o.markTitle
 o.getFileName '"D:\Users\USER\Desktop\(預算書)單期一號分線等改善工程雲林111A54_ap_bdgt.xls")
 o.getAllContents
 o.settingColorRules
+o.getPercentageItems
+o.clearMainChanges
+o.clearPAY_EX
 
 End Sub
 
@@ -345,8 +377,8 @@ obj2.DiartReset
 
 Dim obj As New clsInformation
 
-StartDate = obj.GetStartDate
-EndDate = obj.GetEndDate
+startDate = obj.GetStartDate
+endDate = obj.GetEndDate
 
 obj.ProgressNew
 
@@ -384,6 +416,102 @@ Dim obj As New clsPrintOut
 
 obj.BeforePrintCheck
 obj.ToXLS
+
+End Sub
+
+Sub cmdAddItemName()
+
+Dim o As New clsPCCES
+
+With Sheets("Budget")
+
+    Set coll = o.getCollSeconedName
+    
+    For i = 1 To coll.count
+    
+        p = p & i & "." & coll(i) & vbNewLine
+    
+    Next
+    
+    cnt = CInt(InputBox("請輸入要新增於哪個契約項次以下" & vbNewLine & p, , 1))
+    
+    Set rng = .Columns("B").Find(coll(cnt + 1))
+    Set rng_second_name = .Columns("B").Find(coll(CInt(cnt)))
+    
+    .Rows(rng.Row).Insert Shift:=xlDown, CopyOrigin:=xlFormatFromLeftOrAbove
+    .Rows(rng.Row - 2).Copy .Rows(rng.Row - 1)
+    
+    item_name = InputBox("新增工項名稱=?")
+    item_index = InputBox("上一編號為【" & rng.Offset(-2, -1) & "】" & vbNewLine & "新增工項編號=?", , rng_second_name.Offset(0, -1) & ".")
+    item_unit = InputBox("新增工項單位=?")
+    
+    .Cells(rng.Row - 1, 1) = item_index
+    .Cells(rng.Row - 1, 2) = item_name
+    .Cells(rng.Row - 1, 3) = item_unit
+    
+    item_cost = InputBox("新增工項單價=?")
+    
+    Dim Inf_obj As New clsInformation
+    
+    Set coll = Inf_obj.getContractChanges
+
+    For t_change = 0 To coll.count - 1
+    
+        c = o.t_change_to_column(t_change)
+    
+        .Cells(rng.Row - 1, c) = 0
+        .Cells(rng.Row - 1, c + 1) = item_cost
+    
+    Next
+
+End With
+
+MsgBox "新增工項完畢後請記得點選【匯出至報表】，Main的資料才會同步!", vbInformation
+
+End Sub
+
+Sub cmdGetPayItems(Optional pay_date As String = "")
+
+Dim pay_obj As New clsPay
+
+If pay_date = "" Then pay_date = InputBox("請輸入估驗日期", , Format(Now(), "yyyy/mm/dd"))
+
+pay_obj.pay_date = pay_date
+pay_obj.clearPAY
+pay_obj.getPayItems
+pay_obj.getOtherInf
+
+Sheets("PAY").Activate
+
+End Sub
+
+Sub cmdClearPayEX()
+
+Dim myFunc As New clsMyfunction
+
+Set coll_pay_dates = myFunc.getUniqueItems("PAY_EX", 2, "F")
+
+i = coll_pay_dates.count
+
+If i = 0 Then MsgBox "查無估驗紀錄!", vbCritical: Exit Sub
+
+pay_date = coll_pay_dates(i)
+
+msg = MsgBox("是否要刪除最新一期【" & pay_date & "】的估驗紀錄?", vbYesNo)
+
+If msg = vbNo Then Exit Sub
+
+Set coll_rows = myFunc.getRowsByUser("PAY_EX", "F", CDate(pay_date))
+
+For i = coll_rows.count To 1 Step -1
+
+    r = coll_rows(i)
+
+    Sheets("PAY_EX").Rows(r).Delete
+
+Next
+
+Call cmdGetPayItems(CStr(pay_date))
 
 End Sub
 

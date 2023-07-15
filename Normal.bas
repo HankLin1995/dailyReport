@@ -54,8 +54,6 @@ obj.WriteReport
 obj.WriteReport_Test
 'obj.hideRow
 
-
-
 End Sub
 
 Sub ResetItem()

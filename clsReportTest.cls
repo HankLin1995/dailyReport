@@ -203,9 +203,9 @@ With shtRec
         For r = 2 To lr
         
             RecDay = .Cells(r, 2)
-            itemName = .Cells(r, 5)
+            ItemName = .Cells(r, 5)
             
-            If itemName = TestName Then
+            If ItemName = TestName Then
             
                 ItemAmount = .Cells(r, 6)
                 
@@ -274,8 +274,8 @@ With shtTest
         If targetTest = RecItem Then
         
             targetTestStr = .Cells(r, 5)
-            ContractNum = .Cells(r, 4)
-            SumRecItemNum = ContractNum - RecLast
+            contractNum = .Cells(r, 4)
+            SumRecItemNum = contractNum - RecLast
             oldTestItem = .Cells(r, 1)
             
             SumTestNum = CountOldTestAmount(oldTestItem, recDate)

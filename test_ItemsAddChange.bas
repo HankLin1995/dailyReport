@@ -75,7 +75,7 @@ Set coll_sumNum = getColl_SumNum
 
 With Sheets("Main")
 
-t_change = 1
+t_change = 0
 
 c = 6 + t_change * 5
 

@@ -28,11 +28,20 @@ Set shtDiary = Sheets("Diary")
 Set shtRecords = Sheets("Records")
 Set shtMain = Sheets("Main")
 
-On Error Resume Next
+'On Error Resume Next
 
 ReportDay = shtReport.Range("C2")
 
-If Err <> 0 Then shtReport.Range("K2") = 1: End
+'checkIfInWorkPeriod
+
+ReportNum = shtReport.Range("K2")
+
+key_value = ReportNum
+Set rng = shtDiary.Columns("A").Find(what:=key_value, LookIn:=xlValues)
+
+If rng Is Nothing Then MsgBox "編號在Diary中找不到!", vbCritical: End
+
+'If Err <> 0 Then shtReport.Range("K2") = 1: End
 
 End Sub
 
@@ -78,7 +87,6 @@ End With
 
 End Function
 
-
 Sub CollectItem() '取得報表資料
 
 c = 6 + t_change * 5
@@ -95,13 +103,13 @@ With shtMain
     
     For r = 3 To lr
 
-        itemName = .Cells(r, c)
+        ItemName = .Cells(r, c)
         ItemUnit = .Cells(r, c + 1)
         ItemContractNum = .Cells(r, c + 2)
         ItemMoney = .Cells(r, c + 3)
         ItemSep = .Cells(r, c).Font.ColorIndex
         
-        arr = Array(itemName, ItemUnit, ItemContractNum, ItemMoney)
+        arr = Array(ItemName, ItemUnit, ItemContractNum, ItemMoney)
         
         For i = 0 To UBound(arr)
         
@@ -121,6 +129,8 @@ End Sub
 
 Sub CollectRec() '收集本日數量與累計數量
 
+Dim rec_obj As New clsRecord
+
 With shtRecords
 
     lr = .Cells(Rows.count, 1).End(xlUp).Row
@@ -131,32 +141,7 @@ With shtRecords
     
         TargetItemName = ItemArr(i, 1)
         
-        RecAmount = 0
-        RecSumAmount = 0
-    
-        For r = 3 To lr
-        
-            RecDay = .Cells(r, 2)
-            itemName = .Cells(r, 5)
-            
-            If TargetItemName = itemName Then
-            
-                ItemAmount = .Cells(r, 6)
-                
-                If RecDay = ReportDay Then RecAmount = RecAmount + ItemAmount
-                    
-                If RecDay <= ReportDay Then RecSumAmount = RecSumAmount + ItemAmount
-                
-'                If itemName = "普通模板，甲種" And RecSumAmount > 521 Then
-'
-'                    RecSumAmount = 521
-'                    RecAmount = 0
-'
-'                End If
-        
-            End If
-        
-        Next
+        Call rec_obj.getNumAndSumByItemName(TargetItemName, ReportDay, RecAmount, RecSumAmount)
         
         ItemArr(i, 5) = RecAmount
         ItemArr(i, 6) = RecSumAmount 'WorksheetFunction.RoundDown(RecSumAmount, 0)
@@ -164,6 +149,8 @@ With shtRecords
     Next
 
 End With
+
+Call GetPercentItem
 
 End Sub
 
@@ -214,20 +201,11 @@ Next
 
 End Sub
 
-Sub WriteReport() '***
-
-Call GetPercentItem
+Private Sub checkItemsRow()
 
 With shtReport
-'
-'    For r = 1 To 1000
-'
-'        If .Cells(r, 1) Like "*施工項目*" Then
-'            lr = r - 1
-'            Exit For
-'        End If
-'
-'    Next
+
+    '------------格式重整----------
 
     lr = getReportLastRow - 1
 
@@ -256,11 +234,55 @@ With shtReport
         
     End If
     
+End With
+
+End Sub
+
+Sub WriteReport() '***
+
+Call checkItemsRow
+
+'Call GetPercentItem
+
+With shtReport
+
+'    '------------格式重整----------
+'
+    lr = getReportLastRow - 1
+'
+'    .Cells(8, 2).Resize(lr - 8 + 1, 8).ClearContents
+'
+'    i = 1
+'
+'    Itemlr = UBound(ItemArr, 1) + 8 - 1
+'
+'    If Itemlr >= lr Then '直接新增欄位
+'
+'        For i = 1 To Itemlr - lr + 1
+'
+'            Rows("9:9").Insert Shift:=xlDown, CopyOrigin:=xlFormatFromLeftOrAbove
+'            Range("B8:K8").AutoFill Destination:=Range("B8:K9"), Type:=xlFillDefault
+'
+'            lr = lr + 1
+'
+'        Next
+'
+'        Dim obj3 As New clsReportTest
+'
+'        obj3.Init_Test
+'
+'        MsgBox "已新增施作項目欄位!試驗位置已經重整!!"
+'
+'    End If
+'
+    '-------------------------------
+    
+    
     i = 1
     
-    For r = 8 To Itemlr
+    For r = 8 To UBound(ItemArr, 1) + 8 - 1
     
-        itemName = ItemArr(i, 1)
+        ItemName = ItemArr(i, 1)
         ItemUnit = ItemArr(i, 2)
         ItemContractNum = ItemArr(i, 3)
         ItemMoney = ItemArr(i, 4)
@@ -268,7 +290,7 @@ With shtReport
         ItemSumAmount = ItemArr(i, 6)
         ItemSep = ItemArr(i, 7)
         
-        .Range("B" & r) = itemName
+        .Range("B" & r) = ItemName
         .Range("E" & r) = ItemUnit
         .Range("F" & r) = ItemContractNum
         .Range("G" & r) = ItemAmount
@@ -349,66 +371,88 @@ End Sub
 
 Sub GetInfo() '取得Main工作表資訊
 
-Dim obj As New clsInformation
+Dim PCCES_obj As New clsPCCES
+Dim Inf_obj As New clsInformation
 
-arr = obj.ReturnInfoArr
+Inf_obj.getBasicInformation
 
-For i = 1 To UBound(arr)
 
-    Title = arr(i, 1)
-    
-    If Title Like "coll*" Then
-        Set Data = arr(i, 2)
-    Else
-        Data = arr(i, 2)
-    End If
-    
-    Select Case Title
-    
-    Case "IsChanged": IsChanged = Data
-    Case "IsEnlarged": IsEnlarged = Data
-    Case "EnlargedDate": EnlargedDate = Data
-    Case "WorkDay": WorkDay = Data
-    Case "ContractMoney": ContractMoney = Data
-    Case "collContractMoney": Set collChangedMoney = Data
-    Case "collContractDay": Set collChangedDay = Data
-    Case "WorkDayAdd": WorkDayAdd = Data
-    
-    End Select
+'arr = obj.ReturnInfoArr
+'
+'For i = 1 To UBound(arr)
+'
+'    Title = arr(i, 1)
+'
+'    'If Title Like "coll*" Then
+'        'Set Data = arr(i, 2)
+'    'Else
+'    Data = arr(i, 2)
+'    'End If
+'
+'    Select Case Title
+'
+'    'Case "IsChanged": IsChanged = Data
+'    Case "IsEnlarged": IsEnlarged = Data
+'    Case "EnlargedDate": EnlargedDate = Data
+'    Case "WorkDay": workDay = Data
+'    Case "ContractMoney": contractMoney = Data
+'    'Case "collContractMoney": Set collChangedMoney = Data
+'    'Case "collContractDay": Set collChangedDay = Data
+'    Case "WorkDayAdd": workDayAdd = Data
+'
+'    End Select
+'
+'Next
 
-Next
+IsEnlarged = Inf_obj.IsEnlarged
+EnlargedDate = Inf_obj.EnlargedDate
+workDay = Inf_obj.workDay
+workDayAdd = Inf_obj.workDayAdd
 
 With shtReport
 
     ReportDay = .Range("C2")
     
-    If ReportDay < EnlargedDate Then WorkDay = WorkDay - WorkDayAdd
+    '-----展延工期相關------
     
-    .Range("C4") = WorkDay
+    If ReportDay < EnlargedDate Then workDay = workDay - workDayAdd
+    
+    .Range("C4") = workDay
     
     If IsEnlarged = True And ReportDay >= EnlargedDate Then
-        .Range("H5") = Sheets("Main").Cells(6, 4) & WorkDayAdd & "天"
+        .Range("H5") = Sheets("Main").Cells(6, 4) & workDayAdd & "天"
     Else
         .Range("H5") = "天"
     End If
+    
+    '-----------------------
 
-    .Range("K5") = "原契約:" & collChangedMoney.Item(1)
+    .Range("K5") = "原契約:" & PCCES_obj.getSumMoney
     .Range("K6") = "變更後契約:"
     .Range("D5") = "次"
     
-    If collChangedMoney.count > 1 Then
+    t_change = Inf_obj.getContractChangesByDate(ReportDay)
     
-        For i = collChangedMoney.count To 2 Step -1
-        
-            If ReportDay >= collChangedDay.Item(i) Then
-                .Range("K6") = "變更後契約:" & collChangedMoney.Item(i)
-                t_change = t_change + 1
-                .Range("D5") = t_change & " 次"
-                Exit For
-            End If
-        Next
-        
+    If t_change > 0 Then
+    
+    .Range("K6") = "變更後契約:" & PCCES_obj.getSumMoney(t_change)
+    .Range("D5") = t_change & " 次"
+    
     End If
+    
+'    If collChangedMoney.count > 1 Then
+'
+'        For i = collChangedMoney.count To 2 Step -1
+'
+'            If ReportDay >= collChangedDay.Item(i) Then
+'                .Range("K6") = "變更後契約:" & collChangedMoney.Item(i)
+'                t_change = t_change + 1
+'                .Range("D5") = t_change & " 次"
+'                Exit For
+'            End If
+'        Next
+'
+'    End If
 
 End With
 
@@ -426,60 +470,60 @@ PgsRow = arr(4)
 
 End Sub
 
-Sub CreateSig()
+'Sub CreateSig()
+'
+'With shtReport
+'
+'    SigLeft = .Range("J8")
+'    SigTop = .Range("J9")
+'    SigWidth = .Range("J10")
+'    SigHeight = .Range("J11")
+'
+'End With
+'
+'Randomize
+'
+'rand = Int(Rnd() * 6)
+'
+'Path = ThisWorkbook.Path & "\簽名" & rand + 1 & ".JPG"
+'
+'Set pics = ActiveSheet.Pictures
+'
+'pics.Delete
+'
+'pics.Insert (Path)
+'
+'Set pic = pics.Item(1)
+'
+'pic.Left = SigLeft + Rnd() * 20
+'pic.Top = SigTop + Rnd()
+'pic.Width = SigWidth - Rnd() * 2
+'pic.Height = SigHeight - Rnd() * 2
+'
+'End Sub
 
-With shtReport
 
-    SigLeft = .Range("J8")
-    SigTop = .Range("J9")
-    SigWidth = .Range("J10")
-    SigHeight = .Range("J11")
-    
-End With
+'Sub hideRow()
+'
+'With Sheets("Report")
+'
+'.Rows("8:76").Hidden = False
+'
+'For r = 8 To 76
+'
+'    '.Rows(r).Hidden = False
+'
+'    If .Cells(r, "I") = 0 Then .Rows(r).Hidden = True 'Debug.Print .Cells(r, 2)
+'
+'Next
+'
+'For r = 59 To 76
+'
+'    If r <> 75 Then .Rows(r).Hidden = True
+'
+'Next
+'
+'End With
 
-Randomize
-
-rand = Int(Rnd() * 6)
-
-Path = ThisWorkbook.Path & "\簽名" & rand + 1 & ".JPG"
-
-Set pics = ActiveSheet.Pictures
-
-pics.Delete
-
-pics.Insert (Path)
-
-Set pic = pics.Item(1)
-
-pic.Left = SigLeft + Rnd() * 20
-pic.Top = SigTop + Rnd()
-pic.Width = SigWidth - Rnd() * 2
-pic.Height = SigHeight - Rnd() * 2
-    
-End Sub
-
-
-Sub hideRow()
-
-With Sheets("Report")
-
-.Rows("8:76").Hidden = False
-
-For r = 8 To 76
-
-    '.Rows(r).Hidden = False
-
-    If .Cells(r, "I") = 0 Then .Rows(r).Hidden = True 'Debug.Print .Cells(r, 2)
-
-Next
-
-For r = 59 To 76
-
-    If r <> 75 Then .Rows(r).Hidden = True
-
-Next
-
-End With
-
-End Sub
+'End Sub
 

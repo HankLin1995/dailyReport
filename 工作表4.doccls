@@ -23,13 +23,13 @@ Attribute VB_Exposed = True
 
 Sub getOverNumberFromLastDay()
 
-reportNum = InputBox("請輸入理應為100%的報表編號")
+ReportNum = InputBox("請輸入理應為100%的報表編號")
 allowence = InputBox("請輸入校正回歸允許值", , 1)
 prompt = "***校正回歸完成項目***" & vbNewLine
 
 With Sheets("Report")
 
-    .Range("K2") = reportNum
+    .Range("K2") = ReportNum
 
     Call ReportRun
     
@@ -40,14 +40,14 @@ With Sheets("Report")
         
         If conNum <> sumNum Then
         
-            itemName = .Cells(r, "B")
+            ItemName = .Cells(r, "B")
             numDiff = Round(sumNum - conNum, 4)
             
             If Abs(numDiff) < allowence Then
             
-                Call dealOverNum(itemName, numDiff)
+                Call dealOverNum(ItemName, numDiff)
             
-                prompt = prompt & vbNewLine & itemName & ":" & numDiff
+                prompt = prompt & vbNewLine & ItemName & ":" & numDiff
         
             End If
         
@@ -61,7 +61,7 @@ End With
 
 End Sub
 
-Sub dealOverNum(ByVal itemName As String, ByVal numDiff As Double)
+Sub dealOverNum(ByVal ItemName As String, ByVal numDiff As Double)
 
 With Sheets("Records")
 
@@ -71,7 +71,7 @@ With Sheets("Records")
     
         recName = .Cells(r, "E")
         
-        If recName = itemName Then
+        If recName = ItemName Then
         
             originNum = .Cells(r, "F")
             
@@ -79,7 +79,7 @@ With Sheets("Records")
             
             If adjustNum > 0 Then
             
-                Debug.Print itemName & ",原數量=" & originNum & ">>校正=" & adjustNum
+                Debug.Print ItemName & ",原數量=" & originNum & ">>校正=" & adjustNum
             
                 .Cells(r, "F").AddComment "originNum=" & .Cells(r, "F") & ">>adjustNum=" & adjustNum
             

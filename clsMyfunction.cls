@@ -505,7 +505,7 @@ Function getRowsByUser(ByVal shtName As String, ByVal col_eng As String, ByVal k
     Dim firstAddress As String
     
     With Sheets(shtName).Columns(col_eng)
-        Set c = .Find(key_value, LookIn:=xlValues)
+        Set c = .Find(key_value, LookIn:=xlValues, LookAt:=xlWhole)
         If Not c Is Nothing Then
             firstAddress = c.Address
             Do
@@ -545,6 +545,35 @@ End With
 Set getUniqueItems = coll
 
 End Function
+
+Sub AppendData(ByVal shtName As String, ByVal arr) ', Optional ByVal sc As Integer = 1)
+
+With Sheets(shtName)
+
+lr = .Cells(.Rows.count, 1).End(xlUp).Row
+
+r = lr + 1
+
+For i = LBound(arr) To UBound(arr)
+
+    .Cells(r, 1 + i) = arr(i)
+
+Next
+
+End With
+
+End Sub
+
+Function ch(ByVal i)
+
+arr = Array("一", "二", "三", "四", "五", "六", "七", "八", "九") ', "參", "肆", "伍", "陸")
+
+ch = arr(i - 1)
+
+End Function
+
+
+
 
 
 

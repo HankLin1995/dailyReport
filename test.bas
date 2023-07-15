@@ -1,76 +1,135 @@
 Attribute VB_Name = "test"
-Sub test_rebuild_cmdExportToDiary()
+Sub clearPAY_Report()
 
-Dim myFunc As New clsMyfunction
+With ThisWorkbook.Sheets("PAY_Report")
 
-Set coll_recDates = myFunc.getUniqueItems("Records", 3, "B")
-
-For Each recDate_Str In coll_recDates
-
-    'Set coll_recDate_rows = myFunc.getRowsByUser("Records", "B", CDate(recDate_Str))
-
-    Debug.Print recDate_Str
+    Set rng = .Cells.SpecialCells(xlCellTypeLastCell)
     
-    Debug.Print test_getRecordsByDate(CDate(recDate_Str))
+    .Range("A42:" & rng.Address).Clear
     
+End With
 
-'    For Each r In coll_recDate_rows
-'
-'        Debug.Print r
-'
-'    Next
-
-Next
 
 End Sub
 
+Sub test_getPayNums()
 
-Function test_getRecordsByDate(ByVal recDate As Date)
+Call clearPAY_Report
 
+Dim PCCES_obj As New clsPCCES
 Dim myFunc As New clsMyfunction
-Dim o As New clsRecord
 
-'rec_date = CDate("2023/6/5")
+Set coll_second_name = PCCES_obj.getCollSeconedName
 
-Set coll_rows = myFunc.getRowsByUser("Records", "B", recDate)
+For i = 1 To coll_second_name.count
 
-For i = 1 To coll_rows.count
-
-    r = coll_rows(i)
+    item_second_name = coll_second_name(i)
     
-    With Sheets("Records")
+    arr_title = Array("第" & myFunc.ch(i) & "號明細表(" & item_second_name & ")")
+    
+    Call myFunc.AppendData("PAY_Report", arr_title)
 
-        If mid(.Cells(r, 1), 1, 1) = "M" And .Cells(r, "J") <> "" Then
+    With Sheets("PAY")
+    
+        lr = .Cells(.Rows.count, 1).End(xlUp).Row
+    
+        For r = 2 To lr
         
-            If .Cells(r, 4) = "" Then
-            s = s & "," & .Cells(r, 3) & ":" & .Cells(r, "J") & "=" & .Cells(r, "K") & o.getDetailUnitByMixName(.Cells(r, "J")) ' " 單位"
-                   
-            Else
-            s = s & "," & .Cells(r, 3) & "[" & .Cells(r, 4) & "]:" & .Cells(r, "J") & "=" & .Cells(r, "K") & o.getDetailUnitByMixName(.Cells(r, "J")) ' " 單位"
+            item_index = .Cells(r, 1)
+            item_index_2nd = get2ndIndex(item_index)
+
+            If item_second_name = coll_second_name(item_index_2nd) Then
             
+                Debug.Print item_index
+                item_name = .Cells(r, 2)
+                item_unit = .Cells(r, 3)
+                item_contract_money = .Cells(r, 4)
+                pay_num_ex = .Cells(r, 7)
+                pay_cost_ex = .Cells(r, 8)
+                pay_num = .Cells(r, 9)
+                
+                'pay_cost_ex = pay_num_ex * item_contract_money
+                pay_cost = pay_num * item_contract_money
+                
+                pay_num_sum = pay_num_ex + pay_num
+                pay_cost_sum = pay_cost_ex + pay_cost
+                
+                arr = Array(item_name, item_unit, item_contract_money, pay_num_ex, pay_cost_ex, pay_num, pay_cost, pay_num_sum, pay_cost_sum)
+                
+                Call myFunc.AppendData("PAY_Report", arr)
+                
             End If
-        
-        ElseIf mid(.Cells(r, 1), 1, 1) = "B" And .Cells(r, "F") <> 0 Then
             
-            If .Cells(r, 4) = "" Then
-        
-            s = s & "," & .Cells(r, 3) & ":" & .Cells(r, "E") & "=" & .Cells(r, "F") & .Cells(r, "G") 'getDetailUnitByMixName(.Cells(r, "J")) ' " 單位"
-    
-            Else
-            s = s & "," & .Cells(r, 3) & "[" & .Cells(r, 4) & "]:" & .Cells(r, "E") & "=" & .Cells(r, "F") & .Cells(r, "G") 'getDetailUnitByMixName(.Cells(r, "J")) ' " 單位"
-       
-            End If
-    
-        End If
+        Next
     
     End With
 
 Next
 
-test_getRecordsByDate = mid(s, 2)
+Call test_changeFomula
+
+Sheets("PAY_Report").Activate
+
+End Sub
+
+Sub test_changeFomula()
+
+Application.ScreenUpdating = False
+
+With Sheets("PAY_Report")
+
+    lr = .Cells(.Rows.count, 1).End(xlUp).Row
+    
+    For r = 42 To lr
+        
+        If .Cells(r, 3) = "" Then
+        
+            Debug.Print .Cells(r, 1)
+            .Cells(r, 1).Resize(1, 9).Merge
+            .Cells(r, 1).Resize(1, 9).Borders.LineStyle = 1
+            .Cells(r, 1).Resize(1, 9).Font.ColorIndex = 22
+        Else
+            .Cells(r, 1).WrapText = True
+            .Cells(r, 1).Resize(1, 9).Borders.LineStyle = 1
+        
+        End If
+        
+        .Rows(r).AutoFit
+        
+        If .Rows(r).RowHeight < 25 Then .Rows(r).RowHeight = 25
+    
+    Next
+
+End With
+
+Application.ScreenUpdating = True
+
+End Sub
+
+Function get2ndIndex(ByVal item_index As String)
+
+tmp = Split(item_index, ".")
+
+ch = ""
+For j = LBound(tmp) To 1
+    ch = ch & "." & tmp(j)
+Next
+
+get2ndIndex = mid(ch, 2)
 
 End Function
 
+Sub t()
+
+Dim o As New clsPay
+
+o.storePayItems
+
+Sheets("PAY_EX").Activate
+
+End Sub
+
+'===================================
 Sub checkTestCompleted() '20230225 add
 
 With Sheets("Test")
@@ -121,7 +180,6 @@ For Each it In coll
         If .Cells(r, "D") = item_name Then getMixSum = getMixSum + .Cells(r, "E"): Debug.Print getMixSum
     
     Next
-    
 
 Next
 

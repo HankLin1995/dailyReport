@@ -33,7 +33,7 @@ Set wb = Workbooks(wbname)
 
 End Sub
 
-Function getShtContentName()
+Private Function getShtContentName()
 
 For Each sht In wb.Sheets
 
@@ -157,6 +157,38 @@ With ThisWorkbook.Sheets("Budget")
     
     .Range("A3:" & rng.Address).Clear
     
+    '.Rows("1").ClearContents
+    
+    .Range("H1:" & rng.Address).Clear
+    
+End With
+
+End Sub
+
+Sub clearMainChanges()
+
+With ThisWorkbook.Sheets("Main")
+
+    Set rng = .Cells.SpecialCells(xlCellTypeLastCell)
+    
+    Debug.Print rng.Address
+    
+    .Range("K1:" & rng.Address).Clear
+    
+End With
+
+End Sub
+
+Sub clearPAY_EX()
+
+With ThisWorkbook.Sheets("PAY_EX")
+
+    Set rng = .Cells.SpecialCells(xlCellTypeLastCell)
+    
+    Debug.Print rng.Address
+    
+    .Range("A2:" & rng.Address).Clear
+    
 End With
 
 End Sub
@@ -198,19 +230,24 @@ Call ReArrangeTitle
 
 End Sub
 
-Function getSumMoney()
+Function getSumMoney(Optional ByVal contract_cnt As Integer = 0)
 
 With Sheets("Budget")
 
 lr = .Cells(.Rows.count, 1).End(xlUp).Row
 
-Set rng = .Rows("2").Find("契約數量")
+'Set rng = .Rows("2").Find("契約數量")
 
-c = rng.Column
+Select Case contract_cnt
+
+Case 0: c = 4
+Case Else: c = 8 + (contract_cnt - 1) * 3
+
+End Select
 
 For r = 3 To lr
     
-    item_rule = .Cells(r, c - 3).Font.ColorIndex
+    item_rule = .Cells(r, 1).Font.ColorIndex
     amount = .Cells(r, c)
     price = .Cells(r, c + 1)
     note = .Cells(r, c + 2)
@@ -264,9 +301,11 @@ For Each it In collSeconedName
         Next
         
         If sum_cost <> 0 Then
-           ' Debug.Print it & ">" & sum_cost
-            arr = Array(it, "式", "1", sum_cost, sum_cost)
-            Call exportToMain(arr, 5)
+            'mark 2nd itemName font colorindex
+            
+            Set rng = .Columns("B").Find(it)
+            rng.Font.ColorIndex = 5
+            
         End If
         
     End With
@@ -275,7 +314,66 @@ Next
 
 End Sub
 
-Private Function getCollSeconedName()
+Sub getPercentageItems_export(ByVal t_change As Integer)
+
+Set collSeconedName = getCollSeconedName
+
+'Debug.Print "========百分比項目========"
+
+c = t_change_to_column(t_change)
+
+For Each it In collSeconedName
+
+    sum_cost = 0
+
+    With Sheets("Budget")
+    
+        lr = .Cells(.Rows.count, 1).End(xlUp).Row
+    
+        For r = 3 To lr
+        
+            item_rule = .Cells(r, 1).Font.ColorIndex
+        
+            If item_rule = 5 Then
+            
+                item_num = .Cells(r, 1)
+                item_name = .Cells(r, 2)
+                item_sum_cost = .Cells(r, c + 2)
+            
+                tmp = Split(item_num, ".")
+                
+                If UBound(tmp) >= 1 Then
+                
+                    If collSeconedName(Join(Array(tmp(0), tmp(1)), ".")) = it Then
+                    
+                        sum_cost = sum_cost + item_sum_cost
+                    
+                    End If
+                
+                End If
+            
+            End If
+        
+        Next
+        
+        If sum_cost <> 0 Then
+           ' Debug.Print it & ">" & sum_cost
+            arr = Array(it, "式", "1", sum_cost, sum_cost)
+            Call exportToMain(arr, 5, t_change)
+            'mark 2nd itemName font colorindex
+            
+            Set rng = .Columns("B").Find(it)
+            rng.Font.ColorIndex = 5
+            
+        End If
+        
+    End With
+
+Next
+
+End Sub
+
+Function getCollSeconedName()
 
 Dim coll As New Collection
 
@@ -304,7 +402,106 @@ Set getCollSeconedName = coll
 
 End Function
 
-Sub getRecordingItems()
+Function getRecordingItemsByRecDate(ByVal rec_date As Date, Optional myRules = 3)
+
+Dim Inf_obj As New clsInformation
+Dim coll As New Collection
+
+t_change = Inf_obj.getContractChangesByDate(rec_date)
+
+c = t_change_to_column(t_change)
+
+With Sheets("Budget")
+
+    lr = .Cells(.Rows.count, 1).End(xlUp).Row
+
+    For r = 3 To lr
+    
+        item_rule = .Cells(r, 1).Font.ColorIndex
+    
+        If item_rule = myRules Then
+        
+            item_num = .Cells(r, 1)
+            item_name = .Cells(r, 2)
+            item_amount = .Cells(r, c)
+
+            If item_amount <> 0 Then coll.Add item_name
+
+        End If
+    
+    Next
+
+End With
+
+Set getRecordingItemsByRecDate = coll
+
+End Function
+
+Function getAllItemsByRecDate(ByVal rec_date As Date, Optional myRules = 3)
+
+Dim Inf_obj As New clsInformation
+Dim coll As New Collection
+
+t_change = Inf_obj.getContractChangesByDate(rec_date)
+
+c = t_change_to_column(t_change)
+
+With Sheets("Budget")
+
+    lr = .Cells(.Rows.count, 1).End(xlUp).Row
+
+    For r = 3 To lr
+    
+        item_rule = .Cells(r, 1).Font.ColorIndex
+    
+        If item_rule = 3 Or item_rule = 5 Then
+        
+            item_num = .Cells(r, 1)
+            item_name = .Cells(r, 2)
+            item_amount = .Cells(r, c)
+
+            If item_amount <> 0 Then coll.Add item_name
+
+        End If
+    
+    Next
+
+End With
+
+Set getAllItemsByRecDate = coll
+
+End Function
+
+Function getPercentageItemsByColorIndex()
+
+Dim coll As New Collection
+
+With Sheets("Budget")
+
+    lr = .Cells(.Rows.count, 1).End(xlUp).Row
+
+    For r = 3 To lr
+    
+        item_rule = .Cells(r, 2).Font.ColorIndex
+    
+        If item_rule = 5 Then
+        
+            item_name = .Cells(r, 2)
+            coll.Add item_name
+
+        End If
+    
+    Next
+
+End With
+
+Set getPercentageItemsByRecDate = coll
+
+End Function
+
+Sub getRecordingItems_export(ByVal t_change As Integer)
+
+c = t_change_to_column(t_change)
 
 With Sheets("Budget")
 
@@ -319,32 +516,35 @@ With Sheets("Budget")
             item_num = .Cells(r, 1)
             item_name = .Cells(r, 2)
             item_unit = .Cells(r, 3)
-            item_amount = .Cells(r, 4)
-            item_cost = .Cells(r, 5)
-            item_sum_cost = .Cells(r, 6)
+            item_amount = .Cells(r, c)
+            item_cost = .Cells(r, c + 1)
+            item_sum_cost = .Cells(r, c + 2)
         
             arr = Array(item_name, item_unit, item_amount, item_cost, item_sum_cost)
         
-            Call exportToMain(arr, 3)
+            Call exportToMain(arr, 3, t_change)
         
         End If
     
     Next
 
-    
 End With
 
 End Sub
 
-Sub exportToMain(arr, myColorindex)
+Sub exportToMain(arr, myColorindex, t_change)
 
 With Sheets("Main")
 
-    r = .Cells(.Rows.count, "F").End(xlUp).Row
+    r = .Cells(.Rows.count, 6 + t_change * 5).End(xlUp).Row
     
-    .Range("F" & r + 1 & ":J" & r + 1) = arr
-    .Range("F" & r + 1 & ":J" & r + 1).Borders.LineStyle = 1
-    .Range("F" & r + 1).Font.ColorIndex = myColorindex
+    .Cells(r + 1, 6 + t_change * 5).Resize(1, 5) = arr
+    .Cells(r + 1, 6 + t_change * 5).Resize(1, 5).Borders.LineStyle = 1
+    .Cells(r + 1, 6 + t_change * 5).Font.ColorIndex = myColorindex
+    
+'    .Range("F" & r + 1 & ":J" & r + 1) = arr
+'    .Range("F" & r + 1 & ":J" & r + 1).Borders.LineStyle = 1
+'    .Range("F" & r + 1).Font.ColorIndex = myColorindex
     
 End With
 
@@ -354,7 +554,7 @@ Sub ReArrangeTitle() '重整準則
 
 With Sheets("Budget")
 
-For r = 3 To .Cells(1, 1).End(xlDown).Row
+For r = 3 To .Cells(.Rows.count, 1).End(xlUp).Row
 
     .Cells(r, 1).Font.ColorIndex = .Cells(r, 7)
 
@@ -364,13 +564,69 @@ End With
 
 End Sub
 
-Sub clearOldReport() 'clear舊有Main工作表報表資料
+Sub clearOldReport(ByVal t_change) 'clear舊有Main工作表報表資料
 
 With Sheets("Main")
 
-    lr = .Cells(.Rows.count, 6).End(xlUp).Row
+    lr = .Cells(.Rows.count, 6 + t_change * 5).End(xlUp).Row
     
-    .Cells(3, 6).Resize(lr, 5).Clear
+    .Cells(3, 6 + t_change * 5).Resize(lr, 5).Clear
+
+End With
+
+End Sub
+
+Sub markTitle()
+
+With Sheets("Budget")
+
+    beginDate = InputBox("請輸入開工日期", , Format(Now(), "yyyy/mm/dd"))
+    .Rows("1").ClearContents
+    .Range("D1") = "第0次變更>" & beginDate
+
+End With
+
+End Sub
+
+Sub check_item_name_repeat()
+
+Dim coll_err As New Collection
+
+With Sheets("Budget")
+
+    lr = .Cells(.Rows.count, 1).End(xlUp).Row
+    
+    For r = 3 To lr
+    
+        key_value = .Cells(r, 2)
+    
+        Dim myFunc As New clsMyfunction
+        
+        Set coll_rows = myFunc.getRowsByUser("Budget", "B", key_value)
+    
+        If coll_rows.count > 1 Then
+            
+            For i = 2 To coll_rows.count
+            
+                err_prompt = "第" & coll_rows(i) & "列:" & key_value & "已被使用!"
+            
+                On Error Resume Next
+                coll_err.Add err_prompt, err_prompt
+                On Error GoTo 0
+            
+            Next
+    
+        End If
+    
+    Next
+
+    For i = 1 To coll_err.count
+    
+        prompt = prompt & coll_err(i) & vbNewLine
+    
+    Next
+
+    If prompt <> "" Then MsgBox prompt, vbCritical: End
 
 End With
 
@@ -444,9 +700,20 @@ End Sub
 '
 'End Sub
 
-Function checkCollection(ByRef coll, ByVal coll_key As String)
+'Function checkCollection(ByRef coll, ByVal coll_key As String)
+'
+'checkCollection = coll(coll_key)
+'
+'End Function
 
-checkCollection = coll(coll_key)
+Function t_change_to_column(ByVal t_change)
+
+Select Case t_change
+
+Case 0: t_change_to_column = 4
+Case Else: t_change_to_column = 8 + (t_change - 1) * 3
+
+End Select
 
 End Function
 

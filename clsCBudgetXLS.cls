@@ -441,7 +441,7 @@ Private Function CheckIsSingle(ByVal mSep As String)
 
 With shtBudget
     
-    Set brng = .Columns(1).Find(What:=mSep)
+    Set brng = .Columns(1).Find(what:=mSep)
     
     Set arng = .Columns(1).FindNext(brng)
     
@@ -617,7 +617,7 @@ Function getSumRow(ByVal r As Integer, ByVal Sep As String, ByRef IsSingle)
 
 With shtCBudget
 
-    Set rng = .Columns.Find(What:=Sep & "­p")
+    Set rng = .Columns.Find(what:=Sep & "­p")
 
     If rng Is Nothing Then
         getSumRow = r

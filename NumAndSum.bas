@@ -43,8 +43,6 @@ End With
 
 End Function
 
-
-
 Sub test_calcSumMoney()
 
 Set coll = getMoneyColl
@@ -77,16 +75,6 @@ End With
 
 End Sub
 
-Sub unittest_getMoneyColl()
-
-Set coll = getMoneyColl
-
-item_name = "土方工作，挖方"
-
-Debug.Assert coll(item_name) = 118
-
-End Sub
-
 Function getMoneyColl()
 
 Dim coll As New Collection
@@ -109,29 +97,6 @@ End With
 Set getMoneyColl = coll
 
 End Function
-
-Sub test_KeyInPGS()
-
-Dim o As New clsReport
-
-With Sheets("Report")
-
-si = 82 ' InputBox("開始頁數=")
-ei = 104 'InputBox("結束頁數=")
-
-For i = si To ei
-
-    .Range("K2") = i
-
-    pgs = .Range("I6")
-    
-    Call o.KeyInPGS(.Range("C2").Value, pgs)
-
-Next
-
-End With
-
-End Sub
 
 Sub test_changeLen()
 

@@ -28,7 +28,7 @@ Private Sub CheckBox1_Click() '20221125 僅提供剩餘數量
 
 Me.cboItem.Clear
 
-Set coll = getCollNotZero
+Set coll = getCollNotZero 'Somebugs happend!
 
 For Each it In coll
 
@@ -207,6 +207,10 @@ End Sub
 
 
 Private Sub UserForm_Initialize()
+
+rec_date = InputBox("請輸入填寫日期", , Format(Now(), "yyyy/mm/dd"))
+
+Me.txtDay = rec_date
 
 Dim obj As New clsBasicData
 

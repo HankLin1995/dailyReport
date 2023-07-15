@@ -25,6 +25,7 @@ Private ChannelRow As Integer
 Private ItemRow As Integer
 Private PgsRow As Integer
 
+Private ReportDay As Date
 Private t_change As Integer
 
 Private Sub Class_Initialize()
@@ -37,43 +38,59 @@ Set shtBudget = Sheets("Budget")
 Set shtDiary = Sheets("Diary")
 Set shtReport = Sheets("Report")
 
-c_Main = 6
+'c_Main = 6
 
 Dim obj As New clsInformation
 
-Set collContractDay = obj.GetcollContractDay
-
 ReportDay = shtReport.Range("C2")
 
-If collContractDay.count > 1 Then
+t_change = obj.getContractChangesByDate(ReportDay)
 
-    For i = collContractDay.count To 2 Step -1
-    
-        If ReportDay >= collContractDay.Item(i) Then
-            c_Main = 6 + (i - 1) * 5
-            t_change = t_change + 1
-            Exit For
-        End If
-    Next
-    
-End If
+c_Main = 6 + t_change * 5
+
+'Set collContractDay = obj.GetcollContractDay
+'
+'ReportDay = shtReport.Range("C2")
+'
+'If collContractDay.count > 1 Then
+'
+'    For i = collContractDay.count To 2 Step -1
+'
+'        If ReportDay >= collContractDay.Item(i) Then
+'            c_Main = 6 + (i - 1) * 5
+'            t_change = t_change + 1
+'            Exit For
+'        End If
+'    Next
+'
+'End If
 
 End Sub
 
-Sub ReadData() '讀取工程項目、試驗項目、施作位置
+Sub ReadData() '讀取工程項目、試驗項目、施作位置 for frmData
+
+rec_date = frmData.txtDay
+
+Dim PCCES_obj As New clsPCCES
 
 Call GetMainRow
 
 With shtMain
     
-    lr = .Cells(ItemRow, c_Main).End(xlDown).Row
+    Set collItem = PCCES_obj.getRecordingItemsByRecDate(CDate(rec_date))
     
-    For r = ItemRow + 1 To lr
+    '----about t_change------
     
-        collItem.Add .Cells(r, c_Main).Value
-        collItemRule.Add .Cells(r, c_Main).Font.ColorIndex
-        
-    Next
+'    lr = .Cells(ItemRow, c_Main).End(xlDown).Row
+'
+'    For r = ItemRow + 1 To lr
+'
+'        collItem.Add .Cells(r, c_Main).Value
+'        collItemRule.Add .Cells(r, c_Main).Font.ColorIndex
+'
+'    Next
+'
+    '==========================
     
     For r = TestRow + 1 To ChannelRow - 1
     
@@ -121,14 +138,14 @@ Exit Sub
 
 Dim obj As New clsInformation
 
-StartDate = obj.GetStartDate
-EndDate = obj.GetEndDate
+startDate = obj.GetStartDate
+endDate = obj.GetEndDate
 
-count = EndDate - StartDate + 1
+count = endDate - startDate + 1
 
 With shtDiary
 
-    If .Cells(2, 1) = StartDate Then Exit Sub
+    If .Cells(2, 1) = startDate Then Exit Sub
 
     MyRowH = 25
     
@@ -143,7 +160,7 @@ With shtDiary
         'End If
         myAddDay = .Cells(r, "J")
         .Cells(r, 1) = r - 1
-        .Cells(r, 2) = StartDate + r - 2 + myAddDay
+        .Cells(r, 2) = startDate + r - 2 + myAddDay
         
         .Rows(r).RowHeight = MyRowH
         
@@ -178,7 +195,8 @@ With frmData
     
     For i = 1 To collItem.count '設定不顯示的百分比項目
     
-        If collItemRule.Item(i) <> 5 Then .cboItem.AddItem collItem.Item(i)
+        'If collItemRule.Item(i) <> 5 Then
+        .cboItem.AddItem collItem.Item(i)
     
     Next
     
@@ -200,7 +218,8 @@ With MixData
 
     For i = 1 To collItem.count '設定不顯示的百分比項目
     
-        If collItemRule.Item(i) <> 5 Then .cboItem.AddItem collItem.Item(i)
+        'If collItemRule.Item(i) <> 5 Then
+        .cboItem.AddItem collItem.Item(i)
     
     Next
     

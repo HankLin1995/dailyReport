@@ -17,17 +17,17 @@ Private Sub Class_Initialize()
 
 End Sub
 
-Sub getFileName(Optional ByVal F As String) '取得預算書內容
+Sub getFileName(Optional ByVal f As String) '取得預算書內容
 
-If F = "" Then F = Application.GetOpenFilename
+If f = "" Then f = Application.GetOpenFilename
 
-If F = "False" Then MsgBox "未取得檔案", vbCritical: End
+If f = "False" Then MsgBox "未取得檔案", vbCritical: End
 
-tmp = Split(F, "\")
+tmp = Split(f, "\")
 
 wbname = tmp(UBound(tmp))
 
-Workbooks.Open (F)
+Workbooks.Open (f)
 
 Set wb = Workbooks(wbname)
 
@@ -579,12 +579,14 @@ End Sub
 Sub markTitle()
 
 With Sheets("Budget")
-
+    
     beginDate = InputBox("請輸入開工日期", , Format(Now(), "yyyy/mm/dd"))
     .Rows("1").ClearContents
     .Range("D1") = "第0次變更>" & beginDate
 
 End With
+
+Sheets("Main").Range("B4") = beginDate
 
 End Sub
 
@@ -602,13 +604,13 @@ With Sheets("Budget")
     
         Dim myFunc As New clsMyfunction
         
-        Set coll_rows = myFunc.getRowsByUser("Budget", "B", key_value)
+        Set coll_Rows = myFunc.getRowsByUser("Budget", "B", key_value)
     
-        If coll_rows.count > 1 Then
+        If coll_Rows.count > 1 Then
             
-            For i = 2 To coll_rows.count
+            For i = 2 To coll_Rows.count
             
-                err_prompt = "第" & coll_rows(i) & "列:" & key_value & "已被使用!"
+                err_prompt = "第" & coll_Rows(i) & "列:" & key_value & "已被使用!"
             
                 On Error Resume Next
                 coll_err.Add err_prompt, err_prompt
@@ -716,6 +718,20 @@ Case Else: t_change_to_column = 8 + (t_change - 1) * 3
 End Select
 
 End Function
+
+Function get2ndIndex(ByVal item_index As String)
+
+tmp = Split(item_index, ".")
+
+ch = ""
+For j = LBound(tmp) To 1
+    ch = ch & "." & tmp(j)
+Next
+
+get2ndIndex = mid(ch, 2)
+
+End Function
+
 
 Private Sub Class_Terminate()
 

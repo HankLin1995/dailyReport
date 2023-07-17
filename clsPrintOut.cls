@@ -217,7 +217,7 @@ Application.DisplayAlerts = True
 
 End Sub
 
-Sub SpecificShtToXLS(ByVal shtName As String)
+Sub SpecificShtToXLS(ByVal shtName As String, Optional file_path As String = "")
 
 Application.DisplayAlerts = False
 
@@ -236,6 +236,13 @@ Set wb = Workbooks.Add
 wb.Sheets("¤u§@ªí1").Delete
 
 Application.DisplayAlerts = True
+
+If file_path <> "False" Then
+
+    wb.SaveAs Filename:=file_path
+    wb.Close
+    
+End If
 
 End Sub
 

@@ -101,7 +101,7 @@ Dim k As Integer
 
 ReDim arr(0 To colls(0).count - 1, UBound(colls))
 
-m = 0
+M = 0
 
 For Each coll In colls
 
@@ -109,12 +109,12 @@ For Each coll In colls
     
     For Each it In coll
     
-        arr(k, m) = it
+        arr(k, M) = it
         k = k + 1
     
     Next
 
-    m = m + 1
+    M = M + 1
     
 Next
 
@@ -461,10 +461,10 @@ End Function
 Function tranDate(ByVal mydatestr) As Date
 
 Y = mid(mydatestr, 1, 3)
-m = mid(mydatestr, 4, 2)
+M = mid(mydatestr, 4, 2)
 d = mid(mydatestr, 6, 2)
 
-tranDate = CDate(1911 + Y & "/" & m & "/" & d)
+tranDate = CDate(1911 + Y & "/" & M & "/" & d)
 
 End Function
 
@@ -520,11 +520,43 @@ Function getRowsByUser(ByVal shtName As String, ByVal col_eng As String, ByVal k
     
 End Function
 
-Function getUniqueItems(ByVal shtName As String, ByVal sr As Integer, ByVal find_col_eng As String)
+Function getRowsByUser2(ByVal shtName As String, ByVal key_value, ByVal row_head As Integer, ByVal col_value As String)
+    
+    Dim coll As New Collection
+    Dim firstAddress As String
+    
+    Set rng = Sheets(shtName).Rows(row_head).Find(col_value)
+    col_eng = ConvertToLetter(rng.Column)
+        
+    With Sheets(shtName).Columns(col_eng)
+    
+        Set c = .Find(key_value, LookIn:=xlValues, LookAt:=xlWhole)
+        If Not c Is Nothing Then
+            firstAddress = c.Address
+            Do
+                coll.Add c.Row
+                Set c = .FindNext(c)
+                
+            Loop Until c.Address = firstAddress
+        End If
+    End With
+    
+    Set getRowsByUser2 = coll
+    
+End Function
+
+Function getUniqueItems(ByVal shtName As String, ByVal sr As Integer, Optional ByVal find_col_eng As String, Optional find_col_keyValue As String = "")
 
 Dim coll As New Collection
 
 With Sheets(shtName)
+
+    If find_col_eng = "" Then
+        
+        Set rng = .Rows(sr - 1).Find(find_col_keyValue)
+        find_col_eng = ConvertToLetter(rng.Column)
+        
+    End If
 
     lr = .Cells(.Rows.count, find_col_eng).End(xlUp).Row
 
@@ -570,6 +602,19 @@ arr = Array("一", "二", "三", "四", "五", "六", "七", "八", "九") ', "參", "肆",
 
 ch = arr(i - 1)
 
+End Function
+
+Function ConvertToLetter(iCol As Long) As String
+   Dim a As Long
+   Dim b As Long
+   a = iCol
+   ConvertToLetter = ""
+   Do While iCol > 0
+      a = Int((iCol - 1) / 26)
+      b = (iCol - 1) Mod 26
+      ConvertToLetter = Chr(b + 65) & ConvertToLetter
+      iCol = a
+   Loop
 End Function
 
 

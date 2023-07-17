@@ -21,6 +21,8 @@ Private shtMain As Object
 Private shtDiary As Object
 Private shtRecords As Object
 
+Private myFunc As New clsMyfunction
+
 Private Sub Class_Initialize()
 
 Set shtReport = Sheets("Report")
@@ -129,7 +131,7 @@ End Sub
 
 Sub CollectRec() '收集本日數量與累計數量
 
-Dim rec_obj As New clsRecord
+Dim REC_obj As New clsRecord
 
 With shtRecords
 
@@ -141,7 +143,7 @@ With shtRecords
     
         TargetItemName = ItemArr(i, 1)
         
-        Call rec_obj.getNumAndSumByItemName(TargetItemName, ReportDay, RecAmount, RecSumAmount)
+        Call REC_obj.getNumAndSumByItemName(TargetItemName, ReportDay, RecAmount, RecSumAmount)
         
         ItemArr(i, 5) = RecAmount
         ItemArr(i, 6) = RecSumAmount 'WorksheetFunction.RoundDown(RecSumAmount, 0)
@@ -156,7 +158,7 @@ End Sub
 
 Private Sub GetPercentItem()
 
-For i = 1 To UBound(ItemArr, 1)
+For i = 1 To UBound(ItemArr, 1) 'only for colorindex=3,當分母
 
     ItemContractNum = ItemArr(i, 3)
     ItemMoney = ItemArr(i, 4)
@@ -349,27 +351,12 @@ End Sub
 
 Sub KeyInPGS(ByVal mydate As Date, ByVal pgs_total As Double)
 
-With Sheets("Diary")
-
-Set rng = .Columns("B").Find(mydate)
-
-'Debug.Assert Not rng Is Nothing
-
-If Not rng Is Nothing Then
-
-.Cells(rng.Row, 9) = pgs_total
-
-Else
-
-Debug.Print "工作表Diary中找不到" & mydate
-
-End If
-
-End With
+Set coll_Rows = myFunc.getRowsByUser2("Diary", Format(mydate, "yyyy/mm/dd(aaa)"), 1, "報表日期")
+Sheets("Diary").Cells(coll_Rows(1), 9) = pgs_total
 
 End Sub
 
-Sub GetInfo() '取得Main工作表資訊
+Sub getInfo() '取得Main工作表資訊
 
 Dim PCCES_obj As New clsPCCES
 Dim Inf_obj As New clsInformation
@@ -457,18 +444,18 @@ With shtReport
 End With
 
 End Sub
-
-Private Sub GetMainRow()
-
-Call ReturnMainRow(arr)
-
-ConRow = arr(0)
-TestRow = arr(1)
-ChannelRow = arr(2)
-ItemRow = arr(3)
-PgsRow = arr(4)
-
-End Sub
+'
+'Private Sub GetMainRow()
+'
+'Call ReturnMainRow(arr)
+'
+'ConRow = arr(0)
+'TestRow = arr(1)
+'ChannelRow = arr(2)
+'ItemRow = arr(3)
+'PgsRow = arr(4)
+'
+'End Sub
 
 'Sub CreateSig()
 '

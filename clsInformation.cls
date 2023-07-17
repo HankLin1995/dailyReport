@@ -13,6 +13,8 @@ Public contractMoney As Double '契約金額
 Public contractor As String '承攬廠商
 Public startDate As Date '開工日期
 Public workDay As Integer '工期
+Public workLoc As String '施工地點
+Public pay_date As String
 
 Public workDayAdd As Integer
 Public endDate As Date
@@ -141,7 +143,14 @@ End With
 
 getContractChangesByDate = cnt - 1
 
-If cnt = 0 Then MsgBox "紀錄日期不在開工日期後!", vbCritical: End
+If cnt = 0 Then
+
+Dim Inf_obj As New clsInformation
+Inf_obj.getBasicInformation
+
+MsgBox "日期需在開工日期【" & Inf_obj.startDate & "】之後!", vbCritical: End
+
+End If
 
 End Function
 
@@ -157,6 +166,7 @@ With shtMain
     contractor = .Cells(3, 2)
     startDate = .Cells(4, 2)
     workDay = .Cells(5, 2)
+    workLoc = .Cells(7, 2)
     
     'contractMoney rely on t_change
     

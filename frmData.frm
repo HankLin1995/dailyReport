@@ -26,9 +26,19 @@ End Sub
 
 Private Sub CheckBox1_Click() '20221125 僅提供剩餘數量
 
+Dim PCCES_obj As New clsPCCES
+
 Me.cboItem.Clear
 
-Set coll = getCollNotZero 'Somebugs happend!
+If CheckBox1.Value = True Then
+
+Set coll = getRemainedItems(CDate(Me.txtDay))
+
+Else
+
+Set coll = PCCES_obj.getRecordingItemsByRecDate(CDate(Me.txtDay))
+
+End If
 
 For Each it In coll
 

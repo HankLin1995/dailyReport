@@ -347,6 +347,10 @@ Sub cmdFindBudget()
 
 Dim o As New clsPCCES
 
+msg = MsgBox("變更及估驗資料確定不要了嗎?", vbYesNo + vbInformation)
+
+If msg = vbNo Then Exit Sub
+
 o.markTitle
 o.getFileName '"D:\Users\USER\Desktop\(預算書)單期一號分線等改善工程雲林111A54_ap_bdgt.xls")
 o.getAllContents
@@ -472,14 +476,19 @@ End Sub
 
 Sub cmdGetPayItems(Optional pay_date As String = "")
 
-Dim pay_obj As New clsPay
+Dim PAY_obj As New clsPay
 
 If pay_date = "" Then pay_date = InputBox("請輸入估驗日期", , Format(Now(), "yyyy/mm/dd"))
 
-pay_obj.pay_date = pay_date
-pay_obj.clearPAY
-pay_obj.getPayItems
-pay_obj.getOtherInf
+If PAY_obj.IsPayDateLater(pay_date) = False Then
+    Set coll = PAY_obj.getPayDates
+    MsgBox "估驗日期需要於【" & coll(coll.count) & "】之後!", vbCritical: End
+End If
+
+PAY_obj.pay_date = pay_date
+PAY_obj.clearPAY
+PAY_obj.getPayItems
+PAY_obj.getOtherInf
 
 Sheets("PAY").Activate
 
@@ -488,6 +497,7 @@ End Sub
 Sub cmdClearPayEX()
 
 Dim myFunc As New clsMyfunction
+Dim PAY_obj As New clsPay
 
 Set coll_pay_dates = myFunc.getUniqueItems("PAY_EX", 2, "F")
 
@@ -501,21 +511,130 @@ msg = MsgBox("是否要刪除最新一期【" & pay_date & "】的估驗紀錄?", vbYesNo)
 
 If msg = vbNo Then Exit Sub
 
-Set coll_rows = myFunc.getRowsByUser("PAY_EX", "F", CDate(pay_date))
+Call PAY_obj.fs_kill(i)
 
-For i = coll_rows.count To 1 Step -1
+Set coll_Rows = myFunc.getRowsByUser("PAY_EX", "F", CDate(pay_date))
 
-    r = coll_rows(i)
+For i = coll_Rows.count To 1 Step -1
+
+    r = coll_Rows(i)
 
     Sheets("PAY_EX").Rows(r).Delete
 
 Next
 
-Call cmdGetPayItems(CStr(pay_date))
+Call PAY_obj.clearPAY
+
+'Call cmdGetPayItems(CStr(pay_date))
+
+MsgBox "請重新取得估驗日期!", vbCritical
+'
+'Sheets("Records").Activate
+
+End Sub
+
+Sub cmdExportToPAY()
+
+Dim myFunc As New clsMyfunction
+Dim PAY_obj As New clsPay
+
+Set coll_Rows = myFunc.getUniqueItems("PAY_EX", 2, , "估驗日期")
+Set coll_pay_num = myFunc.getUniqueItems("PAY", 2, , "本次估驗")
+
+If coll_pay_num.count = 0 Then MsgBox "未填寫本次估驗資料，請先填寫!", vbCritical: End
+
+PAY_obj.getPayInfo
+PAY_obj.clearPAY_Report
+PAY_obj.exportPayNumToReport
+PAY_obj.set2ndFormula
+PAY_obj.storePayItems
+PAY_obj.clearPAY
+
+Sheets("Records").Activate
+
+Dim Print_obj As New clsPrintOut
+Dim f As String
+
+On Error Resume Next
+MkDir (ThisWorkbook.Path & "\PAY\")
+On Error GoTo 0
+
+file_name = "第" & coll_Rows.count + 1 & "次估驗"
+
+f = ThisWorkbook.Path & "\PAY\" & file_name & ".xls"
+
+'f = Application.GetSaveAsFilename(InitialFileName:="第" & coll_rows.count + 1 & "次估驗", FileFilter:="Excel Files (*.xls), *.xls")
+
+ThisWorkbook.Sheets("PAY_Report").Visible = True
+
+Call Print_obj.SpecificShtToXLS("PAY_Report", f) '& ".xls")
+ThisWorkbook.Sheets("PAY_Report").Visible = False
+
+End Sub
+
+Sub cmdOpenPayFile()
+
+Set fso = CreateObject("Scripting.FileSystemObject")
+
+Dim PAY_obj As New clsPay
+
+Dim myFunc As New clsMyfunction
+
+Set coll_pay_dates = myFunc.getUniqueItems("PAY_EX", 2, , "估驗日期")
+
+For i = 1 To coll_pay_dates.count
+
+    p = p & i & ".第" & i & "次估驗." & coll_pay_dates(i)
+
+Next
+
+If p = "" Then MsgBox "找不到已建檔的估驗資料!", vbCritical: Exit Sub
+
+cnt = InputBox("請輸入要打開的檔案" & vbNewLine & p, , PAY_obj.getPayCounts)
+
+If fso.FileExists(ThisWorkbook.Path & "\PAY\" & "第" & cnt & "次估驗.xls") = True Then
+
+    Workbooks.Open (ThisWorkbook.Path & "\PAY\" & "第" & cnt & "次估驗.xls")
+Else
+
+Shell "explorer.exe " & wbpath & "\" & "PAY\", vbNormalFocus
+    
+End If
 
 End Sub
 
 '=============function===============
+
+Function getRemainedItems(ByVal rec_date As Date)
+
+Dim myFunc As New clsMyfunction
+Dim PCCES_obj As New clsPCCES
+Dim Inf_obj As New clsInformation
+Dim REC_obj As New clsRecord
+Dim coll_Need As New Collection
+
+'rec_date = CDate("2023/7/17")
+
+Set coll_item_names = PCCES_obj.getRecordingItemsByRecDate(rec_date)
+t_change = Inf_obj.getContractChangesByDate(rec_date)
+
+For i = 1 To coll_item_names.count
+
+    item_name = coll_item_names(i)
+
+    Set coll_Rows = myFunc.getRowsByUser("Budget", "B", item_name)
+    
+    contract_num = Sheets("Budget").Cells(coll_Rows(1), PCCES_obj.t_change_to_column(t_change))
+    
+    Call REC_obj.getNumAndSumByItemName(item_name, rec_date, rec_num, rec_sum)
+    
+    If contract_num - rec_sum <> 0 Then coll_Need.Add item_name
+
+Next
+
+Set getRemainedItems = coll_Need
+
+End Function
 
 Function getTestNeedNum(ByVal num As Double, ByVal s As String)
 

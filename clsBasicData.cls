@@ -42,11 +42,19 @@ Set shtReport = Sheets("Report")
 
 Dim obj As New clsInformation
 
-ReportDay = shtReport.Range("C2")
+If IsError(shtReport.Range("C2")) = False Then
+
+ReportDay = CDate(shtReport.Range("C2"))
 
 t_change = obj.getContractChangesByDate(ReportDay)
 
 c_Main = 6 + t_change * 5
+
+Else
+
+c_Main = 6
+
+End If
 
 'Set collContractDay = obj.GetcollContractDay
 '
@@ -343,6 +351,248 @@ With frmData '這裡有bug，210kg/cm2混凝土所得結果=1.421*E^-14
 End With
 
 End Sub
+
+Sub getProgByInter() '20230624
+
+Call checkProgSetting
+Set collProg = getProgColl
+
+With Sheets("Diary")
+
+    lr = .Cells(.Rows.count, 4).End(xlUp).Row
+
+    For r = 2 To lr
+    
+        myProg = .Cells(r, 4)
+        
+        If myProg = "" Then
+        
+            For i = 1 To collProg.count
+                
+                tmp = Split(collProg(i), ":")
+                
+                If r <= CInt(tmp(0)) Then
+                
+                    r1 = Split(collProg(i - 1), ":")(0)
+                    p1 = Split(collProg(i - 1), ":")(1)
+                    
+                    r2 = Split(collProg(i), ":")(0)
+                    p2 = Split(collProg(i), ":")(1)
+                    
+                    newProg = Round(((r2 - r) * p1 + (r - r1) * p2) / (r2 - r1), 4)
+                    
+                    Exit For
+                
+                End If
+            
+            Next
+            
+            .Cells(r, 4) = newProg
+        
+        End If
+        
+    Next
+
+End With
+
+End Sub
+
+Sub addNewDiaryDays()
+
+cnt = InputBox("請輸入工期")
+
+Sheets("Main").Range("B5") = cnt
+
+Dim myFunc As New clsMyfunction
+Dim Inf_obj As New clsInformation
+
+'Inf_obj.getBasicInformation
+startDate = Inf_obj.startDate
+
+Call clearDiary
+
+With Sheets("Diary")
+
+    .Activate
+
+    For i = 1 To cnt
+    
+        diary_date = startDate + i - 1
+        
+        Call myFunc.AppendData("Diary", Array(i, diary_date, "晴"))
+        
+        '----set formula---
+        
+        .Cells(i + 1, 1).Resize(1, 10).Borders.LineStyle = 1
+        .Cells(i + 1, 1).Resize(1, 4).HorizontalAlignment = xlCenter
+        .Cells(i + 1, 2).NumberFormatLocal = "yyyy/mm/dd(aaa)"
+        .Cells(i + 1, 5).Resize(1, 2).WrapText = True
+        .Cells(i + 1, 4).NumberFormatLocal = "0.00%"
+        
+    Next
+
+End With
+
+End Sub
+
+Sub clearDiary()
+
+With ThisWorkbook.Sheets("Diary")
+
+    Set rng = .Cells.SpecialCells(xlCellTypeLastCell)
+    If rng.Row > 1 Then .Range("A2:" & rng.Address).Clear
+    
+End With
+
+End Sub
+
+Sub addStopDays()
+
+Dim myFunc As New clsMyfunction
+
+Set coll_rows = myFunc.getUniqueItems("Diary", 2, , "預定進度")
+
+If coll_rows.count = 0 Then MsgBox "請先輸入預定進度資料!", vbCritical: End
+
+stop_date_begin = InputBox("請輸入起始停工日期", , "2023/8/1")
+stop_date_end = InputBox("請輸入結束停工日期", , "2023/8/6")
+
+cnt = CDate(stop_date_end) - CDate(stop_date_begin) + 1
+
+With Sheets("Diary")
+
+    Set rng = .Columns("B").Find(Format(CDate(stop_date_end), "yyyy/mm/dd(aaa)"))
+    If rng Is Nothing Then MsgBox "找不到" & stop_date_end & "!", vbCritical: End
+    
+    Set rng = .Columns("B").Find(Format(CDate(stop_date_begin), "yyyy/mm/dd(aaa)"))
+    If rng Is Nothing Then MsgBox "找不到" & stop_date_begin & "!", vbCritical: End
+    
+    
+
+    lr = .Cells(.Rows.count, 1).End(xlUp).Row
+        
+    For i = 1 To cnt
+    
+        .Cells(lr + i, "A") = .Cells(lr + i - 1, "A") + 1
+        .Cells(lr + i, "B") = .Cells(lr + i - 1, "B") + 1
+        .Cells(lr + i, "C") = "晴"
+        
+        .Cells(lr + i, 1).Resize(1, 10).Borders.LineStyle = 1
+        .Cells(lr + i, 1).Resize(1, 4).HorizontalAlignment = xlCenter
+        .Cells(lr + i, 2).NumberFormatLocal = "yyyy/mm/dd(aaa)"
+        .Cells(lr + i, 5).Resize(1, 2).WrapText = True
+        .Cells(lr + i, 4).NumberFormatLocal = "0.00%"
+        
+    Next
+    
+    Set coll_rows = myFunc.getRowsByUser2("Diary", Format(stop_date_begin, "yyyy/mm/dd(aaa)"), 1, "報表日期")
+
+    r_begin = coll_rows(1)
+    first_pgs = .Cells(r_begin - 1, "D")
+    
+    .Range("D" & r_begin & ":D" & lr).Copy .Range("D" & r_begin + cnt)
+
+    For r = r_begin To r_begin + cnt - 1
+    
+        .Cells(r, "D") = .Cells(r - 1, "D")
+        .Cells(r, "D").Interior.ColorIndex = 22
+    
+    Next
+    
+End With
+
+End Sub
+
+'-----------FUNCTION-----------------
+
+Sub checkProgSetting()
+
+Dim Inf_obj As New clsInformation
+
+'Inf_obj.getBasicInformation
+
+fixStartDate = Inf_obj.startDate
+
+With Sheets("Diary")
+
+    lr = .Cells(.Rows.count, 1).End(xlUp).Row
+    
+    progStartDate = .Cells(2, 2)
+    progStartProg = .Cells(2, 4)
+    progEndDate = .Cells(lr, 2)
+    progEndProg = .Cells(lr, 4)
+    
+    If progStartDate <> fixStartDate Then
+    
+        MsgBox ("開工日「" & progStartDate & "」，與標案設定開工日「" & fixStartDate & "」不一樣!"), vbCritical
+        End
+        
+    End If
+    
+    If progStartProg = "" Then
+    
+        .Cells(2, 4) = 0
+        MsgBox "系統自動於開工日補上0%", vbInformation
+        
+    End If
+    
+    If progEndProg <> 1 Then
+    
+        .Cells(lr, 4) = 1
+        MsgBox "系統自動於竣工日補上100%", vbInformation
+    
+    End If
+    
+End With
+
+End Sub
+
+Private Function getProgColl()
+
+Dim coll As New Collection
+
+With Sheets("Diary")
+
+    lr = .Cells(.Rows.count, 1).End(xlUp).Row
+
+    '------main-----------
+    
+    For r = 2 To lr
+    
+        mydate = .Cells(r, 2)
+        myProg = .Cells(r, 4)
+        
+        If myProg <> "" Then
+        
+            coll.Add r & ":" & myProg
+        
+        End If
+    
+    Next
+    
+    For i = 1 To coll.count - 1
+    
+        sr = Split(coll(i), ":")(0)
+        b_pgs = Split(coll(i), ":")(1)
+        er = Split(coll(i + 1), ":")(0)
+        e_pgs = Split(coll(i + 1), ":")(1)
+    
+        If b_pgs > e_pgs Then
+        
+            MsgBox "【" & .Cells(sr, 2) & "】進度不能比【" & .Cells(er, 2) & "】快!", vbCritical: End
+    
+        End If
+    
+    Next
+    
+End With
+
+Set getProgColl = coll
+
+If coll.count = 2 Then MsgBox ("建議在預定進度的欄位「D」填寫進度，內差成果才會比較準確!"), vbCritical
+
+End Function
+
 
 Private Sub GetMainRow()
 

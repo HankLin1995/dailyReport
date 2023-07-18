@@ -9,6 +9,8 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Private Sub Worksheet_Activate()
 
+If IsError(Sheets("Report").Range("C2")) = True Then Exit Sub
+
 Dim obj As New clsBasicData
 obj.DiaryReset
 
@@ -45,12 +47,12 @@ IsRained = False
 
 tmp = Split(targetDate, "/")
 
-m = tmp(1)
+M = tmp(1)
 d = tmp(2)
 
 With Workbooks(2).Sheets("降雨量年紀錄表-108年 ")
 
-    c = m + 1
+    c = M + 1
     r = d + 4
     
     On Error GoTo errorhandler

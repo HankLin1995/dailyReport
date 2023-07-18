@@ -375,16 +375,20 @@ End Sub
 
 Sub cmdCreateProgress()
 
-Dim obj2 As New clsBasicData
+Dim o As New clsBasicData
 
-obj2.DiartReset
+o.addNewDiaryDays
 
-Dim obj As New clsInformation
-
-startDate = obj.GetStartDate
-endDate = obj.GetEndDate
-
-obj.ProgressNew
+'Dim obj2 As New clsBasicData
+'
+'obj2.DiartReset
+'
+'Dim obj As New clsInformation
+'
+'startDate = obj.GetStartDate
+'endDate = obj.GetEndDate
+'
+'obj.ProgressNew
 
 End Sub
 
@@ -513,11 +517,11 @@ If msg = vbNo Then Exit Sub
 
 Call PAY_obj.fs_kill(i)
 
-Set coll_Rows = myFunc.getRowsByUser("PAY_EX", "F", CDate(pay_date))
+Set coll_rows = myFunc.getRowsByUser("PAY_EX", "F", CDate(pay_date))
 
-For i = coll_Rows.count To 1 Step -1
+For i = coll_rows.count To 1 Step -1
 
-    r = coll_Rows(i)
+    r = coll_rows(i)
 
     Sheets("PAY_EX").Rows(r).Delete
 
@@ -538,7 +542,7 @@ Sub cmdExportToPAY()
 Dim myFunc As New clsMyfunction
 Dim PAY_obj As New clsPay
 
-Set coll_Rows = myFunc.getUniqueItems("PAY_EX", 2, , "估驗日期")
+Set coll_rows = myFunc.getUniqueItems("PAY_EX", 2, , "估驗日期")
 Set coll_pay_num = myFunc.getUniqueItems("PAY", 2, , "本次估驗")
 
 If coll_pay_num.count = 0 Then MsgBox "未填寫本次估驗資料，請先填寫!", vbCritical: End
@@ -559,7 +563,7 @@ On Error Resume Next
 MkDir (ThisWorkbook.Path & "\PAY\")
 On Error GoTo 0
 
-file_name = "第" & coll_Rows.count + 1 & "次估驗"
+file_name = "第" & coll_rows.count + 1 & "次估驗"
 
 f = ThisWorkbook.Path & "\PAY\" & file_name & ".xls"
 
@@ -603,6 +607,22 @@ End If
 
 End Sub
 
+Sub cmdGetProgressByInterpolation()
+
+Dim o As New clsBasicData
+
+Call o.getProgByInter
+
+End Sub
+
+Sub cmdStopProgress()
+
+Dim o As New clsBasicData
+
+Call o.addStopDays
+
+End Sub
+
 '=============function===============
 
 Function getRemainedItems(ByVal rec_date As Date)
@@ -622,9 +642,9 @@ For i = 1 To coll_item_names.count
 
     item_name = coll_item_names(i)
 
-    Set coll_Rows = myFunc.getRowsByUser("Budget", "B", item_name)
+    Set coll_rows = myFunc.getRowsByUser("Budget", "B", item_name)
     
-    contract_num = Sheets("Budget").Cells(coll_Rows(1), PCCES_obj.t_change_to_column(t_change))
+    contract_num = Sheets("Budget").Cells(coll_rows(1), PCCES_obj.t_change_to_column(t_change))
     
     Call REC_obj.getNumAndSumByItemName(item_name, rec_date, rec_num, rec_sum)
     

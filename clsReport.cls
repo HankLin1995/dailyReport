@@ -351,8 +351,8 @@ End Sub
 
 Sub KeyInPGS(ByVal mydate As Date, ByVal pgs_total As Double)
 
-Set coll_Rows = myFunc.getRowsByUser2("Diary", Format(mydate, "yyyy/mm/dd(aaa)"), 1, "報表日期")
-Sheets("Diary").Cells(coll_Rows(1), 9) = pgs_total
+Set coll_rows = myFunc.getRowsByUser2("Diary", Format(mydate, "yyyy/mm/dd(aaa)"), 1, "報表日期")
+Sheets("Diary").Cells(coll_rows(1), 9) = pgs_total
 
 End Sub
 
@@ -361,7 +361,7 @@ Sub getInfo() '取得Main工作表資訊
 Dim PCCES_obj As New clsPCCES
 Dim Inf_obj As New clsInformation
 
-Inf_obj.getBasicInformation
+'Inf_obj.getBasicInformation
 
 
 'arr = obj.ReturnInfoArr
@@ -395,6 +395,7 @@ IsEnlarged = Inf_obj.IsEnlarged
 EnlargedDate = Inf_obj.EnlargedDate
 workDay = Inf_obj.workDay
 workDayAdd = Inf_obj.workDayAdd
+endDate = Inf_obj.GetEndDate
 
 With shtReport
 
@@ -405,12 +406,14 @@ With shtReport
     If ReportDay < EnlargedDate Then workDay = workDay - workDayAdd
     
     .Range("C4") = workDay
+    .Range("I4") = endDate
     
     If IsEnlarged = True And ReportDay >= EnlargedDate Then
         .Range("H5") = Sheets("Main").Cells(6, 4) & workDayAdd & "天"
     Else
         .Range("H5") = "天"
     End If
+    
     
     '-----------------------
 
@@ -513,4 +516,6 @@ End Sub
 'End With
 
 'End Sub
+
+
 

@@ -1,44 +1,43 @@
 Attribute VB_Name = "test"
-Sub test_checkPayEmpty()
+
+
+
+Sub t()
 
 Dim myFunc As New clsMyfunction
 
-Set coll = myFunc.getUniqueItems("PAY", 2, , "本次估驗")
+rec_date = CDate("2023/8/6")
 
-If coll.count = 0 Then MsgBox "未填寫本次估驗資料，請先填寫!", vbCritical: End
+With Sheets("Diary")
 
-Debug.Assert coll.count = 0
+Set coll_rows = myFunc.getRowsByUser2("Diary", Format(rec_date, "yyyy/mm/dd(aaa)"), 1, "報表日期")
 
-End Sub
+r_rec_date = coll_rows(1)
 
-Sub fs_open()
+For r = 2 To r_rec_date
 
-Set fso = CreateObject("Scripting.FileSystemObject")
-
-Dim PAY_obj As New clsPay
-
-Dim myFunc As New clsMyfunction
-
-Set coll_pay_dates = myFunc.getUniqueItems("PAY_EX", 2, , "估驗日期")
-
-For i = 1 To coll_pay_dates.count
-
-    p = p & "第" & i & "次估驗." & coll_pay_dates(i)
+    If .Cells(r, 4).Interior.ColorIndex = 22 Then
+    
+        IsStop = True
+    
+    End If
 
 Next
 
-cnt = InputBox("請輸入要打開的檔案" & vbNewLine & mid(p, 2), , PAY_obj.getPayCounts)
-
-If fso.FileExists(ThisWorkbook.Path & "\PAY\" & "第" & cnt & "次估驗.xls") = True Then
-
-    Workbooks.Open (ThisWorkbook.Path & "\PAY\" & "第" & cnt & "次估驗.xls")
-Else
-
-Shell "explorer.exe " & wbpath & "\" & "PAY\", vbNormalFocus
-    
-End If
+End With
 
 End Sub
+
+Sub tttt()
+
+Dim o As New clsInformation
+
+'o.getBasicInformation
+
+Debug.Print o.GetEndDate
+
+End Sub
+
 
 
 

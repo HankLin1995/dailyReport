@@ -41,17 +41,17 @@ Dim collchn As New Collection
 
 wbpath = ThisWorkbook.Path & "\¬dÅçªíOutput\"
 
-F = Dir(wbpath)
+f = Dir(wbpath)
 
-Do Until F = ""
+Do Until f = ""
     
-    ptdot = InStr(1, F, ".")
+    ptdot = InStr(1, f, ".")
     
-    chn = mid(F, 1, ptdot - 1)
+    chn = mid(f, 1, ptdot - 1)
     
     collchn.Add chn, chn
     
-    F = Dir()
+    f = Dir()
 
 Loop
 

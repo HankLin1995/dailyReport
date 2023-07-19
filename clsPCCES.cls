@@ -27,6 +27,7 @@ tmp = Split(f, "\")
 
 wbname = tmp(UBound(tmp))
 
+
 Workbooks.Open (f)
 
 Set wb = Workbooks(wbname)
@@ -174,6 +175,8 @@ With ThisWorkbook.Sheets("Main")
     Debug.Print rng.Address
     
     .Range("K1:" & rng.Address).Clear
+    
+    .Range("B6:C6").ClearContents
     
 End With
 
@@ -604,13 +607,13 @@ With Sheets("Budget")
     
         Dim myFunc As New clsMyfunction
         
-        Set coll_Rows = myFunc.getRowsByUser("Budget", "B", key_value)
+        Set coll_rows = myFunc.getRowsByUser("Budget", "B", key_value)
     
-        If coll_Rows.count > 1 Then
+        If coll_rows.count > 1 Then
             
-            For i = 2 To coll_Rows.count
+            For i = 2 To coll_rows.count
             
-                err_prompt = "第" & coll_Rows(i) & "列:" & key_value & "已被使用!"
+                err_prompt = "第" & coll_rows(i) & "列:" & key_value & "已被使用!"
             
                 On Error Resume Next
                 coll_err.Add err_prompt, err_prompt

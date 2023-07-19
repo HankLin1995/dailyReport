@@ -101,7 +101,7 @@ Dim k As Integer
 
 ReDim arr(0 To colls(0).count - 1, UBound(colls))
 
-M = 0
+m = 0
 
 For Each coll In colls
 
@@ -109,12 +109,12 @@ For Each coll In colls
     
     For Each it In coll
     
-        arr(k, M) = it
+        arr(k, m) = it
         k = k + 1
     
     Next
 
-    M = M + 1
+    m = m + 1
     
 Next
 
@@ -461,10 +461,10 @@ End Function
 Function tranDate(ByVal mydatestr) As Date
 
 Y = mid(mydatestr, 1, 3)
-M = mid(mydatestr, 4, 2)
+m = mid(mydatestr, 4, 2)
 d = mid(mydatestr, 6, 2)
 
-tranDate = CDate(1911 + Y & "/" & M & "/" & d)
+tranDate = CDate(1911 + Y & "/" & m & "/" & d)
 
 End Function
 
@@ -474,9 +474,9 @@ If s Like "*~*" Then
 
     For i = 1 To Len(s)
     
-        ch = mid(s, i, 1)
-        If ch = "~" Then ch = "-"
-        new_ch = new_ch & ch
+        mych = mid(s, i, 1)
+        If mych = "~" Then mych = "-"
+        new_ch = new_ch & mych
     
     Next
     

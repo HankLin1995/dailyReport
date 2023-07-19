@@ -392,6 +392,21 @@ o.addNewDiaryDays
 
 End Sub
 
+Sub cmdCreateProgressFromMain()
+
+With ThisWorkbook.Sheets("Diary")
+
+    Set rng = .Cells.SpecialCells(xlCellTypeLastCell)
+    If rng.Row > 1 Then .Range("A2:" & rng.Address).ClearContents
+    
+End With
+
+Dim o As New clsInformation
+
+o.ProgressNew
+
+End Sub
+
 'Sub cmdExportToDiary()
 '
 'Dim obj As New clsRecord
@@ -623,6 +638,50 @@ Call o.addStopDays
 
 End Sub
 
+Sub cmdEnlargeWorkDays()
+
+Dim Inf_obj As New clsInformation
+Dim myFunc As New clsMyfunction
+
+enlargeDate = InputBox("請輸入展延開始日期", , Format(Now(), "yyyy/mm/dd"))
+enlargeDays = CInt(InputBox("請輸入展延天數", , 1))
+
+Sheets("Main").Range("B6") = Inf_obj.workDay + enlargeDays
+Sheets("Main").Range("C6") = CDate(enlargeDate)
+
+With Sheets("Diary")
+
+    lr = .Cells(.Rows.count, 1).End(xlUp).Row
+
+    For i = 1 To enlargeDays
+        
+        end_date = Inf_obj.GetEndDate
+        diary_date = end_date + i
+        
+        Call myFunc.AppendData("Diary", Array(lr + i - 1, diary_date, "晴"))
+        
+        '----set formula---
+        
+        .Cells(lr + i, 1).Resize(1, 10).Borders.LineStyle = 1
+        .Cells(lr + i, 1).Resize(1, 4).HorizontalAlignment = xlCenter
+        .Cells(lr + i, 2).NumberFormatLocal = "yyyy/mm/dd(aaa)"
+        .Cells(lr + i, 5).Resize(1, 2).WrapText = True
+        .Cells(lr + i, 4).NumberFormatLocal = "0.00%"
+        
+        If i = enlargeDays Then
+        
+            .Cells(lr + i, 4) = 1
+            .Cells(lr, 4) = ""
+        
+        End If
+        
+    Next
+
+End With
+
+End Sub
+
+
 '=============function===============
 
 Function getRemainedItems(ByVal rec_date As Date)
@@ -632,8 +691,6 @@ Dim PCCES_obj As New clsPCCES
 Dim Inf_obj As New clsInformation
 Dim REC_obj As New clsRecord
 Dim coll_Need As New Collection
-
-'rec_date = CDate("2023/7/17")
 
 Set coll_item_names = PCCES_obj.getRecordingItemsByRecDate(rec_date)
 t_change = Inf_obj.getContractChangesByDate(rec_date)
@@ -656,38 +713,4 @@ Set getRemainedItems = coll_Need
 
 End Function
 
-Function getTestNeedNum(ByVal num As Double, ByVal s As String)
-
-tmp = Split(s, ",")
-
-For Each it In tmp
-
-    If IsNumeric(it) Then
-
-        If num >= CDbl(it) Then cnt = cnt + 1
-    
-    Else
-    
-        If cnt > 0 Then
-    
-            before_num = CDbl(tmp(j - 1))
-            each_num = CDbl(mid(it, 1, Len(it) - 1))
-         
-            If (num - before_num) <> 0 Then
-        
-            cnt = cnt + Int((num - before_num) / each_num) + 1
-    
-            End If
-    
-        End If
-    
-    End If
-    
-    j = j + 1
-    
-Next
-
-getTestNeedNum = cnt
-
-End Function
 

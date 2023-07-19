@@ -15,9 +15,9 @@ Sub test_getPAYCount()
 
 Dim myFunc As New clsMyfunction
 
-Set coll_Rows = myFunc.getUniqueItems("PAY_EX", 2, , "估驗日期")
+Set coll_rows = myFunc.getUniqueItems("PAY_EX", 2, , "估驗日期")
 
-Debug.Assert coll_Rows.count + 1 = 1
+Debug.Assert coll_rows.count + 1 = 1
 
 End Sub
 

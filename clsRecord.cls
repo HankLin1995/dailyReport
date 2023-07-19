@@ -274,10 +274,10 @@ Private Function IsRecording(ByVal frm As UserForm)
 
 IsRecording = True
 
-Dim Inf As New clsInformation
+Dim inf As New clsInformation
 
-startDate = Inf.GetStartDate
-endDate = Inf.GetEndDate
+startDate = inf.GetStartDate
+endDate = inf.GetEndDate
 
 With frm
 

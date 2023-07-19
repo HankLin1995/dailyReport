@@ -1,48 +1,53 @@
 Attribute VB_Name = "test"
+Sub enlargeWorkDays()
 
-
-
-Sub t()
-
+Dim Inf_obj As New clsInformation
 Dim myFunc As New clsMyfunction
 
-rec_date = CDate("2023/8/6")
+enlargeDate = InputBox("請輸入展延開始日期", , Format(Now(), "yyyy/mm/dd"))
+enlargeDays = CInt(InputBox("請輸入展延天數", , 1))
+
+Sheets("Main").Range("B6") = Inf_obj.workDay + enlargeDays
+Sheets("Main").Range("C6") = CDate(enlargeDate)
 
 With Sheets("Diary")
 
-Set coll_rows = myFunc.getRowsByUser2("Diary", Format(rec_date, "yyyy/mm/dd(aaa)"), 1, "報表日期")
+    lr = .Cells(.Rows.count, 1).End(xlUp).Row
 
-r_rec_date = coll_rows(1)
-
-For r = 2 To r_rec_date
-
-    If .Cells(r, 4).Interior.ColorIndex = 22 Then
-    
-        IsStop = True
-    
-    End If
-
-Next
+    For i = 1 To enlargeDays
+        
+        end_date = Inf_obj.GetEndDate
+        diary_date = end_date + i
+        
+        Call myFunc.AppendData("Diary", Array(lr + i - 1, diary_date, "晴"))
+        
+        '----set formula---
+        
+        .Cells(lr + i, 1).Resize(1, 10).Borders.LineStyle = 1
+        .Cells(lr + i, 1).Resize(1, 4).HorizontalAlignment = xlCenter
+        .Cells(lr + i, 2).NumberFormatLocal = "yyyy/mm/dd(aaa)"
+        .Cells(lr + i, 5).Resize(1, 2).WrapText = True
+        .Cells(lr + i, 4).NumberFormatLocal = "0.00%"
+        
+        If i = enlargeDays Then
+        
+            .Cells(lr + i, 4) = 1
+            .Cells(lr, 4) = ""
+        
+        End If
+        
+    Next
 
 End With
 
 End Sub
 
-Sub tttt()
-
-Dim o As New clsInformation
-
-'o.getBasicInformation
-
-Debug.Print o.GetEndDate
-
-End Sub
-
-
-
 
 '===================================
 Sub checkTestCompleted() '20230225 add
+
+Dim REC_obj As New clsRecord
+Dim Test_obj As New clsReportTest
 
 With Sheets("Test")
 
@@ -51,8 +56,17 @@ With Sheets("Test")
     For r = 2 To lr
     
         TestName = .Cells(r, "A")
-        calcTest = .Cells(r, "F")
-        doTest = .Cells(r, "G")
+        ItemName = .Cells(r, "C")
+        testPeriod = .Cells(r, "D")
+        
+        Call REC_obj.getNumAndSumByItemName(TestName, CDate(Now()), rec_num, rec_sum)
+        
+        ItemName = .Cells(r, "C")
+        
+        Call REC_obj.getNumAndSumByItemName(ItemName, CDate(Now()), item_num, item_sum)
+        
+        calcTest = rec_sum
+        doTest = Test_obj.getTestNeedNum(item_sum, testPeriod)
         
         If doTest > calcTest Then
         

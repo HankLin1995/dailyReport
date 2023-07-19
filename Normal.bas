@@ -47,7 +47,7 @@ Dim obj As New clsReport
 
 'obj.CreateSig
 
-obj.GetInfo
+obj.getInfo
 obj.CollectItem
 obj.CollectRec
 obj.WriteReport

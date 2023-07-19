@@ -166,8 +166,12 @@ With shtMain
     
         TestName = .Cells(r, 1)
         TestDesign = .Cells(r, 2)
+        TestDesign = Split(TestDesign, ",")(t_change)
         
-        If t_change = 1 Then TestDesign = .Cells(r, 5)
+        'TestDesign = tmp(t_change)
+
+        
+        'If t_change = 1 Then TestDesign = .Cells(r, 5)
         
         TestMoney = .Cells(r, 3)
         TestLoc = .Cells(r, 4)
@@ -341,3 +345,39 @@ If SumTestAmount < SumTestCount Then
 End If
 
 End Function
+
+Function getTestNeedNum(ByVal num As Double, ByVal s As String)
+
+tmp = Split(s, ",")
+
+For Each it In tmp
+
+    If IsNumeric(it) Then
+
+        If num >= CDbl(it) Then cnt = cnt + 1
+    
+    Else
+    
+        If cnt > 0 Then
+    
+            before_num = CDbl(tmp(j - 1))
+            each_num = CDbl(mid(it, 1, Len(it) - 1))
+         
+            If (num - before_num) <> 0 Then
+        
+            cnt = cnt + Int((num - before_num) / each_num) + 1
+    
+            End If
+    
+        End If
+    
+    End If
+    
+    j = j + 1
+    
+Next
+
+getTestNeedNum = cnt
+
+End Function
+

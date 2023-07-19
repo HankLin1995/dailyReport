@@ -67,11 +67,11 @@ With Sheets("PAY")
     
         item_name = .Cells(r, 2)
         
-        Set coll_Rows = myFunc.getRowsByUser("Budget", "B", item_name)
+        Set coll_rows = myFunc.getRowsByUser("Budget", "B", item_name)
         
         With Sheets("Budget")
         
-            r_data = coll_Rows(1)
+            r_data = coll_rows(1)
         
             item_index = .Cells(r_data, 1)
             item_unit = .Cells(r_data, 3)
@@ -324,7 +324,7 @@ Sub getPayInfo()
 Dim myFunc As New clsMyfunction
 Dim inf As New clsInformation
 
-Call inf.getBasicInformation
+'Call inf.getBasicInformation
 
 With Sheets("PAY_Report")
 
@@ -340,9 +340,9 @@ With Sheets("PAY_Report")
     .Range("G5") = pay_date
     .Range("D3") = getPayCounts + 1
     
-    Set coll_Rows = myFunc.getRowsByUser("Diary", "B", Format(pay_date, "yyyy/mm/dd(aaa)"))
+    Set coll_rows = myFunc.getRowsByUser("Diary", "B", Format(pay_date, "yyyy/mm/dd(aaa)"))
 
-    pgs = Sheets("Diary").Cells(coll_Rows(1), "I")
+    pgs = Sheets("Diary").Cells(coll_rows(1), "I")
     
     .Range("G41") = pgs
 
@@ -413,9 +413,9 @@ With Sheets("PAY_EX")
 
 lc = .Cells(1, 1).End(xlToRight).Column
 
-Set coll_Rows = myFunc.getRowsByUser("PAY_EX", "B", item_name)
+Set coll_rows = myFunc.getRowsByUser("PAY_EX", "B", item_name)
 
-For Each r In coll_Rows
+For Each r In coll_rows
     
     pay_num = .Cells(r, 4)
     pay_sum = pay_sum + pay_num
@@ -434,9 +434,9 @@ With Sheets("PAY_EX")
 
 lc = .Cells(1, 1).End(xlToRight).Column
 
-Set coll_Rows = myFunc.getRowsByUser("PAY_EX", "B", item_name)
+Set coll_rows = myFunc.getRowsByUser("PAY_EX", "B", item_name)
 
-For Each r In coll_Rows
+For Each r In coll_rows
     
     pay_cost = .Cells(r, 5)
     pay_sum_cost = pay_sum_cost + pay_cost

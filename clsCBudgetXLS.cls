@@ -47,9 +47,9 @@ Sub getPrintPage()
 
 Dim sht As Worksheet
 
-HP = ActiveSheet.HPageBreaks.count + 1 '羇计
+hp = ActiveSheet.HPageBreaks.count + 1 '羇计
 VP = ActiveSheet.VPageBreaks.count + 1 '绢计
-PG = HP * VP '羆计
+PG = hp * VP '羆计
 
 Set sht = Sheets("CBudget")
 
@@ -486,9 +486,9 @@ Private Function getSumFormula(ByVal count As Integer, ByVal col As String, Opti
 
 For i = scount To count
 
-    F = F & "+" & col & collAddress(i)
+    f = f & "+" & col & collAddress(i)
 
-    getSumFormula = "=SUM(" & mid(F, 2) & ")"
+    getSumFormula = "=SUM(" & mid(f, 2) & ")"
 
 Next
 

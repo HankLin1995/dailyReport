@@ -770,3 +770,60 @@ For i = 1 To rec_rows.count
 Next
 
 End Sub
+
+Sub getReportSum()
+
+Sheets("Report_Sum").Range("A9:L40").ClearContents
+
+Dim REC_obj As New clsRecord
+Dim myFunc As New clsMyfunction
+Dim PCCES_obj As New clsPCCES
+Dim Inf_obj As New clsInformation
+
+Set coll_items = PCCES_obj.getRecordingItemsAll
+
+myFunc.showList (coll_items)
+
+s_date = CDate(InputBox("請輸入統計起始日期", , Inf_obj.startDate))
+e_date = CDate(InputBox("請輸入統計結束日期", , Format(Now(), "yyyy/mm/dd")))
+
+Sheets("Report_Sum").Range("A3") = s_date
+Sheets("Report_Sum").Range("D3") = e_date
+
+t_change = Inf_obj.getContractChangesByDate(e_date)
+
+For Each rec_item In coll_items
+
+    cnt = cnt + 1
+
+    Call REC_obj.getNumAndSumByItemName(rec_item, s_date, rec_num_s, rec_sum_s)
+    Call REC_obj.getNumAndSumByItemName(rec_item, e_date, rec_num_e, rec_sum_e)
+
+    Set coll_rows = myFunc.getRowsByUser2("Budget", rec_item, 2, "工程項目")
+    
+    item_unit = Sheets("Budget").Cells(coll_rows(1), 3)
+    item_num = Sheets("Budget").Cells(coll_rows(1), PCCES_obj.t_change_to_column(t_change))
+    report_num = rec_sum_e - rec_sum_s
+    
+    Call exportReport_Sum(rec_item, item_unit, item_num, report_num, rec_sum_e, cnt)
+    
+Next
+
+End Sub
+
+Sub exportReport_Sum(ByVal rec_item As String, ByVal item_unit As String, ByVal item_num, _
+    ByVal report_num, ByVal rec_sum_e, ByVal cnt As Integer)
+
+With Sheets("Report_Sum")
+
+c = 1
+
+If cnt > 31 Then c = 7
+
+arr = Array(rec_item, , item_unit, item_num, report_num, rec_sum_e)
+
+.Cells(9 + cnt - 1, c).Resize(1, 6) = arr
+
+End With
+
+End Sub

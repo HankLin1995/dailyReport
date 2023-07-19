@@ -572,7 +572,7 @@ PAY_obj.clearPAY
 
 Sheets("Records").Activate
 
-Dim Print_obj As New clsPrintOut
+Dim print_obj As New clsPrintOut
 Dim f As String
 
 On Error Resume Next
@@ -587,7 +587,7 @@ f = ThisWorkbook.Path & "\PAY\" & file_name & ".xls"
 
 ThisWorkbook.Sheets("PAY_Report").Visible = True
 
-Call Print_obj.SpecificShtToXLS("PAY_Report", f) '& ".xls")
+Call print_obj.SpecificShtToXLS("PAY_Report", f) '& ".xls")
 ThisWorkbook.Sheets("PAY_Report").Visible = False
 
 End Sub
@@ -679,6 +679,60 @@ With Sheets("Diary")
     Next
 
 End With
+
+End Sub
+
+Sub checkTestCompleted() '20230225 add
+
+Dim REC_obj As New clsRecord
+Dim Test_obj As New clsReportTest
+
+With Sheets("Test")
+
+    lr = .Cells(.Rows.count, "C").End(xlUp).Row
+    
+    For r = 2 To lr
+    
+        TestName = .Cells(r, "A")
+        ItemName = .Cells(r, "C")
+        testPeriod = .Cells(r, "D")
+        
+        Call REC_obj.getNumAndSumByItemName(TestName, CDate(Now()), rec_num, rec_sum)
+        
+        ItemName = .Cells(r, "C")
+        
+        Call REC_obj.getNumAndSumByItemName(ItemName, CDate(Now()), item_num, item_sum)
+        
+        calcTest = rec_sum
+        doTest = Test_obj.getTestNeedNum(item_sum, testPeriod)
+        
+        If doTest > calcTest Then
+        
+            prompt = prompt & TestName & "©|¤í¯Ê" & doTest - calcTest & "²Õ" & vbNewLine & vbNewLine
+        
+        End If
+    
+    Next
+
+    If prompt <> "" Then MsgBox prompt
+
+End With
+
+End Sub
+
+Sub cmdGetReportSum()
+
+Dim obj As New clsRecord
+
+obj.getReportSum
+
+Dim print_obj As New clsPrintOut
+
+ThisWorkbook.Sheets("Report_Sum").Visible = True
+
+print_obj.SpecificShtToXLS ("Report_Sum")
+
+ThisWorkbook.Sheets("Report_Sum").Visible = False
 
 End Sub
 

@@ -237,7 +237,7 @@ wb.Sheets("¤u§@ªí1").Delete
 
 Application.DisplayAlerts = True
 
-If file_path <> "False" Then
+If file_path <> "False" And file_path <> "" Then
 
     wb.SaveAs Filename:=file_path
     wb.Close

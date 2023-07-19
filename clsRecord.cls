@@ -169,7 +169,7 @@ With shtRecord
     
     Call myFunc.AppendData("Records", arr)
 
-    Call obj.FindTestNum(RecItem, RecAmount, RecLast, recDate)
+    'Call obj.FindTestNum(RecItem, RecAmount, RecLast, recDate)
 
 End With
 

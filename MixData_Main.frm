@@ -61,6 +61,8 @@ obj.Recording_Mix
 
 Call ResetItem_Mix
 
+Call checkTestCompleted
+
 End Sub
 
 Private Sub CommandButton2_Click() '20230205

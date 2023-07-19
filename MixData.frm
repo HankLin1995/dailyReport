@@ -50,13 +50,15 @@ With Me
     MixName = .txtMixName
     MixDefine = .txtDefine
     MixDefineTotal = .txtDefineTotal
+    MixUnit = .txtUnit
+    MixChannel = .txtChannel
     tmp = Split(mid(.txtMixTable, 2), ",")
     
 End With
 
 Dim obj As New clsMixData
 
-Call obj.AppendData(MixName, MixDefine, MixDefineTotal, tmp)
+Call obj.AppendData(MixName, MixDefine, MixDefineTotal, MixUnit, MixChannel, tmp)
 
 'With Sheets("Mix")
 '
@@ -83,11 +85,23 @@ Call obj.AppendData(MixName, MixDefine, MixDefineTotal, tmp)
 End Sub
 
 
+Private Sub txtMixName_AfterUpdate()
+
+Dim Mix_obj As New clsMixData
+
+If Mix_obj.IsMixNameUsed(Me.txtMixName) = True Then MsgBox "工項概要已經被使用!", vbCritical: Me.txtMixName = ""
+
+End Sub
+
+Private Sub txtMixName_Change()
+
+End Sub
+
 Private Sub UserForm_Initialize()
 
 Dim obj As New clsBasicData
 
-obj.ReadData
+'obj.ReadData
 obj.Init_Mix
 
 End Sub

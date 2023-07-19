@@ -1,46 +1,14 @@
 Attribute VB_Name = "test"
-Sub enlargeWorkDays()
 
-Dim Inf_obj As New clsInformation
-Dim myFunc As New clsMyfunction
+Sub main()
 
-enlargeDate = InputBox("請輸入展延開始日期", , Format(Now(), "yyyy/mm/dd"))
-enlargeDays = CInt(InputBox("請輸入展延天數", , 1))
-
-Sheets("Main").Range("B6") = Inf_obj.workDay + enlargeDays
-Sheets("Main").Range("C6") = CDate(enlargeDate)
-
-With Sheets("Diary")
-
-    lr = .Cells(.Rows.count, 1).End(xlUp).Row
-
-    For i = 1 To enlargeDays
-        
-        end_date = Inf_obj.GetEndDate
-        diary_date = end_date + i
-        
-        Call myFunc.AppendData("Diary", Array(lr + i - 1, diary_date, "晴"))
-        
-        '----set formula---
-        
-        .Cells(lr + i, 1).Resize(1, 10).Borders.LineStyle = 1
-        .Cells(lr + i, 1).Resize(1, 4).HorizontalAlignment = xlCenter
-        .Cells(lr + i, 2).NumberFormatLocal = "yyyy/mm/dd(aaa)"
-        .Cells(lr + i, 5).Resize(1, 2).WrapText = True
-        .Cells(lr + i, 4).NumberFormatLocal = "0.00%"
-        
-        If i = enlargeDays Then
-        
-            .Cells(lr + i, 4) = 1
-            .Cells(lr, 4) = ""
-        
-        End If
-        
-    Next
-
-End With
+Call clearMixSum
+Call test_getUnitNames
+Call test_getUnitNames2
 
 End Sub
+
+
 
 
 '===================================

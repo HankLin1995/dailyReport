@@ -244,6 +244,8 @@ End Sub
 
 Sub hideCompleteItem() '做好的可以隱藏起來
 
+msg = MsgBox("是否要顯示全部?", vbYesNo)
+
 With shtMix
 
     Set collr = getSeperateRows()
@@ -255,7 +257,11 @@ With shtMix
         
         If .Cells(sr, 1).Font.ColorIndex = 3 Then
    
-            .Rows(sr).Resize(er - sr + 1).Hidden = True
+            If msg = vbYes Then
+                .Rows(sr).Resize(er - sr + 1).Hidden = False
+            Else
+                .Rows(sr).Resize(er - sr + 1).Hidden = True
+            End If
             
         End If
         
@@ -305,7 +311,7 @@ Set getSeperateRows = coll
 
 End Function
 
-Sub AppendData(ByVal MixName, ByVal MixDefine, ByVal MixDefineTotal, tmp) '將表單資料放入Mix
+Sub AppendData(ByVal MixName, ByVal MixDefine, ByVal MixDefineTotal, ByVal MixUnit, ByVal MixChannel, tmp) '將表單資料放入Mix
 
 With shtMix
     
@@ -316,6 +322,8 @@ With shtMix
     .Cells(lr, 1) = MixName
     .Cells(lr, 2) = MixDefine
     .Cells(lr, 3) = MixDefineTotal
+    .Cells(lr, 8) = MixUnit
+    .Cells(lr, 9) = MixChannel
     
     For i = 0 To UBound(tmp) - 1 Step 3
     
@@ -331,88 +339,239 @@ End With
 
 End Sub
 
+'Sub clearMixSum()
+'
+'With shtMix_Sum
+'
+'    lr = .Cells(.Rows.count, 1).End(xlUp).Row
+'    .Rows(3 & ":" & lr).ClearContents
+'
+'End With
+'
+'End Sub
+'
+'Sub getSpecificItem(ByRef collItem, ByRef collIndex)
+'
+'With shtMix
+'
+'    lr = .Cells(.Rows.count, 4).End(xlUp).Row
+'
+'    For r = 3 To lr
+'
+'        On Error Resume Next
+'
+'        Item = .Cells(r, 4).Value
+'        collItem.Add Item, Item
+'
+'        On Error GoTo 0
+'
+'    Next
+'
+'End With
+'
+'For i = 1 To collItem.count '取得各工項名稱不重複值的index
+'
+'    collIndex.Add i, collItem(i)
+'
+'Next
+'
+'End Sub
+'
+'Sub calcMixData(ByVal collItem, ByVal collIndex)
+'
+'With shtMix
+'
+'    Dim arr(): ReDim arr(collIndex.count - 1, 2)
+'
+'    Set collr = getSeperateRows
+'
+'    j = 3
+'
+'    For i = 1 To collr.count - 1
+'
+'        sr = collr(i)
+'        er = collr(i + 1) - 1
+'
+'        For r = sr To er
+'
+'            '======各單項統計======
+'
+'            id = .Cells(sr, 1) '工項概要
+'            Item = .Cells(r, 4) '工項名稱
+'            unit = .Cells(r, 6) '單位
+'            itemNum = .Cells(sr, 3) * .Cells(r, 5) '該工項總數量
+'            tmp = Split(id, ",")
+'
+'            Sheets("Mix_Sum").Range("A" & j & ":E" & j) = Array(id, Item, itemNum, unit, tmp(0)): j = j + 1
+'
+'            '=======合計統計=======
+'
+'            arr(collIndex(Item) - 1, 0) = Item
+'            arr(collIndex(Item) - 1, 1) = arr(collIndex(Item) - 1, 1) + itemNum
+'            arr(collIndex(Item) - 1, 2) = unit
+'
+'        Next
+'
+'    Next
+'
+'    shtMix_Sum.Range("G3:I" & UBound(arr) + 3) = arr
+'    shtMix_Sum.Activate
+'
+'End With
+'
+'
+'End Sub
+
 Sub clearMixSum()
 
-With shtMix_Sum
+With ThisWorkbook.Sheets("Mix_Tmp")
 
-    lr = .Cells(.Rows.count, 1).End(xlUp).Row
-    .Rows(3 & ":" & lr).ClearContents
+    Set rng = .Cells.SpecialCells(xlCellTypeLastCell)
+    
+    Debug.Print rng.Address
+    
+    .Range("A2:" & rng.Address).Clear
+    
+End With
+
+End Sub
+
+Sub getMixUnitNum()
+
+Dim myFunc As New clsMyfunction
+
+Set coll_unit_names = myFunc.getUniqueItems("Mix", 3, , "主體單元")
+
+Call myFunc.showList(coll_unit_names)
+
+With Sheets("Mix")
+
+    lr = .Cells(.Rows.count, 4).End(xlUp).Row
+    
+    For Each unit_name In coll_unit_names
+    
+        Debug.Print unit_name
+    
+        Set coll_rows = myFunc.getRowsByUser2("Mix", unit_name, 2, "主體單元")
+        
+        For Each r In coll_rows
+        
+            r_end = getNextNotBlankRow(r, lr)
+            
+            For r_data = r To r_end - 1
+            
+                mix_name = .Cells(r, 1)
+                mix_unit_name = .Cells(r, "I")
+                mix_item_name = .Cells(r_data, "D")
+                mix_num = .Cells(r_data, "E")
+                mix_Unit = .Cells(r_data, "F")
+                
+                mix_len = .Cells(r, "C")
+                
+                arr = Array(mix_name, mix_unit_name, mix_item_name, mix_num, mix_Unit, mix_len, mix_len * mix_num)
+            
+                Call myFunc.AppendData("Mix_TMP", arr)
+            
+            Next
+        
+        Next
+    
+    Next
 
 End With
 
 End Sub
 
-Sub getSpecificItem(ByRef collItem, ByRef collIndex)
+Sub getMixUnitSum()
 
-With shtMix
+Dim myFunc As New clsMyfunction
 
-    lr = .Cells(.Rows.count, 4).End(xlUp).Row
+Set coll_unit_names = myFunc.getUniqueItems("Mix", 3, , "主體單元")
+
+Call myFunc.showList(coll_unit_names)
+
+For Each UnitName In coll_unit_names
+
+    Set coll_rows = myFunc.getRowsByUser2("Mix_TMP", UnitName, 1, "單元名稱")
     
-    For r = 3 To lr
+    sr = coll_rows(1)
+    er = coll_rows(coll_rows.count)
     
-        On Error Resume Next
+    Set coll_uqItems = myFunc.getUniqueItemsToLastRow("Mix_TMP", sr, er, "C")
+    
+    With Sheets("Mix_TMP")
+    
+        j = 0
+    
+        For Each it In coll_uqItems
         
-        Item = .Cells(r, 4).Value
-        collItem.Add Item, Item
-
-        On Error GoTo 0
+            Debug.Print UnitName
+        
+            unit_Sum = 0
+            all_Sum = 0
+        
+            For r = sr To er
+            
+                If .Cells(r, "C") = it Then
+                    mix_Unit = .Cells(r, "E")
+                    mix_len = .Cells(r, "F")
+                    unit_Sum = unit_Sum + .Cells(r, "D")
+                    all_Sum = all_Sum + .Cells(r, "G")
+                
+                End If
+                
+            Next
+            
+            Debug.Print it & ">" & unit_Sum & ">" & all_Sum
+            
+            Call myFunc.AppendData("Mix_TMP", Array("合計", UnitName, it, unit_Sum, mix_Unit, mix_len, all_Sum))
+            
+            If j = 0 Then lr = .Cells(.Rows.count, 1).End(xlUp).Row
+            
+            .Range("A" & lr & ":G" & lr).Borders(xlEdgeTop).LineStyle = 1
+             .Range("A" & lr & ":G" & lr).Borders(xlEdgeTop).Weight = xlMedium
+            
+            j = j + 1
+            
+        Next
     
-    Next
+        .Columns.AutoFit
     
-End With
+    End With
 
-For i = 1 To collItem.count '取得各工項名稱不重複值的index
-
-    collIndex.Add i, collItem(i)
-    
 Next
 
 End Sub
 
-Sub calcMixData(ByVal collItem, ByVal collIndex)
+Function getNextNotBlankRow(ByVal r As Integer, ByVal lr As Integer)
 
-With shtMix
-    
-    Dim arr(): ReDim arr(collIndex.count - 1, 2)
+With Sheets("Mix")
 
-    Set collr = getSeperateRows
-    
-    j = 3
-    
-    For i = 1 To collr.count - 1
-    
-        sr = collr(i)
-        er = collr(i + 1) - 1
-    
-        For r = sr To er
-            
-            '======各單項統計======
-            
-            id = .Cells(sr, 1) '工項概要
-            Item = .Cells(r, 4) '工項名稱
-            unit = .Cells(r, 6) '單位
-            itemNum = .Cells(sr, 3) * .Cells(r, 5) '該工項總數量
-            tmp = Split(id, ",")
+For r_data = r + 1 To lr
 
-            Sheets("Mix_Sum").Range("A" & j & ":E" & j) = Array(id, Item, itemNum, unit, tmp(0)): j = j + 1
-                 
-            '=======合計統計=======
-                 
-            arr(collIndex(Item) - 1, 0) = Item
-            arr(collIndex(Item) - 1, 1) = arr(collIndex(Item) - 1, 1) + itemNum
-            arr(collIndex(Item) - 1, 2) = unit
-            
-        Next
+    If .Cells(r_data, "A") <> "" Then getNextNotBlankRow = r_data: Exit Function
     
-    Next
-    
-    shtMix_Sum.Range("G3:I" & UBound(arr) + 3) = arr
-    shtMix_Sum.Activate
-    
+    If r_data = lr Then getNextNotBlankRow = lr + 1
+
+Next
+
 End With
 
+End Function
 
-End Sub
+Function IsMixNameUsed(ByVal MixName As String)
+
+IsMixNameUsed = True
+
+Dim myFunc As New clsMyfunction
+
+Set coll_rows = myFunc.getRowsByUser2("Mix", MixName, 2, "工項概要")
+
+If coll_rows.count = 0 Then IsMixNameUsed = False
+
+
+
+End Function
 
 
 

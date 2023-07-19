@@ -72,6 +72,8 @@ Dim obj As New clsBasicData
 Call obj.RetrunUnit
 Call obj.UsedAmount
 
+'Call checkTestCompleted
+
 End Sub
 
 Sub ResetItem_Mix()

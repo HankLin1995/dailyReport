@@ -566,7 +566,7 @@ With Sheets(shtName)
     
         On Error Resume Next
         
-        coll.Add CStr(s), CStr(s)
+        If s <> "" Then coll.Add CStr(s), CStr(s)
         
         On Error GoTo 0
     
@@ -577,6 +577,40 @@ End With
 Set getUniqueItems = coll
 
 End Function
+
+Function getUniqueItemsToLastRow(ByVal shtName As String, ByVal sr As Integer, ByVal lr As Integer, Optional ByVal find_col_eng As String, Optional find_col_keyValue As String = "")
+
+Dim coll As New Collection
+
+With Sheets(shtName)
+
+    If find_col_eng = "" Then
+        
+        Set rng = .Rows(sr - 1).Find(find_col_keyValue)
+        find_col_eng = ConvertToLetter(rng.Column)
+        
+    End If
+
+   ' lr = .Cells(.Rows.count, find_col_eng).End(xlUp).Row
+
+    For r = sr To lr
+    
+        s = .Cells(r, find_col_eng)
+    
+        On Error Resume Next
+        
+        If s <> "" Then coll.Add CStr(s), CStr(s)
+        
+        On Error GoTo 0
+    
+    Next
+
+End With
+
+Set getUniqueItemsToLastRow = coll
+
+End Function
+
 
 Sub AppendData(ByVal shtName As String, ByVal arr) ', Optional ByVal sc As Integer = 1)
 

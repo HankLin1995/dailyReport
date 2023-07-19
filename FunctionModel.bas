@@ -332,6 +332,7 @@ Sub cmdReArrange()
 Dim obj As New clsPCCES
 
 obj.ReArrangeTitle
+obj.getPercentageItems
 
 End Sub
 Sub cmdFindBudget()

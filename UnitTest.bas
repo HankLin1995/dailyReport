@@ -1,4 +1,21 @@
 Attribute VB_Name = "UnitTest"
+Sub test_IsMixNameUsed()
+
+Dim o As New clsMixData
+
+Debug.Assert o.IsMixNameUsed("C-C',¥kÀð") = False
+
+End Sub
+
+Sub test_getNextNotBlankRow()
+
+r = 71
+lr = 72
+
+Debug.Assert getNextNotBlankRow(r, lr) = 73
+
+End Sub
+
 Sub test_getRowsByUser2()
 
 Dim o As New clsMyfunction

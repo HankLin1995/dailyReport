@@ -118,6 +118,8 @@ frmData.cboItem = ""
 
 Call ResetItem
 
+Call checkTestCompleted
+
 End Sub
 
 

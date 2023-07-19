@@ -265,35 +265,35 @@ End With
 
 End Sub
 
-Sub FindTestNum(ByVal RecItem As String, ByVal RecAmount As Double, ByVal RecLast As Double, ByVal recDate As Date)
-
-sr = 2
-
-With shtTest
-    
-    For r = sr To .Cells(.Rows.count, 1).End(xlUp).Row
-    
-        targetTest = .Cells(r, 3)
-    
-        If targetTest = RecItem Then
-        
-            targetTestStr = .Cells(r, 5)
-            contractNum = .Cells(r, 4)
-            SumRecItemNum = contractNum - RecLast
-            oldTestItem = .Cells(r, 1)
-            
-            SumTestNum = CountOldTestAmount(oldTestItem, recDate)
-            
-            IsTested = CheckTestNum(SumTestNum, SumRecItemNum, targetTestStr)
-            
-            Exit Sub
-            
-        End If
-    Next
-
-End With
-
-End Sub
+'Sub FindTestNum(ByVal RecItem As String, ByVal RecAmount As Double, ByVal RecLast As Double, ByVal recDate As Date)
+'
+'sr = 2
+'
+'With shtTest
+'
+'    For r = sr To .Cells(.Rows.count, 1).End(xlUp).Row
+'
+'        targetTest = .Cells(r, 3)
+'
+'        If targetTest = RecItem Then
+'
+'            targetTestStr = .Cells(r, 5)
+'            contractNum = .Cells(r, 4)
+'            SumRecItemNum = contractNum - RecLast
+'            oldTestItem = .Cells(r, 1)
+'
+'            SumTestNum = CountOldTestAmount(oldTestItem, recDate)
+'
+'            IsTested = CheckTestNum(SumTestNum, SumRecItemNum, targetTestStr)
+'
+'            Exit Sub
+'
+'        End If
+'    Next
+'
+'End With
+'
+'End Sub
 
 Private Function CountOldTestAmount(ByVal TestName As String, ByVal recDate As Date) As Double
 

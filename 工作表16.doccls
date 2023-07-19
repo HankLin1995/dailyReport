@@ -24,12 +24,18 @@ End Sub
 Sub calcMixData()
 
 Dim obj As New clsMixData
-
-Dim collItem As New Collection
-Dim collIndex As New Collection
+'
+'Dim collItem As New Collection
+'Dim collIndex As New Collection
+'
+'Call obj.clearMixSum
+'Call obj.getSpecificItem(collItem, collIndex)
+'Call obj.calcMixData(collItem, collIndex)
 
 Call obj.clearMixSum
-Call obj.getSpecificItem(collItem, collIndex)
-Call obj.calcMixData(collItem, collIndex)
+Call obj.getMixUnitNum
+Call obj.getMixUnitSum
+
+Sheets("Mix_TMP").Activate
 
 End Sub

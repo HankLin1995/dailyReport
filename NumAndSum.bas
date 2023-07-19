@@ -9,7 +9,7 @@ With Sheets("Num")
     For c = 2 To lc
     
         today_sum = .Cells(lr, c)
-        all_sum = Sheets("Sum").Cells(lr, c)
+        all_Sum = Sheets("Sum").Cells(lr, c)
     
         ratio = today_sum / 18419249
         

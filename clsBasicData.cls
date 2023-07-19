@@ -222,6 +222,11 @@ End Sub
 
 Sub Init_Mix() '於MixData表單新增工程項目、試體項目
 
+Dim PCCES_obj As New clsPCCES
+Dim Inf_obj As New clsInformation
+
+Set collItem = PCCES_obj.getRecordingItemsAll
+
 With MixData
 
     For i = 1 To collItem.count '設定不顯示的百分比項目
@@ -231,11 +236,11 @@ With MixData
     
     Next
     
-    For i = 1 To collTest.count
-    
-        .cboItem.AddItem collTest.Item(i)
-    
-    Next
+'    For i = 1 To collTest.count
+'
+'        .cboItem.AddItem collTest.Item(i)
+'
+'    Next
     
 End With
 

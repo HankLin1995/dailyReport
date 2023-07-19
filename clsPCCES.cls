@@ -198,7 +198,17 @@ End Sub
 
 Sub settingColorRules()
 
-targetCnt = CInt(InputBox("請輸入之後為百分比項目之序位", , 3))
+Set coll_2nd = getCollSeconedName
+
+For i = 1 To coll_2nd.count
+
+    p = p & i & "." & coll_2nd(i) & vbNewLine
+
+Next
+
+On Error GoTo ERRORHANDLE
+
+targetCnt = CInt(InputBox("請輸入之後為百分比項目之序位" & vbNewLine & p, , 3))
 
 With Sheets("Budget")
 
@@ -229,7 +239,11 @@ With Sheets("Budget")
 
 End With
 
+Exit Sub
+
 Call ReArrangeTitle
+
+ERRORHANDLE: MsgBox "等等需要使用者自行設定準則!", vbInformation
 
 End Sub
 
@@ -405,7 +419,7 @@ Set getCollSeconedName = coll
 
 End Function
 
-Function getRecordingItemsByRecDate(ByVal rec_date As Date, Optional myRules = 3)
+Function getRecordingItemsByRecDate(ByVal rec_date As Date) ', Optional myRules = 3)
 
 Dim Inf_obj As New clsInformation
 Dim coll As New Collection
@@ -422,7 +436,7 @@ With Sheets("Budget")
     
         item_rule = .Cells(r, 1).Font.ColorIndex
     
-        If item_rule = myRules Then
+        If item_rule = 3 Then
         
             item_num = .Cells(r, 1)
             item_name = .Cells(r, 2)
@@ -499,6 +513,38 @@ With Sheets("Budget")
 End With
 
 Set getPercentageItemsByRecDate = coll
+
+End Function
+
+Function getRecordingItemsAll()
+
+Dim Inf_obj As New clsInformation
+Dim coll As New Collection
+
+With Sheets("Budget")
+
+    lr = .Cells(.Rows.count, 1).End(xlUp).Row
+
+    For r = 3 To lr
+    
+        item_rule = .Cells(r, 1).Font.ColorIndex
+    
+        If item_rule = 3 Then
+        
+            item_num = .Cells(r, 1)
+            item_name = .Cells(r, 2)
+            'item_amount = .Cells(r, 4)
+
+            'If item_amount <> 0 Then
+            coll.Add item_name
+
+        End If
+    
+    Next
+
+End With
+
+Set getRecordingItemsAll = coll
 
 End Function
 

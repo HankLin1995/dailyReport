@@ -214,7 +214,7 @@ With frmData
     
     Next
 
-    .txtDay = Format(Now(), "yyyy/mm/dd")
+    '.txtDay = Format(Now(), "yyyy/mm/dd")
 
 End With
 

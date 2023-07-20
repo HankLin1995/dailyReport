@@ -222,7 +222,7 @@ Private Sub UserForm_Initialize()
 
 rec_date = InputBox("請輸入填寫日期", , Format(Now(), "yyyy/mm/dd"))
 
-Me.txtDay = rec_date
+frmData.txtDay = rec_date
 
 Dim obj As New clsBasicData
 

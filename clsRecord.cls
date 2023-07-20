@@ -322,7 +322,7 @@ End Function
 '
 '    lr = .Cells(Rows.count, 1).End(xlUp).Row
 '
-'    .Range("A3:K" & lr).Sort key1:=.Range("B3:B" & lr), order1:=xlAscending
+    shtRecord.Range("A3:K" & lr).Sort key1:=.Range("B3:B" & lr), order1:=xlAscending
 '
 '    For r = 3 To lr
 '
@@ -479,163 +479,163 @@ End With
 
 End Sub
 
-'Sub getTmpData(ByVal IsBlank As Boolean)
-'
-'Set shtTmp = Sheets("TMP")
-'
-'Dim coll_chname As New Collection
-'Dim coll_item As New Collection
-'
-'shtTmp.Cells.Clear
-'
-'With shtRecord
-'
-'lr = .Cells(.Rows.count, 1).End(xlUp).Row
-'
-'    For r = 3 To lr 'collect chname
-'
-'        chname = .Cells(r, 3)
-'
-'        On Error Resume Next: coll_chname.Add chname, chname: On Error GoTo 0
-'
-'    Next
-'
-'    For Each mychname In coll_chname
-'
-'        shtTmp.Columns("A:C").ClearContents 'basic data
-'
-'        rr = 1
-'
-'        For r = 3 To lr
-'
-'            If .Cells(r, 3) = mychname Then 'putin basic data
-'
-'                shtTmp.Cells(rr, 1 + c) = .Cells(r, 3)
-'                shtTmp.Cells(rr, 2 + c) = .Cells(r, 5)
-'                shtTmp.Cells(rr, 3 + c) = .Cells(r, 6)
-'
-'                rr = rr + 1
-'
-'            End If
-'
-'        Next
-'
-'        With shtTmp
-'
-'            .Range("A1:C" & rr).Sort key1:=.Range("B1:B" & rr), order1:=xlAscending
-'            '.Range(Chr(64 + c + 1) & "1:" & Chr(64 + c + 3) & rr).Sort key1:=.Range(Chr(64 + c + 2) & "1:" & Chr(64 + c + 2) & rr), order1:=xlAscending
-'
-'             For r = 1 To rr - 1 'collect base item
-'
-'                 Item = .Cells(r, 2)
-'                 On Error Resume Next: coll_item.Add Item, Item: On Error GoTo 0
-'
-'             Next
-'
-'             .Cells(1, 4 + cc) = .Cells(1, 1) 'title
-'
-'             item_r = 2
-'
-'             For Each myitem In coll_item
-'
-'                 Sum = 0
-'                 For r = 1 To rr - 1
-'
-'                     If .Cells(r, 2) = myitem Then
-'
-'                         Sum = Sum + .Cells(r, 3)
-'
-'                     End If
-'
-'                 Next
-'
-'                If Sum <> 0 Then
-'
-'                 .Cells(item_r, 4 + cc) = myitem
-'                 .Cells(item_r, 5 + cc) = Sum
-'
-'                End If
-'
-'                 item_r = item_r + 1
-'
-'             Next
-'
-'             If IsBlank = False Then Set coll_item = Nothing
-'
-'             cc = cc + 2
-'
-'        End With
-'
-'    Next
-'
-'End With
-'
-'shtTmp.Columns("A:C").Delete Shift:=xlToLeft
-'shtTmp.Columns.AutoFit
-'
-'End Sub
-'
-'Sub Tmp2TmpTotal()
-'
-'Set shtTmp = Sheets("TMP")
-'Set shtTmpTotal = Sheets("TMPTOTAL")
-'Dim colltmp As New Collection
-'
-'With shtTmp
-'
-'For c = 1 To .Cells(1, .Columns.count).End(xlToLeft).Column Step 2
-'
-'    chname = .Cells(1, c)
-'
-'    lr = .Cells(.Rows.count, c).End(xlUp).Row
-'
-'    For r = 2 To lr
-'
-'        myitem = .Cells(r, c)
-'        myAmount = .Cells(r, c + 1)
-'
-'        If myitem <> "" Then colltmp.Add r, myitem
-'
-'    Next
-'
-'    With shtTmpTotal
-'
-'        For total_c = 1 To .Cells(1, .Columns.count).End(xlToLeft).Column
-'
-'            total_chname = .Cells(1, total_c)
-'
-'            If total_chname = chname Then
-'
-'                total_lr = .Cells(.Rows.count, 5).End(xlUp).Row
-'
-'                For total_r = 2 To total_lr
-'
-'                    total_item = .Cells(total_r, 5)
-'
-'                    On Error Resume Next
-'
-'                    lastRow = myRow
-'                    myRow = colltmp(total_item)
-'
-'                    If lastRow <> myRow Then
-'                        myAmount = shtTmp.Cells(myRow, c + 1)
-'                        .Cells(total_r, total_c + 1) = myAmount
-'                    End If
-'                Next
-'
-'                Exit For
-'
-'            End If
-'
-'        Next
-'
-'    End With
-'
-'Next
-'
-'End With
-'
-'End Sub
+Sub getTmpData(ByVal IsBlank As Boolean)
+
+Set shtTmp = Sheets("TMP")
+
+Dim coll_chname As New Collection
+Dim coll_item As New Collection
+
+shtTmp.Cells.Clear
+
+With shtRecord
+
+lr = .Cells(.Rows.count, 1).End(xlUp).Row
+
+    For r = 3 To lr 'collect chname
+
+        chname = .Cells(r, 3)
+
+        On Error Resume Next: coll_chname.Add chname, chname: On Error GoTo 0
+
+    Next
+
+    For Each mychname In coll_chname
+
+        shtTmp.Columns("A:C").ClearContents 'basic data
+
+        rr = 1
+
+        For r = 3 To lr
+
+            If .Cells(r, 3) = mychname Then 'putin basic data
+
+                shtTmp.Cells(rr, 1 + c) = .Cells(r, 3)
+                shtTmp.Cells(rr, 2 + c) = .Cells(r, 5)
+                shtTmp.Cells(rr, 3 + c) = .Cells(r, 6)
+
+                rr = rr + 1
+
+            End If
+
+        Next
+
+        With shtTmp
+
+            .Range("A1:C" & rr).Sort key1:=.Range("B1:B" & rr), order1:=xlAscending
+            '.Range(Chr(64 + c + 1) & "1:" & Chr(64 + c + 3) & rr).Sort key1:=.Range(Chr(64 + c + 2) & "1:" & Chr(64 + c + 2) & rr), order1:=xlAscending
+
+             For r = 1 To rr - 1 'collect base item
+
+                 Item = .Cells(r, 2)
+                 On Error Resume Next: coll_item.Add Item, Item: On Error GoTo 0
+
+             Next
+
+             .Cells(1, 4 + cc) = .Cells(1, 1) 'title
+
+             item_r = 2
+
+             For Each myitem In coll_item
+
+                 Sum = 0
+                 For r = 1 To rr - 1
+
+                     If .Cells(r, 2) = myitem Then
+
+                         Sum = Sum + .Cells(r, 3)
+
+                     End If
+
+                 Next
+
+                If Sum <> 0 Then
+
+                 .Cells(item_r, 4 + cc) = myitem
+                 .Cells(item_r, 5 + cc) = Sum
+
+                End If
+
+                 item_r = item_r + 1
+
+             Next
+
+             If IsBlank = False Then Set coll_item = Nothing
+
+             cc = cc + 2
+
+        End With
+
+    Next
+
+End With
+
+shtTmp.Columns("A:C").Delete Shift:=xlToLeft
+shtTmp.Columns.AutoFit
+
+End Sub
+
+Sub Tmp2TmpTotal()
+
+Set shtTmp = Sheets("TMP")
+Set shtTmpTotal = Sheets("TMPTOTAL")
+Dim colltmp As New Collection
+
+With shtTmp
+
+For c = 1 To .Cells(1, .Columns.count).End(xlToLeft).Column Step 2
+
+    chname = .Cells(1, c)
+
+    lr = .Cells(.Rows.count, c).End(xlUp).Row
+
+    For r = 2 To lr
+
+        myitem = .Cells(r, c)
+        myAmount = .Cells(r, c + 1)
+
+        If myitem <> "" Then colltmp.Add r, myitem
+
+    Next
+
+    With shtTmpTotal
+
+        For total_c = 1 To .Cells(1, .Columns.count).End(xlToLeft).Column
+
+            total_chname = .Cells(1, total_c)
+
+            If total_chname = chname Then
+
+                total_lr = .Cells(.Rows.count, 5).End(xlUp).Row
+
+                For total_r = 2 To total_lr
+
+                    total_item = .Cells(total_r, 5)
+
+                    On Error Resume Next
+
+                    lastRow = myRow
+                    myRow = colltmp(total_item)
+
+                    If lastRow <> myRow Then
+                        myAmount = shtTmp.Cells(myRow, c + 1)
+                        .Cells(total_r, total_c + 1) = myAmount
+                    End If
+                Next
+
+                Exit For
+
+            End If
+
+        Next
+
+    End With
+
+Next
+
+End With
+
+End Sub
 '
 
 Sub ChangeMixToRecord(ByVal mix_name As String)

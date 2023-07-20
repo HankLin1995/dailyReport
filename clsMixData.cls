@@ -20,7 +20,7 @@ Private Sub Class_Initialize()
 Set shtRec = Sheets("Records")
 Set shtMix = Sheets("Mix")
 Set shtMain = Sheets("Main")
-Set shtMix_Sum = Sheets("Mix_Sum")
+'Set shtMix_Sum = Sheets("Mix_Sum")
 
 End Sub
 

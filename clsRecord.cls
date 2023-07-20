@@ -322,7 +322,7 @@ End Function
 '
 '    lr = .Cells(Rows.count, 1).End(xlUp).Row
 '
-    shtRecord.Range("A3:K" & lr).Sort key1:=.Range("B3:B" & lr), order1:=xlAscending
+'    shtRecord.Range("A3:K" & lr).Sort key1:=.Range("B3:B" & lr), order1:=xlAscending
 '
 '    For r = 3 To lr
 '
@@ -361,6 +361,8 @@ End Function
 'End Sub
 
 Sub cmdExportToDiary_Main()
+
+Call sortRecords
 
 Dim myFunc As New clsMyfunction
 
@@ -823,6 +825,18 @@ If cnt > 31 Then c = 7
 arr = Array(rec_item, , item_unit, item_num, report_num, rec_sum_e)
 
 .Cells(9 + cnt - 1, c).Resize(1, 6) = arr
+
+End With
+
+End Sub
+
+Sub sortRecords()
+
+With shtRecord
+
+lr = .Cells(.Rows.count, 1).End(xlUp).Row
+
+.Range("A3:K" & lr).Sort key1:=shtRecord.Range("B3:B" & lr), order1:=xlAscending
 
 End With
 

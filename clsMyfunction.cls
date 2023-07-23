@@ -651,6 +651,161 @@ Function ConvertToLetter(iCol As Long) As String
    Loop
 End Function
 
+Function IsNumericWithPlusAndParentheses(inputString As String) As Boolean
+    Dim i As Integer
+    Dim char As String
+    Dim validChars As String
+    validChars = "0123456789+()上下.~、"
+    IsNumericWithPlusAndParentheses = True ' 預設為符合條件
+
+    For i = 1 To Len(inputString)
+        char = mid(inputString, i, 1)
+        If InStr(validChars, char) = 0 Then
+            IsNumericWithPlusAndParentheses = False
+            Exit Function ' 出現非法字符，退出循環
+        End If
+    Next i
+End Function
+
+Function TranLoc(ByVal Data As String) As Double
+
+'樁號型態轉成可計算之樁號
+
+tmp = Split(Data, "+")
+
+If UBound(tmp) = -1 Or Data = "" Then Exit Function ' TranLoc = CDbl(Data): Exit Function
+
+tloc = tmp(0) '千位數
+dloc = tmp(1)
+
+If dloc > 1000 Then Exit Function
+
+If dloc Like "*(*" Then
+
+    tmp2 = Split(dloc, "(")
+
+    If tmp2(0) Like "*.*" Then
+
+        tmp3 = Split(tmp2(0), ".")
+        dloc = tmp3(0) + tmp3(1) / 10
+    
+    Else
+    
+        dloc = tmp2(0)
+    
+    End If
+    
+End If
+
+For i = 1 To Len(tloc)
+
+    loc_ch = mid(tloc, i, 1)
+    If IsNumeric(loc_ch) Then ref = ref & loc_ch
+
+Next
+
+TranLoc = CDbl(ref) * 1000 + CDbl(dloc)
+    
+End Function
+
+Function SplitAllLocs(ByVal rec_loc As String) '區間
+
+Dim coll As New Collection
+
+If rec_loc Like "*~*" Then
+
+    tmp = Split(rec_loc, "、")
+
+    For i = LBound(tmp) To UBound(tmp)
+    
+        coll.Add tmp(i)
+    
+        loc_tmp = Split(tmp(i), "~")
+
+        For j = LBound(loc_tmp) To UBound(loc_tmp)
+
+            my_loc = loc_tmp(j)
+            
+            If Not my_loc Like "0+000*" And TranLoc(my_loc) = 0 Then
+            
+                msg = MsgBox("【" & my_loc & "】樁號無法轉換...是否要繼續運行?", vbCritical + vbYesNo)
+            
+                If msg = vbNo Then End
+            
+            End If
+
+        Next
+        
+    Next
+
+End If
+
+Set SplitAllLocs = coll
+
+End Function
+
+Function IsRecLocPass(ByVal rec_loc As String, ByVal item_loc As String) ', ByVal r As Integer)
+
+IsRecLocPass = False
+
+Dim myFunc As New clsMyfunction
+
+tmp = Split(rec_loc, "~")
+
+rec_sloc = myFunc.TranLoc(tmp(0))
+rec_eloc = myFunc.TranLoc(tmp(1))
+
+tmp2 = Split(item_loc, "~")
+
+item_sloc = myFunc.TranLoc(tmp2(0))
+item_eloc = myFunc.TranLoc(tmp2(1))
+
+'If rec_sloc = 0 Then
+'    err_prompt = "表單起點【" & tmp(0) & "】請再檢查。": Exit Function
+'ElseIf rec_eloc = 0 Then
+'    err_prompt = "表單起點【" & tmp(1) & "】請再檢查。": Exit Function
+'ElseIf item_sloc = 0 Then
+'    err_prompt = "紀錄起點【" & tmp2(0) & "】請再檢查。": Exit Function
+'ElseIf item_eloc = 0 Then
+'    err_prompt = "紀錄起點【" & tmp2(1) & "】請再檢查。": Exit Function
+'End If
+
+
+If item_sloc >= rec_sloc And item_sloc < rec_eloc Then
+
+    err_prompt = "第" & r & "列衝突=>紀錄起點【" & tmp2(0) & "】已包含於本次填報【" & rec_loc & "】"
+
+    If err_prompt <> "" Then p = p & err_prompt & vbNewLine
+
+End If
+
+If item_eloc > rec_sloc And item_eloc <= rec_eloc Then
+
+    err_prompt = "第" & r & "列衝突=>紀錄終點【" & tmp2(1) & "】已包含於本次填報【" & rec_loc & "】"
+
+    If err_prompt <> "" Then p = p & err_prompt & vbNewLine
+
+End If
+
+If rec_sloc >= item_sloc And rec_sloc < item_eloc Then
+
+    err_prompt = "第" & r & "列衝突=>填報起點【" & tmp(0) & "】已包含於舊有紀錄【" & item_loc & "】"
+
+    If err_prompt <> "" Then p = p & err_prompt & vbNewLine
+
+End If
+
+If rec_eloc > item_sloc And rec_eloc <= item_eloc Then
+
+    err_prompt = "第" & r & "列衝突=>填報終點【" & tmp(1) & "】已包含於舊有紀錄【" & item_loc & "】"
+
+    If err_prompt <> "" Then p = p & err_prompt & vbNewLine
+
+End If
+
+If p = "" Then IsRecLocPass = True
+
+End Function
 
 
 

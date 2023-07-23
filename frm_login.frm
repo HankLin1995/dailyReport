@@ -49,6 +49,6 @@ End Sub
 
 Private Sub UserForm_Terminate()
 
-If Me.Label6 <> "Pass" Then ThisWorkbook.Close Savechanges:=False
+If Me.Label6 <> "Pass" Then ThisWorkbook.Close SaveChanges:=False
 
 End Sub

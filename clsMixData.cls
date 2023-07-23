@@ -543,6 +543,48 @@ Next
 
 End Sub
 
+Sub getMixUnitSumAll()
+
+With Sheets("Mix_TMP")
+
+    lr = .Cells(.Rows.count, 1).End(xlUp).Row + 1
+
+    .Range("A" & lr & ":G" & lr).Borders(xlEdgeTop).LineStyle = 1
+    .Range("A" & lr & ":G" & lr).Borders(xlEdgeTop).Weight = xlMedium
+    
+    Dim myFunc As New clsMyfunction
+    
+    Set coll_items = myFunc.getUniqueItems("Mix_TMP", 2, , "工項名稱")
+    
+    For Each item_name In coll_items
+    
+        Set coll_rows = myFunc.getRowsByUser2("Mix_TMP", item_name, 1, "工項名稱")
+        
+        item_num = 0
+        item_sum = 0
+        
+        For Each r In coll_rows
+        
+            item_unit = .Cells(r, "E")
+        
+            If .Cells(r, 1) <> "合計" Then
+                
+                item_num = item_num + .Cells(r, "D")
+                item_sum = item_sum + .Cells(r, "G")
+            
+            End If
+        
+        Next
+        
+        Call myFunc.AppendData("Mix_TMP", Array("總計", , item_name, , item_unit, , item_sum))
+    
+    Next
+
+End With
+
+
+End Sub
+
 Function getNextNotBlankRow(ByVal r As Integer, ByVal lr As Integer)
 
 With Sheets("Mix")
@@ -568,8 +610,6 @@ Dim myFunc As New clsMyfunction
 Set coll_rows = myFunc.getRowsByUser2("Mix", MixName, 2, "工項概要")
 
 If coll_rows.count = 0 Then IsMixNameUsed = False
-
-
 
 End Function
 

@@ -56,7 +56,7 @@ With XMLHTTP
     Else
 ERRORHANDLE:
         MsgBox "你沒有連線!", vbCritical
-        ThisWorkbook.Close Savechanges:=False
+        ThisWorkbook.Close SaveChanges:=False
 
     End If
     
@@ -106,7 +106,7 @@ myURL = CreateURL("3", id, password, "wg", "123", "123")
 tmp = Split(ExecHTTP(myURL), ":")
 
 If tmp(0) <> "Pass" Then
-    MsgBox "驗證失敗!!", vbCritical: ThisWorkbook.Close Savechanges:=False
+    MsgBox "驗證失敗!!", vbCritical: ThisWorkbook.Close SaveChanges:=False
 Else
     Application.StatusBar = "設計者：林宗漢(Hank Lin) @2021," & tmp(3) & "使用者：" & tmp(2)
     frm_login.Label6 = "Pass"

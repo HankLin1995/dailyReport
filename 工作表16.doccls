@@ -35,6 +35,7 @@ Dim obj As New clsMixData
 Call obj.clearMixSum
 Call obj.getMixUnitNum
 Call obj.getMixUnitSum
+Call obj.getMixUnitSumAll
 
 Sheets("Mix_TMP").Activate
 

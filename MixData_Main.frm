@@ -56,12 +56,19 @@ Private Sub cmdOutput_Click()
 
 Dim obj As New clsRecord
 
-obj.ReadData_Mix
+Dim IsLocOK As Boolean
+
+Call obj.ReadData_Mix    'IsLocOK)
+
+err_msg = obj.getMixLocPrompt_MIX
+
+If err_msg <> "" Then MsgBox err_msg, vbCritical: Exit Sub
+
 obj.Recording_Mix
 
 Call ResetItem_Mix
 
-Call checkTestCompleted
+'Call checkTestCompleted
 
 End Sub
 

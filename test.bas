@@ -1,26 +1,8 @@
 Attribute VB_Name = "test"
-Sub tttt()
 
-With Sheets("Records")
 
-lr = .Cells(.Rows.count, 1).End(xlUp).Row
-
-For r = 3 To lr
-
-    If .Cells(r, 1) Like "*~*" Then
-    
-        .Cells(r, 1) = Replace(.Cells(r, 1), "~", "-")
-    
-    End If
-
-Next
-
-End With
-
-End Sub
 
 '===================================
-
 
 Sub test0612() '¿À≈Á∞±Ød¬I•”Ω–≥Ê
 

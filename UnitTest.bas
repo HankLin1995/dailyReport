@@ -1,4 +1,79 @@
 Attribute VB_Name = "UnitTest"
+Sub unittest_getRecLocInvolvedPrompt()
+
+rec_loc = "0+350~0+3880" '表單新增
+item_loc = "0+350~0+370" '已經紀錄
+
+Dim f As New clsMyfunction
+
+f.SplitAllLocs (rec_loc)
+
+Debug.Print f.IsRecLocPass(rec_loc, item_loc)
+
+End Sub
+
+Sub test_IsTranLocContainALLIneed()
+
+Dim f As New clsMyfunction
+
+Debug.Assert f.IsNumericWithPlusAndParentheses("0+000.5~0+001") = True
+Debug.Assert f.IsNumericWithPlusAndParentheses("dd+0+0") = False
+Debug.Assert f.IsNumericWithPlusAndParentheses("0+000(上)") = True
+Debug.Assert f.IsNumericWithPlusAndParentheses("0+000(其他)") = False
+
+End Sub
+
+Sub test_getMixLocPrompt_REC()
+
+Dim o As New clsRecord
+Dim f As New clsMyfunction
+
+
+RecLocation = "2+350~2+390" '.txtWhere
+RecItem = "土方工作，挖方" ' .cboItem
+RecCanal = "單期一號"
+
+'紀錄內容:1+340~1+380
+
+For Each my_loc In f.SplitAllLocs(RecLocation)
+
+    err_msg = o.getMixLocPrompt_REC(RecItem, my_loc, RecCanal)
+
+    If err_msg <> "" Then p1 = p1 & err_msg & vbNewLine
+
+Next
+
+If p1 <> "" Then MsgBox p1, vbCritical
+
+End Sub
+
+Sub test_getMixLocPrompt_MIX()
+
+Dim o As New clsRecord
+Dim f As New clsMyfunction
+Dim RecLocation  As String
+
+'recDate = .txtDay
+'RecChannelName = .cboChannel
+RecLocation = "0+390~0+640" '.txtWhere
+RecItem = "A-A',右牆" ' .cboItem
+'If .txtAmount <> "" Then RecAmount = .txtAmount
+
+If f.IsNumericWithPlusAndParentheses(RecLocation) = True Then
+
+For Each my_loc In f.Spl
+itAllLocs (RecLocation)
+
+    p1 = p1 & o.getMixLocPrompt_MIX(RecItem, my_loc) & vbNewLine
+    
+Next
+
+If p1 <> "" Then MsgBox p1, vbCritical
+ 
+End If
+ 
+End Sub
+
 Sub test_IsMixNameUsed()
 
 Dim o As New clsMixData

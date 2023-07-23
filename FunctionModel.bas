@@ -136,6 +136,8 @@ Next
 
 End With
 
+'Sheets("Records").Activate
+
 End Sub
 
 Sub test_getMixSumUnit()
@@ -210,21 +212,21 @@ MsgBox s
 
 End Sub
 
-'Sub cmdgetTmpData()
-'
-'Dim obj As New clsRecord
-'
-''msg = MsgBox("是否要留白?", vbYesNo)
-'
-''If msg = vbYes Then
-'obj.getTmpData (True)
-''Else
-''obj.getTmpData (False)
-''End If
-'
+Sub cmdGetTmpData()
+
+Dim obj As New clsRecord
+
+'msg = MsgBox("是否要留白?", vbYesNo)
+
+'If msg = vbYes Then
+Call obj.getTmpData 'True)
+'Else
+'obj.getTmpData (False)
+'End If
+
 'obj.Tmp2TmpTotal
-'
-'End Sub
+
+End Sub
 
 Sub cmdMixComplete()
 
@@ -369,6 +371,8 @@ frmData.Show
 End Sub
 
 Sub cmdShowComplexUI()
+
+Call cmdMixComplete
 
 MixData_Main.Show
 
@@ -570,7 +574,7 @@ PAY_obj.set2ndFormula
 PAY_obj.storePayItems
 PAY_obj.clearPAY
 
-Sheets("Records").Activate
+'Sheets("Records").Activate
 
 Dim print_obj As New clsPrintOut
 Dim f As String
@@ -604,7 +608,7 @@ Set coll_pay_dates = myFunc.getUniqueItems("PAY_EX", 2, , "估驗日期")
 
 For i = 1 To coll_pay_dates.count
 
-    p = p & i & ".第" & i & "次估驗." & coll_pay_dates(i)
+    p = p & i & ".第" & i & "次估驗." & coll_pay_dates(i) & vbNewLine
 
 Next
 
@@ -612,12 +616,16 @@ If p = "" Then MsgBox "找不到已建檔的估驗資料!", vbCritical: Exit Sub
 
 cnt = InputBox("請輸入要打開的檔案" & vbNewLine & p, , PAY_obj.getPayCounts)
 
+If cnt = "" Then MsgBox "未選取資料!", vbCritical: Exit Sub
+
 If fso.FileExists(ThisWorkbook.Path & "\PAY\" & "第" & cnt & "次估驗.xls") = True Then
 
     Workbooks.Open (ThisWorkbook.Path & "\PAY\" & "第" & cnt & "次估驗.xls")
 Else
 
-Shell "explorer.exe " & wbpath & "\" & "PAY\", vbNormalFocus
+    MsgBox "查無估驗資料存檔，請至儲存區看看!", vbCritical
+
+    Shell "explorer.exe " & ThisWorkbook.Path & "\" & "PAY\", vbNormalFocus
     
 End If
 
@@ -682,10 +690,16 @@ End With
 
 End Sub
 
-Sub checkTestCompleted() '20230225 add
+Sub checkTestCompleted(Optional ByVal IsUpload As Boolean = False) '20230225 add
 
 Dim REC_obj As New clsRecord
 Dim Test_obj As New clsReportTest
+
+If IsUpload = True Then
+
+Dim GAS_obj As New clsFetchURL_TEST
+
+End If
 
 With Sheets("Test")
 
@@ -704,11 +718,18 @@ With Sheets("Test")
         Call REC_obj.getNumAndSumByItemName(ItemName, CDate(Now()), item_num, item_sum)
         
         calcTest = rec_sum
-        doTest = Test_obj.getTestNeedNum(item_sum, testPeriod)
+        doTest = CInt(Test_obj.getTestNeedNum(item_sum, testPeriod))
         
         If doTest > calcTest Then
         
             prompt = prompt & TestName & "尚欠缺" & doTest - calcTest & "組" & vbNewLine & vbNewLine
+        
+        End If
+        
+        If IsUpload = True Then
+        
+        myURL = GAS_obj.CreateURL(TestName, doTest - calcTest)
+        GAS_obj.ExecHTTP (myURL)
         
         End If
     
@@ -735,6 +756,28 @@ print_obj.SpecificShtToXLS ("Report_Sum")
 ThisWorkbook.Sheets("Report_Sum").Visible = False
 
 End Sub
+
+Sub deleteRecIndex()
+
+rec_Index = InputBox("請輸入預計要刪除的流水號:")
+
+Dim myFunc As New clsMyfunction
+
+Set coll_rows = myFunc.getRowsByUser2("Records", rec_Index, 2, "流水號")
+
+If coll_rows.count = 0 Then MsgBox "查無此流水號!", vbCritical: End
+
+Set coll_rows = myFunc.ReverseColl(coll_rows)
+
+For Each r In coll_rows
+    
+    Sheets("Records").Rows(r).Delete
+
+Next
+
+End Sub
+
+
 
 
 '=============function===============
@@ -765,6 +808,36 @@ For i = 1 To coll_item_names.count
 Next
 
 Set getRemainedItems = coll_Need
+
+End Function
+
+Function getSumByItemNameAndCanal(ByVal item_name As String, ByVal canal_name As String)
+
+Dim f As New clsMyfunction
+
+'Set coll_rows = f.getRowsByUser("TMP", "B", item_name)
+
+Dim coll_rows As New Collection
+
+With Sheets("TMP")
+
+    For r = 2 To .Cells(.Rows.count, 1).End(xlUp).Row
+    
+        If .Cells(r, "B") = item_name Then coll_rows.Add r
+    
+    Next
+
+End With
+
+
+For Each r In coll_rows
+
+    canalName = Sheets("TMP").Cells(r, 1)
+    rec_sum = Sheets("TMP").Cells(r, 3)
+    
+    If canalName = canal_name Then getSumByItemNameAndCanal = rec_sum
+
+Next
 
 End Function
 

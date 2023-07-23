@@ -107,6 +107,22 @@ Function getSumDiff(ByVal Sum As Double, ByVal CSum As Double)
     
 End Function
 
+Sub cmdChangeItemsChooser()
+
+mode = InputBox("請選擇預計要執行的步驟" & vbNewLine & "1.新增變更期數" & vbNewLine & "2.更正變更日期", , 1)
+
+If mode = 1 Then
+
+Call addNewChangeItems
+
+ElseIf mode = 2 Then
+
+Call editChangeDate
+
+End If
+
+End Sub
+
 Sub addNewChangeItems()
 
 Dim o As New clsInformation
@@ -115,12 +131,24 @@ Set coll = o.getContractChanges
 
 With Sheets("Budget")
 
+    cnt = coll.count  'InputBox("請輸入本次為第幾次變更設計", , 1)
+    changeDate = InputBox("請輸入變更設計日期", , Format(Now(), "yyyy/mm/dd"))
+    
+    Set coll_changes = o.getContractChanges
+    
+    For Each it In coll_changes
+    
+        tmp = Split(it, ">")
+    
+        If changeDate <= tmp(1) Then MsgBox "日期不能比" & tmp(1) & "還早!", vbCritical: End
+    
+    Next
+    
     lr = .Cells(.Rows.count, 1).End(xlUp).Row
     lc = .Cells(2, .Columns.count).End(xlToLeft).Column
     
     .Range("D2:F" & lr).Copy .Cells(2, lc + 1)
-    cnt = coll.count  'InputBox("請輸入本次為第幾次變更設計", , 1)
-    changeDate = InputBox("請輸入變更設計日期", , Format(Now(), "yyyy/mm/dd"))
+    
     .Cells(1, lc + 1) = "第" & cnt & "次變更" & ">" & CDate(changeDate)
     .Cells(1, lc + 1).Font.ColorIndex = 3
     .Cells(1, lc + 1).Resize(1, 3).Merge
@@ -130,49 +158,44 @@ End With
 
 End Sub
 
-'Sub test_budgetStored()
-'
-'Dim o As New clsBudgetDB
-'
-'If o.IsExisted("B", "契約") Then
-'
-'    msg = MsgBox("已經存有契約資料,是否覆蓋?", vbYesNo)
-'
-'    If msg = vbYes Then
-'
-'        Call o.clearRows("B", "契約")
-'
-'    Else
-'
-'        MsgBox "動作已結束!": Exit Sub
-'
-'    End If
-'
-'End If
-'
-'With Sheets("Budget")
-'
-'    lr = .Cells(.Rows.count, 1).End(xlUp).Row
-'
-'    For r = 3 To lr
-'
-'        item_index = .Cells(r, 1)
-'        item_name = .Cells(r, 2)
-'        item_unit = .Cells(r, 3)
-'        item_num = .Cells(r, 4)
-'        item_amount = .Cells(r, 5)
-'        item_sum = .Cells(r, 6)
-'
-'        arr = Array("契約", item_index, item_name, item_unit, item_num, item_amount, item_sum)
-'
-'    '    Debug.Print UBound(arr)
-'
-'        o.AppendData (arr)
-'
-'    Next
-'
-'End With
-'
-'End Sub
+Sub editChangeDate()
+
+Dim Inf_obj As New clsInformation
+Dim PCCES_obj As New clsPCCES
+
+Set coll_changes = Inf_obj.getContractChanges
+
+For Each it In coll_changes
+
+    If j > 0 Then p = j & "." & p & it & vbNewLine
+    j = j + 1
+    
+Next
+
+If p <> "" Then i = CInt(InputBox("預計要修改的日期為第幾次?" & vbNewLine & p, , j - 1))
+
+If i <= coll_changes.count And i > 0 Then
+
+
+    On Error GoTo ERRORHANDLE
+    new_change_date = CDate(InputBox("請輸入正確的變更日期為:", , Format(Now(), "yyyy/mm/dd")))
+
+    new_change_str = "第" & j - 1 & "次變更>" & new_change_date
+
+    
+    c = PCCES_obj.t_change_to_column(j - 1)
+    
+    Sheets("Budget").Cells(1, c) = new_change_str
+
+End If
+
+Exit Sub
+
+ERRORHANDLE:
+
+MsgBox "日期格式不正確!...yyyy/mm/dd", vbCritical
+
+End Sub
+
 
 

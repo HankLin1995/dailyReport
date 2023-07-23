@@ -9,7 +9,24 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Private Sub Workbook_BeforeClose(Cancel As Boolean)
 
-'frm_Report.Show
+'https://script.google.com/macros/s/AKfycbzNvQOSQoBc7h3bnyYTmiw_zy8ijUl-IiDpkl-Zw21mb59exRbj_mp4p323giDPcOyA/exec
+
+If Sheets("Test").Range("E1").Font.ColorIndex <> 3 Then
+
+    msg = MsgBox("是否需要LINE提醒試驗?", vbYesNo)
+
+    If msg = vbYes Then
+        Call checkTestCompleted(True)
+    Else
+        Call checkTestCompleted
+    End If
+    
+Else
+
+    Call checkTestCompleted
+
+End If
+
 
 End Sub
 

@@ -9,7 +9,7 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Private wbname As String
 Private wb As Object
-Private myfun As New clsMyfunction
+Private myFun As New clsMyfunction
 
 Private Sub Class_Initialize()
 
@@ -62,7 +62,7 @@ With wb.Sheets(getShtContentName)
     
     For r = 9 To lr
     
-        item_num = myfun.tranCharcter_NUM(.Cells(r, 1))
+        item_num = myFun.tranCharcter_NUM(.Cells(r, 1))
         item_cont = .Cells(r, 2)
         item_unit = .Cells(r, 3)
         item_amount = .Cells(r, 4)
@@ -98,7 +98,7 @@ With wb.Sheets(getShtContentName)
 
     If .Cells(r + 1, "F") <> "" Then
     
-        getFullName = myfun.tranCharcter(.Cells(r, "B"))
+        getFullName = myFun.tranCharcter(.Cells(r, "B"))
         
     Else
     
@@ -108,7 +108,7 @@ With wb.Sheets(getShtContentName)
         
             If cnt > 0 And .Cells(rr, "A") <> "" Then Exit For
         
-            s = s & myfun.tranCharcter(.Cells(rr, "B"))
+            s = s & myFun.tranCharcter(.Cells(rr, "B"))
             cnt = cnt + 1
         
         Next

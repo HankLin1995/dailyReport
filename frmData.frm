@@ -103,22 +103,27 @@ End Sub
 
 Private Sub cmdOutput_Click()
 
-Dim obj2 As New clsDetail
-obj2.getPropertiesByName (frmData.cboItem.Text)
-obj2.setAmount (frmData.txtDetailTable.Text)
+'Dim obj2 As New clsDetail
+'obj2.getPropertiesByName (frmData.cboItem.Text)
+'obj2.setAmount (frmData.txtDetailTable.Text)
 
 Dim obj As New clsRecord
 
-obj.ReadData
+'Dim IsLocOK As Boolean
+
+Call obj.ReadData '(IsLocOK)
+
+err_prompt = obj.getMixLocPrompt_REC
+
+If err_prompt <> "" Then MsgBox err_prompt, vbCritical: Exit Sub
+
 obj.Recording
 
-If frmData.txtDetailTable <> "" Then obj.Recording_Detail
-
 frmData.cboItem = ""
+frmData.txtWhere = ""
 
 Call ResetItem
 
-Call checkTestCompleted
 
 End Sub
 
@@ -221,6 +226,8 @@ End Sub
 Private Sub UserForm_Initialize()
 
 rec_date = InputBox("請輸入填寫日期", , Format(Now(), "yyyy/mm/dd"))
+
+If rec_date = "" Then rec_date = Format(Now(), "yyyy/mm/dd")
 
 frmData.txtDay = rec_date
 

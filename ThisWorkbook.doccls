@@ -11,22 +11,23 @@ Private Sub Workbook_BeforeClose(Cancel As Boolean)
 
 'https://script.google.com/macros/s/AKfycbzNvQOSQoBc7h3bnyYTmiw_zy8ijUl-IiDpkl-Zw21mb59exRbj_mp4p323giDPcOyA/exec
 
-If Sheets("Test").Range("E1").Font.ColorIndex <> 3 Then
+'If Sheets("Test").Range("E1").Font.ColorIndex <> 3 Then
+'
+'    msg = MsgBox("是否需要LINE提醒試驗?", vbYesNo)
+'
+'    If msg = vbYes Then
+'        Call checkTestCompleted(True)
+'    Else
+'        Call checkTestCompleted
+'    End If
+'
+'Else
+'
+'    Call checkTestCompleted
+'
+'End If
 
-    msg = MsgBox("是否需要LINE提醒試驗?", vbYesNo)
-
-    If msg = vbYes Then
-        Call checkTestCompleted(True)
-    Else
-        Call checkTestCompleted
-    End If
-    
-Else
-
-    Call checkTestCompleted
-
-End If
-
+Call checkTestCompleted
 
 End Sub
 
@@ -35,16 +36,22 @@ Private Sub Workbook_Open()
 'Dim obj As New clsFetchURL
 'If obj.checkAccessByIP = False Then frm_login.Show
 
-MsgBox "設計者：林宗漢(Hank Lin) @2018" & vbNewLine & _
-       "" & vbNewLine & _
-        "手機：0912052274" & vbNewLine & _
-       "電子郵件：apple84026113@gmail.com" & vbNewLine & _
-       "部落格：https://hankvba.blogspot.com/" & vbNewLine & _
-       "版權聲明"
-
-On Error Resume Next
+'MsgBox "設計者：林宗漢(Hank Lin) @2018" & vbNewLine & _
+'       "" & vbNewLine & _
+'        "手機：0912052274" & vbNewLine & _
+'       "電子郵件：apple84026113@gmail.com" & vbNewLine & _
+'       "部落格：https://hankvba.blogspot.com/" & vbNewLine & _
+'       "版權聲明"
 
 Call checkTestCompleted
+
+'Dim o As New clsUserInformation
+
+'o.hideCmd
+
+Call FetchURL_Main
+
+frm_Info.Show
 
 'Application.StatusBar = "設計者：林宗漢(Hank Lin) @2021"
 

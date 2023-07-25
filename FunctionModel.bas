@@ -5,9 +5,9 @@ With Sheets("Report")
 
     mydate = .Range("C2")
     myID = .Range("K2")
-    
-    If myNewDate = 0 Then myNewDate = InputBox("請輸入日期，格式如" & vbNewLine & mydate, , mydate)
     On Error GoTo DATEFORMATERRORHANDLE
+    If myNewDate = 0 Then myNewDate = InputBox("請輸入日期，格式如" & vbNewLine & mydate, , mydate)
+    'On Error GoTo DATEFORMATERRORHANDLE
     myNewID = myID + CDate(myNewDate) - mydate
     Set rng = Sheets("Diary").Columns("A").Find(myNewID)
     
@@ -271,6 +271,8 @@ End Sub
 
 Sub cmdExportToCheck()
 
+MsgBox "還在修理中!", vbCritical: Exit Sub
+
 Dim obj As New clsCheck
 
 obj.ExportToCheck
@@ -361,6 +363,12 @@ o.settingColorRules
 o.getPercentageItems
 o.clearMainChanges
 o.clearPAY_EX
+
+End Sub
+
+Sub cmdShowCheckUI()
+
+frm_Check.Show
 
 End Sub
 
@@ -645,20 +653,26 @@ Dim o As New clsBasicData
 
 Call o.addStopDays
 
+Sheets("Diary").Activate
+
 End Sub
 
 Sub cmdEnlargeWorkDays()
 
+On Error GoTo ERRORHANDLE
+
 Dim Inf_obj As New clsInformation
 Dim myFunc As New clsMyfunction
 
-enlargeDate = InputBox("請輸入展延開始日期", , Format(Now(), "yyyy/mm/dd"))
+enlargeDate = CDate(InputBox("請輸入展延開始日期", , Format(Now(), "yyyy/mm/dd")))
 enlargeDays = CInt(InputBox("請輸入展延天數", , 1))
 
 Sheets("Main").Range("B6") = Inf_obj.workDay + enlargeDays
 Sheets("Main").Range("C6") = CDate(enlargeDate)
 
 With Sheets("Diary")
+
+    .Activate
 
     lr = .Cells(.Rows.count, 1).End(xlUp).Row
 
@@ -687,6 +701,20 @@ With Sheets("Diary")
     Next
 
 End With
+
+'msg = MsgBox("是否要自展延的最後一天前預定進度設定?", vbYesNo)
+'
+'If msg = vbYes Then
+'
+'    Call cmdGetProgressByInterpolation
+'
+'End If
+
+Exit Sub
+
+ERRORHANDLE:
+
+MsgBox "動作已取消!", vbCritical
 
 End Sub
 

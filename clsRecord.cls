@@ -996,3 +996,50 @@ With Sheets("Records")
 End With
 
 End Function
+
+Function getExistLocByRecDate(ByVal check_date) ' As String)
+
+Dim coll_locs As New Collection
+Dim myFunc As New clsMyfunction
+
+Set coll_rows = myFunc.getRowsByUser("Records", "B", check_date)
+
+'Set coll_locs = myFunc.getUniqueItemsInCollRows("Records", coll_rows, 2, , "施作位置")
+
+With Sheets("Records")
+
+    For Each r In coll_rows
+    
+        rec_canal = .Cells(r, "C")
+        rec_loc = .Cells(r, "D")
+    
+        rec_loc_all = rec_canal & "," & rec_loc
+        
+        On Error Resume Next
+        
+        If rec_loc <> "" Then coll_locs.Add rec_loc_all, rec_loc_all
+        
+        On Error GoTo 0
+    
+    Next
+    
+    For Each rec_loc In coll_locs
+    
+        j = j + 1
+        p = p & j & "." & rec_loc & vbNewLine
+    
+    Next
+    
+    If p <> "" Then i = InputBox("請選擇【" & check_date & "】曾經施作位置:" & vbNewLine & p)
+
+End With
+
+On Error GoTo ERRORHANDLE
+
+getExistLocByRecDate = coll_locs(CInt(i))
+
+Exit Function
+
+ERRORHANDLE:
+
+End Function

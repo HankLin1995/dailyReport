@@ -89,7 +89,7 @@ Function getShowIndex(ByVal collMixItems)
 
 'TODO:create a tmp plot orders
 
-plot_order = Sheets("Records").Range("J1")
+plot_order = Sheets("Records").Range("E1")
 
 For Each it In collMixItems
 

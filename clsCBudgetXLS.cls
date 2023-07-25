@@ -12,6 +12,8 @@ Attribute VB_Exposed = False
 Private shtBudget As Worksheet
 Private shtCBudget As Worksheet
 Private obj As New clsBudgetItems
+Private PCCES_obj As New clsPCCES
+Private Inf_obj As New clsInformation
 
 Private collAddress As New Collection
 Private ItemCountArray As Variant
@@ -29,7 +31,15 @@ Set shtCBudget = Sheets("CBudget")
 '取得預算書的資料
 'get budget data from sheets("Budget")
 
-obj.getData
+Set coll_changes = Inf_obj.getContractChanges
+
+t_change = coll_changes.count - 1
+
+c = PCCES_obj.t_change_to_column(t_change - 1)
+
+Debug.Assert c = 8
+
+obj.getData (c)
 obj.sumEachSepPrice
 
 a = obj.sumSpecificPrice(1, 2)
@@ -71,7 +81,7 @@ End Sub
 
 Sub getMode()
 
-mode = InputBox("1.專案工程" & vbctrl & "2.自籌款", , "1")
+mode = 1 'InputBox("1.專案工程" & vbctrl & "2.自籌款", , "1")
 
 If mode = "1" Then
 
@@ -118,9 +128,9 @@ With shtCBudget
         
             myitem = .Cells(r, 2)
         
-            myindex = obj.collItemIndex(myitem)
+            myIndex = obj.collItemIndex(myitem)
 
-            Call WriteData(myindex, r)
+            Call WriteData(myIndex, r)
         
         End If
         
@@ -347,8 +357,8 @@ For r = 7 To lr
         
         Sum = .Cells(r, "K") '正項目相加
         CSum = .Cells(r, "L") '負項目相加
-        .Cells(r, "M") = "=getSumDiff(K" & r & ",L" & r & ")" ' getSumDiff(Sum, CSum)"
-
+        '.Cells(r, "M") = "=getSumDiff(K" & r & ",L" & r & ")" ' getSumDiff(Sum, CSum)"
+        .Cells(r, "M") = getSumDiff(Sum, CSum)
     End If
     
 Next
@@ -580,7 +590,7 @@ With shtCBudget
                     
                     Debug.Print .Cells(r, 1) & ":" & ratioMoney
                     
-                    If .Cells(r, "J") >= ratioMoney Then MsgBox .Cells(r, 1) & .Cells(r, 2) & "編制過高!!", vbCritical
+                    If .Cells(r, "J") > ratioMoney Then MsgBox .Cells(r, 1) & .Cells(r, 2) & "編制過高!!", vbCritical
                     
                     On Error Resume Next
                     .Cells(r, "J").Comment.Delete

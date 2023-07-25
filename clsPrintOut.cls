@@ -7,7 +7,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
-Private Filename As String
+Private filename As String
 Private sht As Object
 
 Sub BeforePrintCheck()
@@ -43,7 +43,7 @@ For i = sr To er
         
         On Error Resume Next
         
-        ActiveSheet.ExportAsFixedFormat Type:=xlTypePDF, Filename:= _
+        ActiveSheet.ExportAsFixedFormat Type:=xlTypePDF, filename:= _
         wbpath & "\" & "監造日報表Output\" & Range("K2"), Quality:= _
         xlQualityStandard, IncludeDocProperties:=True, IgnorePrintAreas:=False, _
         OpenAfterPublish:=False
@@ -99,7 +99,7 @@ Sub ToPDF_Check(ByVal sht As Worksheet, ByVal fname As String, ByVal mode) '查驗
     
     On Error Resume Next
     
-    sht.ExportAsFixedFormat Type:=xlTypePDF, Filename:= _
+    sht.ExportAsFixedFormat Type:=xlTypePDF, filename:= _
     wbpath & "\" & "查驗表Output\" & fname, Quality:= _
     xlQualityStandard, IncludeDocProperties:=True, IgnorePrintAreas:=False, _
     OpenAfterPublish:=False
@@ -239,7 +239,7 @@ Application.DisplayAlerts = True
 
 If file_path <> "False" And file_path <> "" Then
 
-    wb.SaveAs Filename:=file_path
+    wb.SaveAs filename:=file_path
     wb.Close
     
 End If

@@ -34,7 +34,11 @@ End Sub
 
 Sub changeNum()
 
-ActiveSheet.Range("K2") = InputBox("請輸入編號")
+myIndex = InputBox("請輸入編號")
+
+If myIndex = "" Then Exit Sub
+
+ActiveSheet.Range("K2") = myIndex
 
 Call ReportRun
 

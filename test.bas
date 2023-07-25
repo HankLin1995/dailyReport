@@ -1,5 +1,95 @@
 Attribute VB_Name = "test"
+Sub t2()
 
+recDate = CDate("2023/7/10")
+
+Dim myFunc As New clsMyfunction
+
+Set coll_rows = myFunc.getRowsByUser("Records", "B", recDate)
+
+End Sub
+
+
+Sub t()
+
+Dim myFunc As New clsMyfunction
+
+check_date = CDate("2023/7/10") ' Format(CDate("2023/7/10"), "yyyy/mm/dd")
+
+Set coll_rows = myFunc.getRowsByUser("Records", "B", check_date)
+
+Debug.Assert coll_rows.count = 9
+
+Dim o As New clsRecord
+
+a = o.getExistLocByRecDate(CDate("2023/7/10"))
+
+End Sub
+
+Private Function getCheckStyle()
+
+msg_check_style = MsgBox("是否為檢驗停留點?", vbYesNo)
+
+getCheckStyle = "施工抽查點"
+If msg_check_style = vbYes Then getCheckStyle = "檢驗停留點"
+
+End Function
+
+Sub main()
+
+Dim myFunc As New clsMyfunction
+
+check_name = getCheckName
+
+Call splitFileName_Check(check_name, check_name_ch, check_name_eng)
+
+check_date = InputBox("請輸入抽查時間", , CDate(Format(Now(), "yyyy/mm/dd")))
+check_style = getCheckStyle
+check_loc = InputBox("請輸入地點", , "0+800左牆")
+check_page = countChecks(check_name_ch) + 1
+
+arr = Array(check_name_ch, check_name_eng, check_page, check_date, check_style, check_loc)
+
+Call myFunc.AppendData("Check", arr)
+
+End Sub
+
+Function getCheckName()
+
+Dim myFunc As New clsMyfunction
+
+Set coll_check_names = getCheckFileNames
+
+For i = 1 To coll_check_names.count
+
+    p = p & i & "." & coll_check_names(i) & vbNewLine
+
+Next
+
+mode = InputBox("請輸入要執行的抽查表" & vbNewLine & p, , 1)
+
+getCheckName = coll_check_names(CInt(mode))
+
+End Function
+
+Private Function countChecks(ByVal check_name As String)
+
+Dim myFunc As New clsMyfunction
+
+Set coll_rows = myFunc.getRowsByUser2("Check", check_name, 1, "查驗表(中文)")
+
+countChecks = coll_rows.count
+
+End Function
+
+Function splitFileName_Check(ByVal filename As String, ByRef filename_ch, ByRef filename_eng)
+    
+    pt2 = InStrRev(filename, "[")
+
+    filename_ch = mid(filename, 1, pt2 - 1)
+    filename_eng = mid(filename, pt2 + 1, Len(filename) - pt2 - 1)
+
+End Function
 
 
 '===================================

@@ -18,20 +18,20 @@ Set shtRec = Sheets("Records")
 
 'Set shtCheckTMP = Workbooks.Open(ThisWorkbook.Path & "\查驗TMP\查驗.xls")
 
-targetCheck.Add "開挖", "開挖"
-targetCheck.Add "土方", "土方"
-targetCheck.Add "鋼筋", "鋼筋"
-targetCheck.Add "模板", "模板"
-targetCheck.Add "混凝土", "混凝土"
-targetCheck.Add "混凝土完成", "混凝土完成"
-targetCheck.Add "假設工程", "假設工程"
-targetCheck.Add "碎石級配", "碎石級配"
-targetCheck.Add "瀝青混凝土", "瀝青混凝土"
-targetCheck.Add "傾倒式閘門", "傾倒式閘門"
-targetCheck.Add "吊門機製造及安裝", "吊門機製造及安裝"
-targetCheck.Add "自動測報", "自動測報"
-targetCheck.Add "電氣", "電氣"
-targetCheck.Add "焊接", "焊接"
+'targetCheck.Add "開挖", "開挖"
+'targetCheck.Add "土方", "土方"
+'targetCheck.Add "鋼筋", "鋼筋"
+'targetCheck.Add "模板", "模板"
+'targetCheck.Add "混凝土", "混凝土"
+'targetCheck.Add "混凝土完成", "混凝土完成"
+'targetCheck.Add "假設工程", "假設工程"
+'targetCheck.Add "碎石級配", "碎石級配"
+'targetCheck.Add "瀝青混凝土", "瀝青混凝土"
+'targetCheck.Add "傾倒式閘門", "傾倒式閘門"
+'targetCheck.Add "吊門機製造及安裝", "吊門機製造及安裝"
+'targetCheck.Add "自動測報", "自動測報"
+'targetCheck.Add "電氣", "電氣"
+'targetCheck.Add "焊接", "焊接"
 
 End Sub
 
@@ -420,6 +420,31 @@ Else
 End If
 
 FindKeyAddress = rng_last.Address
+
+End Function
+
+'=======202307======
+
+
+Function getCheckFileNames()
+
+Dim coll As New Collection
+
+myFolder = ThisWorkbook.Path & "\抽查記錄表範本" ' getSavedFolder
+
+Set coll_path = GetFilePathsInFolder(myFolder)
+
+For Each filePath In coll_path
+
+    filename = mid(filePath, InStrRev(filePath, "\") + 1)
+    pt = InStrRev(filename, ".")
+    filename_short = mid(filename, 1, pt - 1)
+
+    coll.Add filename_short
+
+Next
+
+Set getCheckFileNames = coll
 
 End Function
 

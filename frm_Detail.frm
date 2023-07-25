@@ -22,7 +22,7 @@ Private Sub cboItem_Change()
 subItem = Me.cboItem.Text
 
 Dim obj As New clsDetail
-Call obj.getPropertiesByName(Me.Label15.Caption)
+Call obj.getPropertiesByName(Me.Label15.caption)
 
 Me.lblUnit = obj.getUnit(subItem)
 Me.lblLast = obj.getLast(subItem)
@@ -49,7 +49,7 @@ Private Sub CommandButton2_Click()
 
 Dim obj As New clsDetail
 
-mainItem = Me.Label15.Caption
+mainItem = Me.Label15.caption
 subItem = Me.cboItem.Text
 
 '========IsExisted==============

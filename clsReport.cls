@@ -95,6 +95,10 @@ c = 6 + t_change * 5
 
 With shtMain
 
+    If .Cells(1, c) = "" Then
+        MsgBox "查無該日有報表資料!請先進行變更設計資料有無匯入至報表!", vbCritical: Call cmdExportToReport
+    End If
+
     lr = .Cells(Rows.count, c).End(xlUp).Row
     
     ItemCount = lr - 3 + 1

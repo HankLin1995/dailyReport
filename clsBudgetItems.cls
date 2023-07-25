@@ -23,6 +23,12 @@ Public collsumCSep As New Collection
 
 Sub getData(Optional c As Integer = 4)
 
+If c = 4 Then
+    diff = 4
+Else
+    diff = 3
+End If
+
 With Sheets("Budget")
     
     lr = .Cells(3, 1).End(xlDown).Row
@@ -36,8 +42,8 @@ With Sheets("Budget")
         unit = .Cells(r, "C")
         num = .Cells(r, c) 'D
         price = .Cells(r, c).Offset(0, 1)
-        CNum = .Cells(r, c + 4) 'H
-        CPrice = .Cells(r, c + 4).Offset(0, 1)
+        CNum = .Cells(r, c + diff) 'H
+        CPrice = .Cells(r, c + diff).Offset(0, 1)
         
         If price <> 0 Then
         

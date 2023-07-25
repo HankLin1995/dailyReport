@@ -611,6 +611,36 @@ Set getUniqueItemsToLastRow = coll
 
 End Function
 
+Function getUniqueItemsInCollRows(ByVal shtName As String, ByVal coll_rows, ByVal row_head As Integer, Optional ByVal find_col_eng As String, Optional find_col_keyValue As String = "")
+
+Dim coll As New Collection
+
+With Sheets(shtName)
+
+    If find_col_eng = "" Then
+        
+        Set rng = .Rows(row_head).Find(find_col_keyValue)
+        find_col_eng = ConvertToLetter(rng.Column)
+        
+    End If
+
+    For Each r In coll_rows
+    
+        s = .Cells(r, find_col_eng)
+    
+        On Error Resume Next
+        
+        If s <> "" Then coll.Add CStr(s), CStr(s)
+        
+        On Error GoTo 0
+    
+    Next
+
+End With
+
+Set getUniqueItemsInCollRows = coll
+
+End Function
 
 Sub AppendData(ByVal shtName As String, ByVal arr) ', Optional ByVal sc As Integer = 1)
 

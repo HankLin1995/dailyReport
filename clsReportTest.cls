@@ -166,7 +166,18 @@ With shtMain
     
         TestName = .Cells(r, 1)
         TestDesign = .Cells(r, 2)
-        TestDesign = Split(TestDesign, ",")(t_change)
+        
+        tmp = Split(TestDesign, ",")
+        
+        If UBound(tmp) < t_change Then
+        
+        TestDesign = tmp(UBound(tmp))
+        
+        Else
+        
+        TestDesign = tmp(t_change)
+        
+        End If
         
         'TestDesign = tmp(t_change)
 
@@ -189,6 +200,12 @@ With shtMain
     Next
 
 End With
+
+Exit Sub
+
+'TESTERRORHANDLE:
+
+'MsgBox "請先於上的試驗組數進行修改!" & vbNewLine & "如有變更應該要多,出來", vbCritical
 
 End Sub
 

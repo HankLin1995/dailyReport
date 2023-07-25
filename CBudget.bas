@@ -61,6 +61,10 @@ Else
     
 End If
 
+getReportName = "明細表"
+If msg = vbYes Then getReportName = "總表"
+
+
 If mode = 1 Then
     
     Sheets("CBudget").Range("A2") = "第" & cnt & "次變更設計" & getReportName
@@ -75,23 +79,23 @@ Application.ScreenUpdating = True
 
 End Sub
 
-Function getReportName()
-
-getReportName = "明細表"
-
-With Sheets("CBudget")
-
-For Each myRow In .Rows
-
-If myRow.Hidden = True Then
-getReportName = "總表": Exit Function
-End If
-
-Next
-
-End With
-
-End Function
+'Function getReportName()
+'
+'getReportName = "明細表"
+'
+'With Sheets("CBudget")
+'
+'For Each myRow In .Rows
+'
+'If myRow.Hidden = True Then
+'getReportName = "總表": Exit Function
+'End If
+'
+'Next
+'
+'End With
+'
+'End Function
 
 Function getSumDiff(ByVal Sum As Double, ByVal CSum As Double)
 
@@ -109,7 +113,9 @@ End Function
 
 Sub cmdChangeItemsChooser()
 
-mode = InputBox("請選擇預計要執行的步驟" & vbNewLine & "1.新增變更期數" & vbNewLine & "2.更正變更日期", , 1)
+mode = InputBox("請選擇預計要執行的步驟" & vbNewLine & "1.新增變更期數" & _
+                                            vbNewLine & "2.更正變更日期" & _
+                                            vbNewLine & "3.刪除變更最後期數", , 1)
 
 If mode = 1 Then
 
@@ -118,6 +124,44 @@ Call addNewChangeItems
 ElseIf mode = 2 Then
 
 Call editChangeDate
+
+ElseIf mode = 3 Then
+
+Call deleteChanges
+
+End If
+
+End Sub
+
+Sub deleteChanges()
+
+Dim Inf_obj As New clsInformation
+Dim PCCES_obj As New clsPCCES
+
+Set coll_changes = Inf_obj.getContractChanges
+
+For Each it In coll_changes
+
+    If j > 0 Then p = j & "." & p & it & vbNewLine
+    j = j + 1
+    
+Next
+
+If p <> "" Then
+
+    msg = MsgBox("是否要刪除最後一期的變更設計?", vbYesNo)
+    
+    If msg = vbYes Then
+    
+    c = PCCES_obj.t_change_to_column(j - 1)
+    
+    Sheets("Budget").Cells(2, c).Resize(1, 3).EntireColumn.Delete
+    
+    End If
+
+Else
+
+    MsgBox "查無變更設計內容!", vbInformation
 
 End If
 
@@ -140,7 +184,7 @@ With Sheets("Budget")
     
         tmp = Split(it, ">")
     
-        If changeDate <= tmp(1) Then MsgBox "日期不能比" & tmp(1) & "還早!", vbCritical: End
+        If CDate(changeDate) <= tmp(1) Then MsgBox "日期不能比" & tmp(1) & "還早!", vbCritical: End
     
     Next
     
@@ -153,6 +197,8 @@ With Sheets("Budget")
     .Cells(1, lc + 1).Font.ColorIndex = 3
     .Cells(1, lc + 1).Resize(1, 3).Merge
     .Cells(1, lc + 1).Resize(1, 3).EntireColumn.AutoFit
+    
+    MsgBox "變更設計內容填寫完畢後記得再點選匯入報表才會生效!", vbInformation
     
 End With
 

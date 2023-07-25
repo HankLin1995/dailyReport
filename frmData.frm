@@ -89,7 +89,7 @@ With frm_Detail
     Call obj.getPropertiesByName(Item)
     Call obj.setItemToCbo
 
-    .Label15.Caption = Item
+    .Label15.caption = Item
     .Show
 
 End With

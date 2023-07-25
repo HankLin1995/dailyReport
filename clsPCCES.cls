@@ -239,9 +239,9 @@ With Sheets("Budget")
 
 End With
 
-Exit Sub
-
 Call ReArrangeTitle
+
+Exit Sub
 
 ERRORHANDLE: MsgBox "等等需要使用者自行設定準則!", vbInformation
 

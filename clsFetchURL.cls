@@ -8,36 +8,48 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 'HankLin edited @ 20210823
-'使用雲端授權結合Google app script當作後臺控制
-'應用xlpadlock編譯xls變成exe檔案即可達到小白無法侵入的等級
+
+'GAS程式碼@VBA2-使用者登記冊-公共工程施工日誌
 
 
 Dim XMLHTTP As Object
 Dim DOM As Object
 
-Const URL As String = "https://script.google.com/macros/s/AKfycbwW-9_vxA7QivljwkOoHyrDnKB7s4-Gu53B3S9xklf2zo4BJzK9-tgQLwXI45LOegJ3tg/exec"
+Const URL As String = "https://script.google.com/macros/s/AKfycbxrYIn8VplAjH7mDaTzTUBcDSrJcW8s0fv6oW2qM6gXjjfrWGA3G3iKoVUMpdYntxkR/exec"
 
-Private Sub Class_Initialize()
+Sub Class_Initialize()
 
 Set XMLHTTP = CreateObject("Microsoft.XMLHTTP")
 Set DOM = CreateObject("Htmlfile")
 
 End Sub
 
-Function CreateURL(ByVal mode As String, ByVal id As String, ByVal password As String, ByVal wg As String, ByVal Report As String, ByVal myName As String)
+Function CreateURL(ByVal mode As String, Optional ByVal user_mac As String, Optional ByVal user_name As String, Optional ByVal user_company As String, Optional ByVal user_mail As String, Optional ByVal msg As String) ', ByVal myName As String)
 
-id = getUnicode(id)
-password = getUnicode(password)
-wg = getUnicode(wg)
-Report = getUnicode(Report)
-myName = getUnicode(myName)
+Debug.Assert user_mac <> ""
 
-CreateURL = URL & "?mode=" & mode & "&id=" & id & "&password=" & _
-    password & "&ip=" & GetIPAddress & "&workgroup=" & wg & "&report=" & Report & "&myName=" & myName
+'user_mac = getUnicode(user_mac)
+user_name = getUnicode(user_name)
+'user_mail = getUnicode(user_mail)
+user_company = getUnicode(user_company)
+msg = getUnicode(msg)
 
+  'let mode=e.parameter.mode; //方法選擇
+  'let mac=deUnicode(e.parameter.mac); //帳號
+  'let myname=deUnicode(e.parameter.myname); //密碼
+  'let workgroup=deUnicode(e.parameter.workgroup); //機關名
+  'let mymail=deUnicode(e.parameter.mymail);//電子郵件
+
+CreateURL = URL & "?func=" & mode & _
+                    "&mac=" & user_mac & _
+                    "&myname=" & user_name & _
+                    "&workgroup=" & user_company & _
+                    "&mymail=" & user_mail & _
+                    "&msg=" & msg
+                    
 End Function
 
-Function ExecHTTP(myURL)
+Function ExecHTTP(ByVal myURL As String)
 
 On Error GoTo ERRORHANDLE
 
@@ -46,17 +58,27 @@ With XMLHTTP
     .Open "GET", myURL, False
     .send
     
-    Debug.Print myURL
+    'Debug.Print myURL
     
     If .Status = 200 Then
     
         tmp = Split(.responsetext, "***")
-        ExecHTTP = tmp(1)
+        
+        'If UBound(tmp) <> 0 Then
+        
+            ExecHTTP = tmp(1)
+        
+        'End If
         
     Else
 ERRORHANDLE:
-        MsgBox "你沒有連線!", vbCritical
-        ThisWorkbook.Close SaveChanges:=False
+        MsgBox "Something ERROR!", vbCritical
+        frm_EndQRCode.Show
+        End
+        
+        'clientObj.hideCmd
+        
+        'ThisWorkbook.Close Savechanges:=False
 
     End If
     
@@ -66,7 +88,9 @@ End Function
 
 Sub signup(ByVal id As String, ByVal password As String, ByVal wg As String, ByVal myName As String)
 
-myURL = CreateURL("1", id, password, wg, "123", myName)
+'myURL = CreateURL("1", id, password, wg, "123", myName)
+
+
 If ExecHTTP(myURL) = "signed" Then
     MsgBox "帳號或者該電腦已經被註冊過了!", vbCritical
     
@@ -87,7 +111,7 @@ If tmp(0) <> "Pass" Then
     checkAccessByIP = False
     Exit Function
 Else
-    Application.StatusBar = "設計者：林宗漢(Hank Lin) @2021," & tmp(3) & "使用者：" & tmp(2)
+    'Application.StatusBar = "設計者：林宗漢(Hank Lin) @2021," & tmp(3) & "使用者：" & tmp(2)
     checkAccessByIP = True
     frm_login.Label6 = "Pass"
 End If
@@ -108,7 +132,7 @@ tmp = Split(ExecHTTP(myURL), ":")
 If tmp(0) <> "Pass" Then
     MsgBox "驗證失敗!!", vbCritical: ThisWorkbook.Close SaveChanges:=False
 Else
-    Application.StatusBar = "設計者：林宗漢(Hank Lin) @2021," & tmp(3) & "使用者：" & tmp(2)
+    'Application.StatusBar = "設計者：林宗漢(Hank Lin) @2021," & tmp(3) & "使用者：" & tmp(2)
     frm_login.Label6 = "Pass"
 End If
 
@@ -203,5 +227,9 @@ Private Function CharToUnicode(strChar As String)
     CharToUnicode = lngUnicode
     
 End Function
+
+
+
+
 
 

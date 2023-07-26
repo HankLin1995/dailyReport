@@ -155,7 +155,7 @@ Function getSavedFolder()
     With fldr
         .Title = "Select a Folder"
         .AllowMultiSelect = False
-        .InitialFileName = ThisWorkbook.Path
+        '.InitialFileName = getThisWorkbookPath
         If .Show = -1 Then FolderName = .SelectedItems(1)
     End With
 getSavedFolder = FolderName

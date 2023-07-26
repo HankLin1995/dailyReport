@@ -479,7 +479,7 @@ End Sub
 '
 'rand = Int(Rnd() * 6)
 '
-'Path = ThisWorkbook.Path & "\Ã±¦W" & rand + 1 & ".JPG"
+'Path = getThisWorkbookPath & "\Ã±¦W" & rand + 1 & ".JPG"
 '
 'Set pics = ActiveSheet.Pictures
 '

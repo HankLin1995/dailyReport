@@ -156,11 +156,11 @@ With ThisWorkbook.Sheets("Budget")
     
     Debug.Print rng.Address
     
-    .Range("A3:" & rng.Address).Clear
+    If rng.Row > 2 Then .Range("A3:" & rng.Address).Clear
     
     '.Rows("1").ClearContents
     
-    .Range("H1:" & rng.Address).Clear
+    If rng.Column > 7 Then .Range("H1:" & rng.Address).Clear
     
 End With
 
@@ -174,7 +174,7 @@ With ThisWorkbook.Sheets("Main")
     
     Debug.Print rng.Address
     
-    .Range("K1:" & rng.Address).Clear
+    If rng.Column > 10 Then .Range("K1:" & rng.Address).Clear
     
     .Range("B6:C6").ClearContents
     
@@ -190,7 +190,7 @@ With ThisWorkbook.Sheets("PAY_EX")
     
     Debug.Print rng.Address
     
-    .Range("A2:" & rng.Address).Clear
+    If rng.Row > 1 Then .Range("A2:" & rng.Address).Clear
     
 End With
 

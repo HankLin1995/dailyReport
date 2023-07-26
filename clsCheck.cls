@@ -16,7 +16,7 @@ Private Sub Class_Initialize()
 Set shtCheck = Sheets("Check")
 Set shtRec = Sheets("Records")
 
-'Set shtCheckTMP = Workbooks.Open(ThisWorkbook.Path & "\查驗TMP\查驗.xls")
+'Set shtCheckTMP = Workbooks.Open(getThisWorkbookPath & "\查驗TMP\查驗.xls")
 
 'targetCheck.Add "開挖", "開挖"
 'targetCheck.Add "土方", "土方"
@@ -39,7 +39,7 @@ Sub CheckList()
 
 Dim collchn As New Collection
 
-wbpath = ThisWorkbook.Path & "\查驗表Output\"
+wbpath = getThisWorkbookPath & "\查驗表Output\"
 
 f = Dir(wbpath)
 
@@ -300,7 +300,7 @@ End Sub
 
 Sub PrintCheckTable() '列印查驗表
 
-fs = ThisWorkbook.Path & "\查驗TMP\查驗.xls"
+fs = getThisWorkbookPath & "\查驗TMP\查驗.xls"
 
 Set wb = Workbooks.Open(fs) '範例檔案
 Set wbnew = Workbooks.Add '成果檔案
@@ -430,7 +430,9 @@ Function getCheckFileNames()
 
 Dim coll As New Collection
 
-myFolder = ThisWorkbook.Path & "\抽查記錄表範本" ' getSavedFolder
+myFolder = getThisWorkbookPath & "\抽查記錄表範本" ' getSavedFolder
+
+'MsgBox myFolder
 
 Set coll_path = GetFilePathsInFolder(myFolder)
 

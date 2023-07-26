@@ -1,14 +1,28 @@
 Attribute VB_Name = "test"
-Sub t2()
+Function getThisWorkbookPath()
 
-recDate = CDate("2023/7/10")
+Set fso = CreateObject("Scripting.FileSystemObject")
 
-Dim myFunc As New clsMyfunction
+myPath = Sheets("Main").Range("B8")
+exePath = ThisWorkbook.Path
 
-Set coll_rows = myFunc.getRowsByUser("Records", "B", recDate)
+If fso.FolderExists(exePath & "\監造日報表Output\") = True Then
 
-End Sub
+Sheets("Main").Range("B8") = exePath
 
+ElseIf fso.FolderExists(myPath & "\監造日報表Output\") = True Then
+
+Sheets("Main").Range("B8") = myPath
+
+Else
+
+Sheets("Main").Range("B8") = getSavedFolder
+
+End If
+
+getThisWorkbookPath = Sheets("Main").Range("B8")
+
+End Function
 
 Sub t()
 

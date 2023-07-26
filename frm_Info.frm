@@ -21,6 +21,8 @@ ERRORForm.Show
 Unload Me
 End Sub
 
+
+
 Private Sub Image2_Click()
 ActiveWorkbook.FollowHyperlink Address:="https://hankvba.blogspot.com", NewWindow:=True
 End Sub

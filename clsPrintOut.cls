@@ -26,7 +26,7 @@ sr = Val(InputBox("秨﹍计"))
 
 er = Val(InputBox("挡计"))
 
-wbpath = ThisWorkbook.Path
+wbpath = getThisWorkbookPath
 
 For i = sr To er
 
@@ -75,7 +75,7 @@ Exit Sub
 sr = Val(InputBox("秨﹍计"))
 er = Val(InputBox("挡计"))
 
-wbpath = ThisWorkbook.Path
+wbpath = getThisWorkbookPath
 
 For i = sr To er
 
@@ -89,7 +89,7 @@ End Sub
 
 Sub ToPDF_Check(ByVal sht As Worksheet, ByVal fname As String, ByVal mode) '琩喷块ΘPDF
 
-    wbpath = ThisWorkbook.Path
+    wbpath = getThisWorkbookPath
     
     If mode = 1 Then
     

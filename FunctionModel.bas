@@ -588,12 +588,12 @@ Dim print_obj As New clsPrintOut
 Dim f As String
 
 On Error Resume Next
-MkDir (ThisWorkbook.Path & "\PAY\")
+MkDir (getThisWorkbookPath & "\PAY\")
 On Error GoTo 0
 
 file_name = "第" & coll_rows.count + 1 & "次估驗"
 
-f = ThisWorkbook.Path & "\PAY\" & file_name & ".xls"
+f = getThisWorkbookPath & "\PAY\" & file_name & ".xls"
 
 'f = Application.GetSaveAsFilename(InitialFileName:="第" & coll_rows.count + 1 & "次估驗", FileFilter:="Excel Files (*.xls), *.xls")
 
@@ -601,6 +601,8 @@ ThisWorkbook.Sheets("PAY_Report").Visible = True
 
 Call print_obj.SpecificShtToXLS("PAY_Report", f) '& ".xls")
 ThisWorkbook.Sheets("PAY_Report").Visible = False
+
+ThisWorkbook.Sheets("PAY").Activate
 
 End Sub
 
@@ -620,20 +622,24 @@ For i = 1 To coll_pay_dates.count
 
 Next
 
-If p = "" Then MsgBox "找不到已建檔的估驗資料!", vbCritical: Exit Sub
+If p = "" Then
+    'Sheets("Main").Range("B8") = getSavedFolder
+    MsgBox "找不到已建檔的估驗資料!", vbCritical: Exit Sub
+    
+End If
 
 cnt = InputBox("請輸入要打開的檔案" & vbNewLine & p, , PAY_obj.getPayCounts)
 
 If cnt = "" Then MsgBox "未選取資料!", vbCritical: Exit Sub
 
-If fso.FileExists(ThisWorkbook.Path & "\PAY\" & "第" & cnt & "次估驗.xls") = True Then
+If fso.FileExists(getThisWorkbookPath & "\PAY\" & "第" & cnt & "次估驗.xls") = True Then
 
-    Workbooks.Open (ThisWorkbook.Path & "\PAY\" & "第" & cnt & "次估驗.xls")
+    Workbooks.Open (getThisWorkbookPath & "\PAY\" & "第" & cnt & "次估驗.xls")
 Else
 
     MsgBox "查無估驗資料存檔，請至儲存區看看!", vbCritical
 
-    Shell "explorer.exe " & ThisWorkbook.Path & "\" & "PAY\", vbNormalFocus
+    Shell "explorer.exe " & getThisWorkbookPath & "\" & "PAY\", vbNormalFocus
     
 End If
 

@@ -294,5 +294,87 @@ End Function
 
 'TODO:create a tmp sheet to keyin plot order
 
+Sub plotS_Curve()
+
+Dim Inf_obj As New clsInformation
+Dim shp As Shape
+
+For Each shp In Sheets("S-CURVE").Shapes
+
+    If shp.OnAction = "" Then shp.Delete
+
+Next
+
+
+With Sheets("Diary")
+
+lr = .Cells(.Rows.count, 1).End(xlUp).Row
+
+End With
+
+    Sheets("S-CURVE").Activate
+
+    Sheets("S-CURVE").Shapes.AddChart2(240, xlXYScatterSmoothNoMarkers).Select
+    ActiveChart.SetSourceData Source:=Range("Diary!$B$2:$B$147,Diary!$D$2:$D$147,Diary!$I$2:$I$48")
+    ActiveChart.FullSeriesCollection(1).Select
+    ActiveChart.FullSeriesCollection(1).XValues = "=Diary!$B$2:$B$" & lr
+    ActiveChart.FullSeriesCollection(1).Values = "=Diary!$D$2:$D$" & lr
+    ActiveChart.FullSeriesCollection(1).Name = "=""預定進度"""
+    ActiveChart.FullSeriesCollection(2).XValues = "=Diary!$B$2:$B$" & lr
+    ActiveChart.FullSeriesCollection(2).Values = "=Diary!$I$2:$I$" & lr
+    ActiveChart.FullSeriesCollection(2).Name = "=""實際進度"""
+    ActiveChart.FullSeriesCollection(3).Delete
+    
+    ActiveChart.Axes(xlValue).Select
+    ActiveChart.Axes(xlValue).MinimumScale = 0
+    ActiveChart.Axes(xlValue).MaximumScale = 1
+    ActiveChart.Axes(xlCategory).Select
+    ActiveChart.Axes(xlCategory).MinimumScale = Sheets("Diary").Range("B2")
+    ActiveChart.Axes(xlCategory).MaximumScale = Sheets("Diary").Range("B" & lr)
+    
+    For Each shp In Sheets("S-CURVE").Shapes
+    
+        If shp.OnAction = "" Then ShpName = shp.Name
+    
+    Next
+    
+    ActiveChart.ChartTitle.Select
+    ActiveChart.ChartTitle.Text = Inf_obj.conName
+    Selection.Format.TextFrame2.TextRange.Characters.Text = Inf_obj.conName
+    With Selection.Format.TextFrame2.TextRange.Characters(1, 2).ParagraphFormat
+        .TextDirection = msoTextDirectionLeftToRight
+        .Alignment = msoAlignCenter
+    End With
+    With Selection.Format.TextFrame2.TextRange.Characters(1, 2).Font
+        .BaselineOffset = 0
+        .Bold = msoFalse
+        .NameComplexScript = "+mn-cs"
+        .NameFarEast = "+mn-ea"
+        .Fill.Visible = msoTrue
+        .Fill.ForeColor.RGB = RGB(89, 89, 89)
+        .Fill.Transparency = 0
+        .Fill.Solid
+        .Size = 14
+        .Italic = msoFalse
+        .Kerning = 12
+        .Name = "+mn-lt"
+        .UnderlineStyle = msoNoUnderline
+        .Spacing = 0
+        .Strike = msoNoStrike
+    End With
+    ActiveChart.ChartArea.Select
+    ActiveChart.SetElement (msoElementLegendRight)
+    
+    ActiveChart.ChartArea.Select
+    ActiveSheet.Shapes(ShpName).IncrementLeft -410
+    ActiveSheet.Shapes(ShpName).IncrementTop -140
+    ActiveSheet.Shapes(ShpName).ScaleWidth 2, msoFalse, _
+        msoScaleFromTopLeft
+    ActiveSheet.Shapes(ShpName).ScaleHeight 2, msoFalse, _
+        msoScaleFromTopLeft
+        
+
+End Sub
+
 
 

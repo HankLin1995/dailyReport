@@ -27,7 +27,7 @@ Private Sub Workbook_BeforeClose(Cancel As Boolean)
 '
 'End If
 
-Call checkTestCompleted
+'Call checkTestCompleted
 
 End Sub
 
@@ -52,6 +52,8 @@ Call checkTestCompleted
 Call FetchURL_Main
 
 frm_Info.Show
+
+Call getThisWorkbookPath
 
 'Application.StatusBar = "設計者：林宗漢(Hank Lin) @2021"
 

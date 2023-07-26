@@ -27,7 +27,7 @@ Else
         '==========1206Add for «ö¶s±±¨î ============
         
         Dim o As New clsUserInformation
-        'o.showCmd
+        o.showCmd
 
     End If
 

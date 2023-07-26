@@ -26,7 +26,7 @@ sr = Val(InputBox("開始頁數"))
 
 er = Val(InputBox("結束頁數"))
 
-wbpath = getThisWorkbookPath
+wbPath = getThisWorkbookPath
 
 For i = sr To er
 
@@ -37,14 +37,14 @@ For i = sr To er
     Call ReportRun
     
         On Error Resume Next
-        MkDir wbpath & "\" & "監造日報表Output"
+        MkDir wbPath & "\" & "監造日報表Output"
         On Error GoTo 0
         'ChDir wbpath
         
         On Error Resume Next
         
         ActiveSheet.ExportAsFixedFormat Type:=xlTypePDF, filename:= _
-        wbpath & "\" & "監造日報表Output\" & Range("K2"), Quality:= _
+        wbPath & "\" & "監造日報表Output\" & Range("K2"), Quality:= _
         xlQualityStandard, IncludeDocProperties:=True, IgnorePrintAreas:=False, _
         OpenAfterPublish:=False
         
@@ -58,7 +58,7 @@ For i = sr To er
         
 Next
 
-Shell "explorer.exe " & wbpath & "\" & "監造日報表Output\", vbNormalFocus
+Shell "explorer.exe " & wbPath & "\" & "監造日報表Output\", vbNormalFocus
 
 End Sub
 
@@ -75,7 +75,7 @@ Exit Sub
 sr = Val(InputBox("開始頁數"))
 er = Val(InputBox("結束頁數"))
 
-wbpath = getThisWorkbookPath
+wbPath = getThisWorkbookPath
 
 For i = sr To er
 
@@ -89,18 +89,18 @@ End Sub
 
 Sub ToPDF_Check(ByVal sht As Worksheet, ByVal fname As String, ByVal mode) '查驗表輸出成PDF
 
-    wbpath = getThisWorkbookPath
+    wbPath = getThisWorkbookPath
     
     If mode = 1 Then
     
     On Error Resume Next
-    MkDir wbpath & "\" & "查驗表Output"
+    MkDir wbPath & "\" & "查驗表Output"
     On Error GoTo 0
     
     On Error Resume Next
     
     sht.ExportAsFixedFormat Type:=xlTypePDF, filename:= _
-    wbpath & "\" & "查驗表Output\" & fname, Quality:= _
+    wbPath & "\" & "查驗表Output\" & fname, Quality:= _
     xlQualityStandard, IncludeDocProperties:=True, IgnorePrintAreas:=False, _
     OpenAfterPublish:=False
 
@@ -235,7 +235,34 @@ Set wb = Workbooks.Add
 
 wb.Sheets("工作表1").Delete
 
+If file_path <> "False" And file_path <> "" Then
+
+    wb.SaveAs filename:=file_path
+    wb.Close
+    
+End If
+
 Application.DisplayAlerts = True
+
+End Sub
+
+Sub SpecificShtObjToXLS(ByVal shtObj As Object, ByVal shtName As String, Optional file_path As String = "")
+
+Application.DisplayAlerts = False
+
+Set wb = Workbooks.Add
+    
+    shtObj.Copy (wb.Sheets(1))
+    
+    Set sht = wb.Sheets(1)
+    
+    With sht
+        
+        .Name = shtName
+    
+    End With
+
+wb.Sheets("工作表1").Delete
 
 If file_path <> "False" And file_path <> "" Then
 
@@ -244,7 +271,8 @@ If file_path <> "False" And file_path <> "" Then
     
 End If
 
-End Sub
+Application.DisplayAlerts = True
 
+End Sub
 
 

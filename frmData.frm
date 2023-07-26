@@ -18,6 +18,7 @@ Attribute VB_Exposed = False
 
 
 
+
 Private Sub cboItem_Change()
 
 Call ResetItem
@@ -236,8 +237,8 @@ Dim obj As New clsBasicData
 obj.ReadData
 obj.Init
 
-Dim obj2 As New clsCheck
+'Dim obj2 As New clsCheck
 
-Call obj2.AddCheckTable(frmData)
+'Call obj2.AddCheckTable(frmData)
 
 End Sub

@@ -58,7 +58,7 @@ With Sheets("Report")
             ItemName = .Cells(r, "B")
             numDiff = Round(sumNum - conNum, 4)
             
-            If Abs(numDiff) < allowence Then
+            If Abs(numDiff) < CDbl(allowence) Then
             
                 Call dealOverNum(ItemName, numDiff)
             
@@ -95,6 +95,12 @@ With Sheets("Records")
             If adjustNum > 0 Then
             
                 Debug.Print ItemName & ",原數量=" & originNum & ">>校正=" & adjustNum
+            
+                On Error Resume Next
+            
+                .Cells(r, "F").Comment.Delete
+                
+                On Error GoTo 0
             
                 .Cells(r, "F").AddComment "originNum=" & .Cells(r, "F") & ">>adjustNum=" & adjustNum
             
@@ -262,10 +268,14 @@ End Sub
 
 Sub cmdPrintCheck()
 
+'MsgBox "測試中..."
+
+'Exit Sub
+
 Dim obj As New clsCheck
 
-'obj.CheckList
-obj.PrintCheckTable
+obj.CheckList
+obj.printCheckTable
 
 End Sub
 
@@ -632,7 +642,7 @@ cnt = InputBox("請輸入要打開的檔案" & vbNewLine & p, , PAY_obj.getPayCounts)
 
 If cnt = "" Then MsgBox "未選取資料!", vbCritical: Exit Sub
 
-If fso.FileExists(getThisWorkbookPath & "\PAY\" & "第" & cnt & "次估驗.xls") = True Then
+If fso.fileexists(getThisWorkbookPath & "\PAY\" & "第" & cnt & "次估驗.xls") = True Then
 
     Workbooks.Open (getThisWorkbookPath & "\PAY\" & "第" & cnt & "次估驗.xls")
 Else
@@ -811,6 +821,71 @@ Next
 
 End Sub
 
+Sub cmdGetCheckTable() '檢驗停留點申請單
+
+Dim print_obj As New clsPrintOut
+Dim Inf_obj As New clsInformation
+Dim myFunc As New clsMyfunction
+
+Set checkdaylist = myFunc.getUniqueItems("Check", 2, , "時間") ' getTimeList
+
+With Sheets("Check")
+
+lr = .Cells(1, 1).End(xlDown).Row
+
+For Each checkday In checkdaylist
+
+myRow = 15
+
+i = i + 1
+
+With Sheets("CheckList")
+ 
+    .Range("W4") = i
+    .Range("W6") = CDate(checkday) - 1
+    .Cells(15, 1).Resize(10, 26).ClearContents
+
+End With
+
+    For r = 2 To lr
+        
+        If .Cells(r, 4) = CDate(checkday) And .Cells(r, 5) = "檢驗停留點" Then
+        
+            checkitem = .Cells(r, 1)
+            tmp = Split(.Cells(r, 6), ",")
+            checkch = tmp(0)
+            CheckLoc = tmp(1)
+        
+            With Sheets("CheckList")
+                
+                .Range("E8") = Inf_obj.conName
+                .Range("E10") = Inf_obj.contractor
+                .Range("A" & myRow) = checkch
+                .Range("G" & myRow) = checkday
+                .Range("M" & myRow) = CheckLoc
+                .Range("R" & myRow) = checkitem
+            
+                myRow = myRow + 1
+            
+            End With
+        
+        End If
+        
+    Next
+
+    If myRow = 15 Then
+        i = i - 1
+    Else
+        'Sheets("CheckList").PrintOut
+        Call print_obj.SpecificShtToXLS("CheckList", getThisWorkbookPath & "\查驗表Output\EN-" & i & ".xlsx")
+    End If
+
+Next
+
+End With
+
+End Sub
+
 
 
 
@@ -872,6 +947,31 @@ For Each r In coll_rows
     If canalName = canal_name Then getSumByItemNameAndCanal = rec_sum
 
 Next
+
+End Function
+
+Function getThisWorkbookPath()
+
+Set fso = CreateObject("Scripting.FileSystemObject")
+
+myPath = ThisWorkbook.Sheets("Main").Range("B8")
+exePath = ThisWorkbook.Path
+
+If fso.FolderExists(exePath & "\監造日報表Output\") = True Then
+
+ThisWorkbook.Sheets("Main").Range("B8") = exePath
+
+ElseIf fso.FolderExists(myPath & "\監造日報表Output\") = True Then
+
+ThisWorkbook.Sheets("Main").Range("B8") = myPath
+
+Else
+
+ThisWorkbook.Sheets("Main").Range("B8") = getSavedFolder
+
+End If
+
+getThisWorkbookPath = ThisWorkbook.Sheets("Main").Range("B8")
 
 End Function
 

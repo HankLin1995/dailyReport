@@ -77,11 +77,9 @@ End Function
 
 Sub hideCmd()
 
-Exit Sub
+For Each sht In Sheets
 
-With Sheets("日報填寫")
-
-    For Each shp In .Shapes
+    For Each shp In sht.Shapes
     
         'Debug.Print shp.OnAction
     
@@ -97,15 +95,15 @@ With Sheets("日報填寫")
         
     Next
 
-End With
+Next
 
 End Sub
 
 Sub showCmd()
 
-With Sheets("日報填寫")
+For Each sht In Sheets
 
-    For Each shp In .Shapes
+    For Each shp In sht.Shapes
     
         If shp.OnAction <> "" Then shp.Visible = True
     
@@ -118,8 +116,7 @@ With Sheets("日報填寫")
         
     Next
 
-
-End With
+Next
 
 End Sub
 

@@ -14,13 +14,55 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 
+
+
+Private Sub cmdOutput_Click()
+
+Dim myFunc As New clsMyfunction
+Dim check_obj As New clsCheck
+
+With Me
+
+check_name = .cboCheckItem
+
+Call myFunc.splitFileName_Check(check_name, check_item, check_item_eng)
+
+check_cnt = check_obj.countChecks(check_item)
+check_date = .txtCheckDate
+check_style = .cboCheckStyle
+check_loc = .txtCheckLoc
+check_photo_inf = .lstCheckTable.List
+
+cnt = UBound(check_photo_inf, 1)
+
+For i = 0 To cnt
+
+    photo_path = check_photo_inf(i, 0)
+    photo_note = check_photo_inf(i, 1)
+
+    photo_prompt = photo_prompt & photo_path & ">" & photo_note & ","
+
+Next
+
+arr = Array(check_item, check_item_eng, check_cnt, check_date, check_style, check_loc, , , photo_prompt)
+
+Call myFunc.AppendData("Check", arr)
+
+End With
+
+Unload Me
+
+End Sub
+
 Private Sub CommandButton1_Click()
 
-f = "G:\我的雲端硬碟\ExcelVBA\監造日報表\上課素材\0109\113_200116_0026.jpg"
+'f = "G:\我的雲端硬碟\ExcelVBA\監造日報表\上課素材\0109\113_200116_0026.jpg"
+
+ChDir getThisWorkbookPath & "\施工照片\"
 
 If f = "" Then f = Application.GetOpenFilename
 
-If f = "False" Then MsgBox "未取得檔案", vbCritical: End
+If f = "False" Then MsgBox "未取得檔案", vbCritical: Exit Sub
 
 Me.txtFilePath = f
 
@@ -37,6 +79,22 @@ End With
 End Sub
 
 Private Sub CommandButton2_Click()
+
+If Me.txtFilePath Like "*>*" Then
+
+    MsgBox "路徑中不得含有>", vbCritical
+    Me.txtFilePath = ""
+    Exit Sub
+
+End If
+
+If Me.txtPhotoNote Like "*>*" Then
+
+    MsgBox "說明欄中不得含有>", vbCritical
+    Me.txtPhotoNote = ""
+    Exit Sub
+
+End If
 
 With lstCheckTable
 

@@ -50,9 +50,9 @@ Else
     TestRow_End = ChannelRow - 1
 End If
 
-count = Round((TestRow_End - TestRow) / 2, 0) - 1
+Count = Round((TestRow_End - TestRow) / 2, 0) - 1
 
-Call Init_InsertTestRow(count, sr + 3)
+Call Init_InsertTestRow(Count, sr + 3)
 
 c = 0
 
@@ -61,7 +61,7 @@ For r = TestRow + 1 To TestRow_End
     ts = shtMain.Cells(r, 1)
     tsm = shtMain.Cells(r, 2)
     
-    If j = count + 2 Then c = 6: j = 0
+    If j = Count + 2 Then c = 6: j = 0
     
     shtReport.Cells(sr + 2 + j, 2 + c) = ts
     shtReport.Cells(sr + 2 + j, 3 + c) = tsm
@@ -94,13 +94,13 @@ End With
 
 End Sub
 
-Private Sub Init_InsertTestRow(ByVal count As Integer, ByVal targetRow As Integer)
+Private Sub Init_InsertTestRow(ByVal Count As Integer, ByVal targetRow As Integer)
 
 With shtReport
 
 i = 0
 
-Do Until i = count
+Do Until i = Count
 
     .Rows(targetRow).Insert
     
@@ -118,7 +118,7 @@ Private Sub Init_getTestRow(sr, er)
 
 With shtReport
 
-    lr = .Cells(.Rows.count, 1).End(xlUp).Row
+    lr = .Cells(.Rows.Count, 1).End(xlUp).Row
 
     For Each rng In .Range("A1:A" & lr)
     
@@ -213,7 +213,7 @@ Sub GetTestRec()
 
 With shtRec
 
-    lr = .Cells(Rows.count, 1).End(xlUp).Row
+    lr = .Cells(Rows.Count, 1).End(xlUp).Row
 
     For i = 1 To UBound(TestArr, 1)
     
@@ -316,7 +316,7 @@ Private Function CountOldTestAmount(ByVal TestName As String, ByVal recDate As D
 
 With shtRec
 
-    lr = .Cells(.Rows.count, 1).End(xlUp).Row
+    lr = .Cells(.Rows.Count, 1).End(xlUp).Row
 
     For r = 3 To lr
     

@@ -109,7 +109,7 @@ Dim myFunc As New clsMyfunction
 
 Set coll_rows = myFunc.getUniqueItems("PAY_EX", 2, , "估驗日期")
 
-Debug.Assert coll_rows.count + 1 = 1
+Debug.Assert coll_rows.Count + 1 = 1
 
 End Sub
 
@@ -117,7 +117,7 @@ Sub test_exportSheets()
 
 Dim o As New clsPrintOut
 Dim f As String
-f = Application.GetSaveAsFilename(InitialFileName:="第次估驗", FileFilter:="Excel Files (*.xlsx), *.xlsx")
+f = Application.GetSaveAsFilename(initialFilename:="第次估驗", FileFilter:="Excel Files (*.xls), *.xls")
 If f = "False" Then f = ""
 
 Debug.Assert f = ""
@@ -138,11 +138,11 @@ Dim f As New clsMyfunction
 
 Set coll = f.getUniqueItems("PAY_EX", 2, "F")
 
-Debug.Assert coll.count = 1
+Debug.Assert coll.Count = 1
 
 Set coll = f.getUniqueItems("PAY_EX", 2, , "估驗日期")
 
-Debug.Assert coll.count = 1
+Debug.Assert coll.Count = 1
 
 End Sub
 

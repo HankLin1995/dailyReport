@@ -26,7 +26,7 @@ With shtDetail
 
     '.UsedRange.EntireRow.Hidden = False '摺疊會出問題!
     
-    lr = .Cells(Rows.count, 3).End(xlUp).Row
+    lr = .Cells(Rows.Count, 3).End(xlUp).Row
     
     For r = 3 To lr
     
@@ -48,7 +48,7 @@ Set coll = getSeperateRows()
 
 With shtDetail
 
-For i = 1 To coll.count - 1
+For i = 1 To coll.Count - 1
 
     sr = coll(i)
     er = coll(i + 1) - 1

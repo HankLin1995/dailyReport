@@ -58,7 +58,7 @@ With wb.Sheets(getShtContentName)
 
     '.Unprotect ("RATSWVNXYRCMPIZ") 'only read it's ok
 
-    lr = .Cells(.Rows.count, "F").End(xlUp).Row
+    lr = .Cells(.Rows.Count, "F").End(xlUp).Row
     
     For r = 9 To lr
     
@@ -125,7 +125,7 @@ Private Sub getData(ByVal num As String, ByVal cont As String, ByVal unit As Str
 
     With ThisWorkbook.Sheets("Budget")
     
-        lr = .Cells(.Rows.count, 1).End(xlUp).Row
+        lr = .Cells(.Rows.Count, 1).End(xlUp).Row
         
         r_Main = lr + 1
         
@@ -200,7 +200,7 @@ Sub settingColorRules()
 
 Set coll_2nd = getCollSeconedName
 
-For i = 1 To coll_2nd.count
+For i = 1 To coll_2nd.Count
 
     p = p & i & "." & coll_2nd(i) & vbNewLine
 
@@ -212,7 +212,7 @@ targetCnt = CInt(InputBox("請輸入之後為百分比項目之序位" & vbNewLine & p, , 3))
 
 With Sheets("Budget")
 
-    lr = .Cells(.Rows.count, 1).End(xlUp).Row
+    lr = .Cells(.Rows.Count, 1).End(xlUp).Row
     
     For r = 3 To lr
     
@@ -251,7 +251,7 @@ Function getSumMoney(Optional ByVal contract_cnt As Integer = 0)
 
 With Sheets("Budget")
 
-lr = .Cells(.Rows.count, 1).End(xlUp).Row
+lr = .Cells(.Rows.Count, 1).End(xlUp).Row
 
 'Set rng = .Rows("2").Find("契約數量")
 
@@ -289,7 +289,7 @@ For Each it In collSeconedName
 
     With Sheets("Budget")
     
-        lr = .Cells(.Rows.count, 1).End(xlUp).Row
+        lr = .Cells(.Rows.Count, 1).End(xlUp).Row
     
         For r = 3 To lr
         
@@ -345,7 +345,7 @@ For Each it In collSeconedName
 
     With Sheets("Budget")
     
-        lr = .Cells(.Rows.count, 1).End(xlUp).Row
+        lr = .Cells(.Rows.Count, 1).End(xlUp).Row
     
         For r = 3 To lr
         
@@ -396,7 +396,7 @@ Dim coll As New Collection
 
 With Sheets("Budget")
 
-    lr = .Cells(.Rows.count, 1).End(xlUp).Row
+    lr = .Cells(.Rows.Count, 1).End(xlUp).Row
 
     For r = 3 To lr
     
@@ -430,7 +430,7 @@ c = t_change_to_column(t_change)
 
 With Sheets("Budget")
 
-    lr = .Cells(.Rows.count, 1).End(xlUp).Row
+    lr = .Cells(.Rows.Count, 1).End(xlUp).Row
 
     For r = 3 To lr
     
@@ -465,7 +465,7 @@ c = t_change_to_column(t_change)
 
 With Sheets("Budget")
 
-    lr = .Cells(.Rows.count, 1).End(xlUp).Row
+    lr = .Cells(.Rows.Count, 1).End(xlUp).Row
 
     For r = 3 To lr
     
@@ -495,7 +495,7 @@ Dim coll As New Collection
 
 With Sheets("Budget")
 
-    lr = .Cells(.Rows.count, 1).End(xlUp).Row
+    lr = .Cells(.Rows.Count, 1).End(xlUp).Row
 
     For r = 3 To lr
     
@@ -523,7 +523,7 @@ Dim coll As New Collection
 
 With Sheets("Budget")
 
-    lr = .Cells(.Rows.count, 1).End(xlUp).Row
+    lr = .Cells(.Rows.Count, 1).End(xlUp).Row
 
     For r = 3 To lr
     
@@ -554,7 +554,7 @@ c = t_change_to_column(t_change)
 
 With Sheets("Budget")
 
-    lr = .Cells(.Rows.count, 1).End(xlUp).Row
+    lr = .Cells(.Rows.Count, 1).End(xlUp).Row
 
     For r = 3 To lr
     
@@ -585,7 +585,7 @@ Sub exportToMain(arr, myColorindex, t_change)
 
 With Sheets("Main")
 
-    r = .Cells(.Rows.count, 6 + t_change * 5).End(xlUp).Row
+    r = .Cells(.Rows.Count, 6 + t_change * 5).End(xlUp).Row
     
     .Cells(r + 1, 6 + t_change * 5).Resize(1, 5) = arr
     .Cells(r + 1, 6 + t_change * 5).Resize(1, 5).Borders.LineStyle = 1
@@ -603,7 +603,7 @@ Sub ReArrangeTitle() '重整準則
 
 With Sheets("Budget")
 
-For r = 3 To .Cells(.Rows.count, 1).End(xlUp).Row
+For r = 3 To .Cells(.Rows.Count, 1).End(xlUp).Row
 
     .Cells(r, 1).Font.ColorIndex = .Cells(r, 7)
 
@@ -617,7 +617,7 @@ Sub clearOldReport(ByVal t_change) 'clear舊有Main工作表報表資料
 
 With Sheets("Main")
 
-    lr = .Cells(.Rows.count, 6 + t_change * 5).End(xlUp).Row
+    lr = .Cells(.Rows.Count, 6 + t_change * 5).End(xlUp).Row
     
     .Cells(3, 6 + t_change * 5).Resize(lr, 5).Clear
 
@@ -645,7 +645,7 @@ Dim coll_err As New Collection
 
 With Sheets("Budget")
 
-    lr = .Cells(.Rows.count, 1).End(xlUp).Row
+    lr = .Cells(.Rows.Count, 1).End(xlUp).Row
     
     For r = 3 To lr
     
@@ -655,9 +655,9 @@ With Sheets("Budget")
         
         Set coll_rows = myFunc.getRowsByUser("Budget", "B", key_value)
     
-        If coll_rows.count > 1 Then
+        If coll_rows.Count > 1 Then
             
-            For i = 2 To coll_rows.count
+            For i = 2 To coll_rows.Count
             
                 err_prompt = "第" & coll_rows(i) & "列:" & key_value & "已被使用!"
             
@@ -671,7 +671,7 @@ With Sheets("Budget")
     
     Next
 
-    For i = 1 To coll_err.count
+    For i = 1 To coll_err.Count
     
         prompt = prompt & coll_err(i) & vbNewLine
     

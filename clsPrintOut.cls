@@ -26,7 +26,7 @@ sr = Val(InputBox("開始頁數"))
 
 er = Val(InputBox("結束頁數"))
 
-wbPath = getThisWorkbookPath
+wbpath = getThisWorkbookPath
 
 For i = sr To er
 
@@ -37,14 +37,14 @@ For i = sr To er
     Call ReportRun
     
         On Error Resume Next
-        MkDir wbPath & "\" & "監造日報表Output"
+        MkDir wbpath & "\" & "監造日報表Output"
         On Error GoTo 0
         'ChDir wbpath
         
         On Error Resume Next
         
         ActiveSheet.ExportAsFixedFormat Type:=xlTypePDF, filename:= _
-        wbPath & "\" & "監造日報表Output\" & Range("K2"), Quality:= _
+        wbpath & "\" & "監造日報表Output\" & Range("K2"), Quality:= _
         xlQualityStandard, IncludeDocProperties:=True, IgnorePrintAreas:=False, _
         OpenAfterPublish:=False
         
@@ -58,7 +58,7 @@ For i = sr To er
         
 Next
 
-Shell "explorer.exe " & wbPath & "\" & "監造日報表Output\", vbNormalFocus
+Shell "explorer.exe " & wbpath & "\" & "監造日報表Output\", vbNormalFocus
 
 End Sub
 
@@ -75,7 +75,7 @@ Exit Sub
 sr = Val(InputBox("開始頁數"))
 er = Val(InputBox("結束頁數"))
 
-wbPath = getThisWorkbookPath
+wbpath = getThisWorkbookPath
 
 For i = sr To er
 
@@ -89,18 +89,18 @@ End Sub
 
 Sub ToPDF_Check(ByVal sht As Worksheet, ByVal fname As String, ByVal mode) '查驗表輸出成PDF
 
-    wbPath = getThisWorkbookPath
+    wbpath = getThisWorkbookPath
     
     If mode = 1 Then
     
     On Error Resume Next
-    MkDir wbPath & "\" & "查驗表Output"
+    MkDir wbpath & "\" & "查驗表Output"
     On Error GoTo 0
     
     On Error Resume Next
     
     sht.ExportAsFixedFormat Type:=xlTypePDF, filename:= _
-    wbPath & "\" & "查驗表Output\" & fname, Quality:= _
+    wbpath & "\" & "查驗表Output\" & fname, Quality:= _
     xlQualityStandard, IncludeDocProperties:=True, IgnorePrintAreas:=False, _
     OpenAfterPublish:=False
 
@@ -266,7 +266,7 @@ wb.Sheets("工作表1").Delete
 
 If file_path <> "False" And file_path <> "" Then
 
-    wb.SaveAs filename:=file_path
+    wb.SaveAs filename:=file_path, FileFormat:=xlExcel8
     wb.Close
     
 End If

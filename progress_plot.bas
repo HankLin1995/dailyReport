@@ -213,7 +213,7 @@ Dim coll As New Collection
 
 With Sheets("Records")
 
-    lr = .Cells(.Rows.count, 1).End(xlUp).Row
+    lr = .Cells(.Rows.Count, 1).End(xlUp).Row
     
     For r = 3 To lr
     
@@ -270,7 +270,7 @@ Dim coll As New Collection
 
 With Sheets("Records") 'get item orders by records
 
-    lr = .Cells(.Rows.count, 1).End(xlUp).Row
+    lr = .Cells(.Rows.Count, 1).End(xlUp).Row
     
     For r = 3 To lr
     
@@ -308,7 +308,7 @@ Next
 
 With Sheets("Diary")
 
-lr = .Cells(.Rows.count, 1).End(xlUp).Row
+lr = .Cells(.Rows.Count, 1).End(xlUp).Row
 
 End With
 

@@ -63,7 +63,7 @@ Dim coll As New Collection
 
 With Sheets("Diary")
 
-lr = .Cells(.Rows.count, 1).End(xlUp).Row
+lr = .Cells(.Rows.Count, 1).End(xlUp).Row
 
 IsStart = False
 
@@ -141,7 +141,7 @@ Dim coll As New Collection
 
 With Sheets("Budget")
 
-lc = .Cells(1, .Columns.count).End(xlToLeft).Column
+lc = .Cells(1, .Columns.Count).End(xlToLeft).Column
 
 For c = 1 To lc
 
@@ -172,7 +172,7 @@ Function getContractChangesByDate(ByVal recDate As Date)
 
 With Sheets("Budget")
 
-lc = .Cells(1, .Columns.count).End(xlToLeft).Column
+lc = .Cells(1, .Columns.Count).End(xlToLeft).Column
 
 For c = 1 To lc
 
@@ -258,7 +258,7 @@ End Sub
 
 Sub ProgressNew() '計算各天數進度傳入Diary工作表
 
-Dim collDay As New Collection
+Dim collday As New Collection
 Dim collPer As New Collection
 Dim arr() As Variant
 

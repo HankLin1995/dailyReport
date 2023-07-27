@@ -1,6 +1,6 @@
 Attribute VB_Name = "tranFunction"
 
-Sub test()
+Sub Test()
 
 strLoc = "28+500~28+525" '¡B28+550.9~28+590"
 

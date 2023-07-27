@@ -80,7 +80,7 @@ Sub dealOverNum(ByVal ItemName As String, ByVal numDiff As Double) '20221122處理
 
 With Sheets("Records")
 
-    lr = .Cells(.Rows.count, 1).End(xlUp).Row
+    lr = .Cells(.Rows.Count, 1).End(xlUp).Row
     
     For r = lr To 3 Step -1
     
@@ -126,7 +126,7 @@ Dim o As New clsRecord
 
 With Sheets("Mix")
 
-lr = .Cells(.Rows.count, "D").End(xlUp).Row
+lr = .Cells(.Rows.Count, "D").End(xlUp).Row
 
 For r = 3 To lr
 
@@ -155,7 +155,7 @@ Dim coll As New Collection
 
 With Sheets("Mix_Sum")
 
-    lr = .Cells(.Rows.count, 1).End(xlUp).Row
+    lr = .Cells(.Rows.Count, 1).End(xlUp).Row
     
     For r = 3 To 86
     
@@ -196,7 +196,7 @@ For Each it In coll
     
     With Sheets("Mix_Sum_UNIT")
     
-        lr = .Cells(.Rows.count, 1).End(xlUp).Row + 1
+        lr = .Cells(.Rows.Count, 1).End(xlUp).Row + 1
         
         .Cells(lr, 1) = it
         .Cells(lr, 2) = WorksheetFunction.Round(Sum, 3)
@@ -473,7 +473,7 @@ With Sheets("Budget")
 
     Set coll = o.getCollSeconedName
     
-    For i = 1 To coll.count
+    For i = 1 To coll.Count
     
         p = p & i & "." & coll(i) & vbNewLine
     
@@ -501,7 +501,7 @@ With Sheets("Budget")
     
     Set coll = Inf_obj.getContractChanges
 
-    For t_change = 0 To coll.count - 1
+    For t_change = 0 To coll.Count - 1
     
         c = o.t_change_to_column(t_change)
     
@@ -524,7 +524,7 @@ If pay_date = "" Then pay_date = InputBox("請輸入估驗日期", , Format(Now(), "yyy
 
 If PAY_obj.IsPayDateLater(pay_date) = False Then
     Set coll = PAY_obj.getPayDates
-    MsgBox "估驗日期需要於【" & coll(coll.count) & "】之後!", vbCritical: End
+    MsgBox "估驗日期需要於【" & coll(coll.Count) & "】之後!", vbCritical: End
 End If
 
 PAY_obj.pay_date = pay_date
@@ -543,7 +543,7 @@ Dim PAY_obj As New clsPay
 
 Set coll_pay_dates = myFunc.getUniqueItems("PAY_EX", 2, "F")
 
-i = coll_pay_dates.count
+i = coll_pay_dates.Count
 
 If i = 0 Then MsgBox "查無估驗紀錄!", vbCritical: Exit Sub
 
@@ -557,7 +557,7 @@ Call PAY_obj.fs_kill(i)
 
 Set coll_rows = myFunc.getRowsByUser("PAY_EX", "F", CDate(pay_date))
 
-For i = coll_rows.count To 1 Step -1
+For i = coll_rows.Count To 1 Step -1
 
     r = coll_rows(i)
 
@@ -583,7 +583,7 @@ Dim PAY_obj As New clsPay
 Set coll_rows = myFunc.getUniqueItems("PAY_EX", 2, , "估驗日期")
 Set coll_pay_num = myFunc.getUniqueItems("PAY", 2, , "本次估驗")
 
-If coll_pay_num.count = 0 Then MsgBox "未填寫本次估驗資料，請先填寫!", vbCritical: End
+If coll_pay_num.Count = 0 Then MsgBox "未填寫本次估驗資料，請先填寫!", vbCritical: End
 
 PAY_obj.getPayInfo
 PAY_obj.clearPAY_Report
@@ -598,12 +598,12 @@ Dim print_obj As New clsPrintOut
 Dim f As String
 
 On Error Resume Next
-MkDir (getThisWorkbookPath & "\PAY\")
+MkDir (getThisWorkbookPath & "\估驗Output\")
 On Error GoTo 0
 
-file_name = "第" & coll_rows.count + 1 & "次估驗"
+file_name = "第" & coll_rows.Count + 1 & "次估驗"
 
-f = getThisWorkbookPath & "\PAY\" & file_name & ".xls"
+f = getThisWorkbookPath & "\估驗Output\" & file_name & ".xls"
 
 'f = Application.GetSaveAsFilename(InitialFileName:="第" & coll_rows.count + 1 & "次估驗", FileFilter:="Excel Files (*.xls), *.xls")
 
@@ -626,7 +626,7 @@ Dim myFunc As New clsMyfunction
 
 Set coll_pay_dates = myFunc.getUniqueItems("PAY_EX", 2, , "估驗日期")
 
-For i = 1 To coll_pay_dates.count
+For i = 1 To coll_pay_dates.Count
 
     p = p & i & ".第" & i & "次估驗." & coll_pay_dates(i) & vbNewLine
 
@@ -642,9 +642,9 @@ cnt = InputBox("請輸入要打開的檔案" & vbNewLine & p, , PAY_obj.getPayCounts)
 
 If cnt = "" Then MsgBox "未選取資料!", vbCritical: Exit Sub
 
-If fso.fileexists(getThisWorkbookPath & "\PAY\" & "第" & cnt & "次估驗.xls") = True Then
+If fso.fileexists(getThisWorkbookPath & "\估驗Output\" & "第" & cnt & "次估驗.xls") = True Then
 
-    Workbooks.Open (getThisWorkbookPath & "\PAY\" & "第" & cnt & "次估驗.xls")
+    Workbooks.Open (getThisWorkbookPath & "\估驗Output\" & "第" & cnt & "次估驗.xls")
 Else
 
     MsgBox "查無估驗資料存檔，請至儲存區看看!", vbCritical
@@ -690,7 +690,7 @@ With Sheets("Diary")
 
     .Activate
 
-    lr = .Cells(.Rows.count, 1).End(xlUp).Row
+    lr = .Cells(.Rows.Count, 1).End(xlUp).Row
 
     For i = 1 To enlargeDays
         
@@ -747,7 +747,7 @@ End If
 
 With Sheets("Test")
 
-    lr = .Cells(.Rows.count, "C").End(xlUp).Row
+    lr = .Cells(.Rows.Count, "C").End(xlUp).Row
     
     For r = 2 To lr
     
@@ -809,7 +809,7 @@ Dim myFunc As New clsMyfunction
 
 Set coll_rows = myFunc.getRowsByUser2("Records", rec_Index, 2, "流水號")
 
-If coll_rows.count = 0 Then MsgBox "查無此流水號!", vbCritical: End
+If coll_rows.Count = 0 Then MsgBox "查無此流水號!", vbCritical: End
 
 Set coll_rows = myFunc.ReverseColl(coll_rows)
 
@@ -854,7 +854,7 @@ End With
             checkitem = .Cells(r, 1)
             tmp = Split(.Cells(r, 6), ",")
             checkch = tmp(0)
-            CheckLoc = tmp(1)
+            checkloc = tmp(1)
         
             With Sheets("CheckList")
                 
@@ -862,7 +862,7 @@ End With
                 .Range("E10") = Inf_obj.contractor
                 .Range("A" & myRow) = checkch
                 .Range("G" & myRow) = checkday
-                .Range("M" & myRow) = CheckLoc
+                .Range("M" & myRow) = checkloc
                 .Range("R" & myRow) = checkitem
             
                 myRow = myRow + 1
@@ -877,7 +877,7 @@ End With
         i = i - 1
     Else
         'Sheets("CheckList").PrintOut
-        Call print_obj.SpecificShtToXLS("CheckList", getThisWorkbookPath & "\查驗表Output\EN-" & i & ".xlsx")
+        Call print_obj.SpecificShtToXLS("CheckList", getThisWorkbookPath & "\抽查表Output\EN-" & i & ".xls")
     End If
 
 Next
@@ -886,7 +886,13 @@ End With
 
 End Sub
 
+Sub cmdMergeChecks()
 
+Dim check_obj As New clsCheck
+
+check_obj.collectFilesBySelect
+
+End Sub
 
 
 '=============function===============
@@ -902,7 +908,7 @@ Dim coll_Need As New Collection
 Set coll_item_names = PCCES_obj.getRecordingItemsByRecDate(rec_date)
 t_change = Inf_obj.getContractChangesByDate(rec_date)
 
-For i = 1 To coll_item_names.count
+For i = 1 To coll_item_names.Count
 
     item_name = coll_item_names(i)
 
@@ -930,7 +936,7 @@ Dim coll_rows As New Collection
 
 With Sheets("TMP")
 
-    For r = 2 To .Cells(.Rows.count, 1).End(xlUp).Row
+    For r = 2 To .Cells(.Rows.Count, 1).End(xlUp).Row
     
         If .Cells(r, "B") = item_name Then coll_rows.Add r
     

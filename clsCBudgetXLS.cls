@@ -33,7 +33,7 @@ Set shtCBudget = Sheets("CBudget")
 
 Set coll_changes = Inf_obj.getContractChanges
 
-t_change = coll_changes.count - 1
+t_change = coll_changes.Count - 1
 
 c = PCCES_obj.t_change_to_column(t_change - 1)
 
@@ -57,8 +57,8 @@ Sub getPrintPage()
 
 Dim sht As Worksheet
 
-hp = ActiveSheet.HPageBreaks.count + 1 '縱向頁數
-VP = ActiveSheet.VPageBreaks.count + 1 '橫向頁數
+hp = ActiveSheet.HPageBreaks.Count + 1 '縱向頁數
+VP = ActiveSheet.VPageBreaks.Count + 1 '橫向頁數
 PG = hp * VP '總頁數
 
 Set sht = Sheets("CBudget")
@@ -113,7 +113,7 @@ Sub RetriveData() '從變更預算明細表上的資料名稱去回傳應該是正確的變更預算資料
 
 With shtCBudget
 
-    lr = .Cells(.Rows.count, 2).End(xlUp).Row
+    lr = .Cells(.Rows.Count, 2).End(xlUp).Row
     
     For r = 7 To lr
 
@@ -152,7 +152,7 @@ With shtCBudget
         IsSingle = CheckIsSingle(mSepEach) '檢查是否為單一項目
     
         i = 0 'Controll mSep
-        count = 0
+        Count = 0
         
         Call AddTitle(r, mSepEach, IsSingle) '新增項次以及項目名稱
         
@@ -162,12 +162,12 @@ With shtCBudget
             
             If mSep = mSepEach Then
                 
-                count = count + 1
+                Count = Count + 1
                 
                 If IsSingle Then
-                    Call WriteData_Single(i, r, count)
+                    Call WriteData_Single(i, r, Count)
                 Else
-                    Call WriteData_Mix(i, r, count)
+                    Call WriteData_Mix(i, r, Count)
                 End If
         
             End If
@@ -184,7 +184,7 @@ End Sub
 
 Sub WriteData(ByVal i As Integer, ByVal r As Integer)
 
-Item = obj.collItem(i)
+Item = obj.collitem(i)
 unit = obj.collUnit(i)
 num = obj.collNum(i)
 Num_ch = obj.collCNum(i)
@@ -211,7 +211,7 @@ End With
 
 End Sub
 
-Sub WriteData_Single(ByVal i As Integer, ByRef r, ByVal count As Integer)
+Sub WriteData_Single(ByVal i As Integer, ByRef r, ByVal Count As Integer)
 
 r = r - 1
 
@@ -226,9 +226,9 @@ r = r + 1
 
 End Sub
 
-Sub WriteData_Mix(ByVal i As Integer, ByRef r, ByVal count As Integer)
+Sub WriteData_Mix(ByVal i As Integer, ByRef r, ByVal Count As Integer)
 
-shtCBudget.Cells(r, 1) = count
+shtCBudget.Cells(r, 1) = Count
 
 Call WriteData(i, r)
 Call FormulaRow(r, 2)
@@ -301,9 +301,9 @@ On Error GoTo ERRORHANDLE
 
 Call FormulaRow(r, 1)
 
-count = obj.collSepEachIndex(SepName)
+Count = obj.collSepEachIndex(SepName)
 
-shtCBudget.Cells(r, 1) = "(" & ItemCountArray(count - 1) & ")"
+shtCBudget.Cells(r, 1) = "(" & ItemCountArray(Count - 1) & ")"
 shtCBudget.Cells(r, 2) = SepName
 
 'if count=
@@ -321,7 +321,7 @@ Sub ChangeCellColor() '改變變更後的文字顏色
 
 With shtCBudget
 
-    lr = .Cells(.Rows.count, 2).End(xlUp).Row
+    lr = .Cells(.Rows.Count, 2).End(xlUp).Row
     
     For r = 7 To lr
     
@@ -342,7 +342,7 @@ Sub useSumFormula()
 
 With shtCBudget
 
-lr = .Cells(.Rows.count, 2).End(xlUp).Row
+lr = .Cells(.Rows.Count, 2).End(xlUp).Row
 
 For r = 7 To lr
 
@@ -371,7 +371,7 @@ Sub DealSpecificSum()
 
 With shtCBudget
 
-    lr = .Cells(.Rows.count, 2).End(xlUp).Row
+    lr = .Cells(.Rows.Count, 2).End(xlUp).Row
 
     For r = lr To 3 Step -1
         
@@ -435,7 +435,7 @@ With shtCBudget
         
             .Cells(r + 1, 1).EntireRow.Insert xlShiftUp
             .Cells(r + 1, 2) = "總工程費"
-            Call loopSumFormula(r, collAddress.count)
+            Call loopSumFormula(r, collAddress.Count)
             .Cells(r + 1, "M") = "=getSumDiff(K" & r + 1 & ",L" & r + 1 & ")"
             '.Cells(r + 1, "M") = getSumDiff(.Cells(r + 1, "K"), .Cells(r + 1, "L"))
             
@@ -480,21 +480,21 @@ End With
 
 End Function
 
-Private Sub loopSumFormula(ByVal r As Integer, ByVal count As Integer, Optional ByVal scount As Integer = 1)
+Private Sub loopSumFormula(ByVal r As Integer, ByVal Count As Integer, Optional ByVal scount As Integer = 1)
 
 arr = Array("I", "J", "K", "L")
 
 For i = 0 To UBound(arr)
 
-    shtCBudget.Cells(r + 1, arr(i)) = getSumFormula(count, arr(i), scount)
+    shtCBudget.Cells(r + 1, arr(i)) = getSumFormula(Count, arr(i), scount)
 
 Next
 
 End Sub
 
-Private Function getSumFormula(ByVal count As Integer, ByVal col As String, Optional scount As Integer = 1)
+Private Function getSumFormula(ByVal Count As Integer, ByVal col As String, Optional scount As Integer = 1)
 
-For i = scount To count
+For i = scount To Count
 
     f = f & "+" & col & collAddress(i)
 
@@ -510,7 +510,7 @@ arr = Array("I", "J", "K", "L", "M")
 
 With shtCBudget
 
-    lr = .Cells(.Rows.count, 2).End(xlUp).Row
+    lr = .Cells(.Rows.Count, 2).End(xlUp).Row
     
     For r = 7 To lr
     
@@ -558,7 +558,7 @@ If IsHidden = True Then
     
     '當分頁強制分開時，可以將強制分開的格線打破，讓總表維持在一頁
     
-    If .HPageBreaks.count <> 0 Then
+    If .HPageBreaks.Count <> 0 Then
         .HPageBreaks(1).DragOff xlDown, 1
     End If
     .PageSetup.PrintArea = "A1:M" & lr
@@ -577,7 +577,7 @@ tmp = InputBox("目前的檢查係數為" & ratio & vbctrl & "請輸入欲檢查的分類項目:", 
 chtmps = Split(tmp, ",")
 
 With shtCBudget
-    lr = .Cells(.Rows.count, 2).End(xlUp).Row
+    lr = .Cells(.Rows.Count, 2).End(xlUp).Row
     For r = 7 To lr
         
         If .Rows(r).Hidden = False Then

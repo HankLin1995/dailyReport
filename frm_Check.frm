@@ -27,7 +27,7 @@ check_name = .cboCheckItem
 
 Call myFunc.splitFileName_Check(check_name, check_item, check_item_eng)
 
-check_cnt = check_obj.countChecks(check_item)
+check_cnt = check_obj.countChecks(check_item) + 1
 check_date = .txtCheckDate
 check_style = .cboCheckStyle
 check_loc = .txtCheckLoc
@@ -44,6 +44,8 @@ For i = 0 To cnt
 
 Next
 
+If cnt <> -1 Then photo_prompt = mid(photo_prompt, 1, Len(photo_prompt) - 1)
+
 arr = Array(check_item, check_item_eng, check_cnt, check_date, check_style, check_loc, , , photo_prompt)
 
 Call myFunc.AppendData("Check", arr)
@@ -54,13 +56,28 @@ Unload Me
 
 End Sub
 
+
+
 Private Sub CommandButton1_Click()
 
 'f = "G:\我的雲端硬碟\ExcelVBA\監造日報表\上課素材\0109\113_200116_0026.jpg"
 
-ChDir getThisWorkbookPath & "\施工照片\"
+' 設定起始資料夾的路徑
 
-If f = "" Then f = Application.GetOpenFilename
+Dim myFunc As New clsMyfunction
+Dim initialFolder As String
+
+If Me.txtFilePath = "" Then
+
+initialFolder = getThisWorkbookPath
+
+Else
+
+initialFolder = mid(Me.txtFilePath, 1, InStrRev(Me.txtFilePath, "\"))
+
+End If
+
+If f = "" Then f = myFunc.FileOpen(initialFolder, "JPG(*.jpg)", "*.jpg") '.GetOpenFilename
 
 If f = "False" Then MsgBox "未取得檔案", vbCritical: Exit Sub
 
@@ -118,7 +135,15 @@ check_date = CDate(Me.txtCheckDate)
 
 check_loc = REC_obj.getExistLocByRecDate(check_date)
 
-If check_loc <> "" Then Me.txtCheckLoc = check_loc
+If check_loc Like "*,*" Then
+
+    tmp = Split(check_loc, ",")
+    
+    Me.txtCheckCanal = tmp(0)
+    Me.txtCheckLocDetail = tmp(1)
+    Me.txtCheckLoc = check_loc
+
+End If
 
 End Sub
 
@@ -136,6 +161,22 @@ End If
 End With
 
 End Sub
+
+
+
+Private Sub txtCheckCanal_AfterUpdate()
+
+Me.txtCheckLoc = Me.txtCheckCanal & "," & Me.txtCheckLocDetail
+
+End Sub
+
+Private Sub txtCheckLocDetail_AfterUpdate()
+
+Me.txtCheckLoc = Me.txtCheckCanal & "," & Me.txtCheckLocDetail
+
+End Sub
+
+
 
 Private Sub txtFilePath_Change()
 

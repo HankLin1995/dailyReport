@@ -206,7 +206,7 @@ With shtRecord
 
     
 
-    lr = .Cells(Rows.count, 1).End(xlUp).Row + 1
+    lr = .Cells(Rows.Count, 1).End(xlUp).Row + 1
 
     'arr = Array( lr - 2, RecDate, RecChannelName, RecLocation, RecItem, RecAmount, RecUnit, Check, CheckType)
     arr = Array("B-" & lr - 2, recDate, RecChannelName, RecLocation, RecItem, RecAmount, RecUnit) ', Check, CheckType) '20211209
@@ -252,7 +252,7 @@ With shtRecord
     MixName = RecItem
     MixAmount = RecAmount
 
-    lr = .Cells(Rows.count, 1).End(xlUp).Row + 1
+    lr = .Cells(Rows.Count, 1).End(xlUp).Row + 1
 
     For i = 1 To UBound(MixArr)
 
@@ -280,7 +280,7 @@ With shtRecord
 
     DetailArr = Split(frmData.txtDetailTable.Text, ",")
 
-    lr = .Cells(Rows.count, 1).End(xlUp).Row + 1
+    lr = .Cells(Rows.Count, 1).End(xlUp).Row + 1
 
     For i = 1 To UBound(DetailArr) Step 3
 
@@ -450,7 +450,7 @@ Dim myFunc As New clsMyfunction
 
 Set coll_rows = myFunc.getRowsByUser("Records", "B", recDate)
 
-For i = 1 To coll_rows.count
+For i = 1 To coll_rows.Count
 
     r = coll_rows(i)
     
@@ -651,11 +651,11 @@ Dim colltmp As New Collection
 
 With shtTmp
 
-For c = 1 To .Cells(1, .Columns.count).End(xlToLeft).Column Step 2
+For c = 1 To .Cells(1, .Columns.Count).End(xlToLeft).Column Step 2
 
     chname = .Cells(1, c)
 
-    lr = .Cells(.Rows.count, c).End(xlUp).Row
+    lr = .Cells(.Rows.Count, c).End(xlUp).Row
 
     For r = 2 To lr
 
@@ -668,13 +668,13 @@ For c = 1 To .Cells(1, .Columns.count).End(xlToLeft).Column Step 2
 
     With shtTmpTotal
 
-        For total_c = 1 To .Cells(1, .Columns.count).End(xlToLeft).Column
+        For total_c = 1 To .Cells(1, .Columns.Count).End(xlToLeft).Column
 
             total_chname = .Cells(1, total_c)
 
             If total_chname = chname Then
 
-                total_lr = .Cells(.Rows.count, 5).End(xlUp).Row
+                total_lr = .Cells(.Rows.Count, 5).End(xlUp).Row
 
                 For total_r = 2 To total_lr
 
@@ -758,7 +758,7 @@ With Sheets("Mix")
 Set rng = .Columns("A").Find(mix_name)
 
 sr = rng.Row
-lr = .Cells(.Rows.count, "D").End(xlUp).Row
+lr = .Cells(.Rows.Count, "D").End(xlUp).Row
 
 For r = sr To lr
 
@@ -781,7 +781,7 @@ If rng Is Nothing Then MsgBox mix_number & "在record工作表找不到!", vbCritical: 
 
 sr = rng.Row
 
-lr = .Cells(.Rows.count, 1).End(xlUp).Row
+lr = .Cells(.Rows.Count, 1).End(xlUp).Row
 
 For r = sr To lr
 
@@ -799,7 +799,7 @@ Dim coll As New Collection
 
 With Sheets("Records")
 
-lr = .Cells(.Rows.count, 1).End(xlUp).Row
+lr = .Cells(.Rows.Count, 1).End(xlUp).Row
 
 For r = 3 To lr
 
@@ -829,7 +829,7 @@ Set rec_rows = myFunc.getRowsByUser("Records", "E", item_name)
 RecAmount = 0
 RecSumAmount = 0
 
-For i = 1 To rec_rows.count
+For i = 1 To rec_rows.Count
 
     r = rec_rows(i)
     
@@ -905,7 +905,7 @@ Sub sortRecords()
 
 With shtRecord
 
-lr = .Cells(.Rows.count, 1).End(xlUp).Row
+lr = .Cells(.Rows.Count, 1).End(xlUp).Row
 
 .Range("A3:K" & lr).Sort key1:=shtRecord.Range("B3:B" & lr), order1:=xlAscending
 

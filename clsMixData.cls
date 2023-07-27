@@ -38,7 +38,7 @@ Dim j As Integer
 
 With shtMix
 
-    lr = .Cells(Rows.count, 4).End(xlUp).Row
+    lr = .Cells(Rows.Count, 4).End(xlUp).Row
     
     For r = 3 To lr
     
@@ -48,7 +48,7 @@ With shtMix
 
     collr.Add lr + 1
     
-    For i = 1 To collr.count - 1
+    For i = 1 To collr.Count - 1
     
         j = 0
     
@@ -109,13 +109,13 @@ Sub Init() '初始化Mix表單
  
 With MixData_Main
 
-    For i = 1 To collMix.count
+    For i = 1 To collMix.Count
     
         .cboItem.AddItem collMix(i)(0, 1)
     
     Next
     
-    For i = 1 To collChannel.count
+    For i = 1 To collChannel.Count
         
         .cboChannel.AddItem collChannel.Item(i)
     
@@ -151,7 +151,7 @@ TargetItem = frm.cboItem
 
 With shtRec
 
-    lr = .Cells(Rows.count, 5).End(xlUp).Row
+    lr = .Cells(Rows.Count, 5).End(xlUp).Row
 
     .Range("A3:K" & lr).Sort key1:=.Range("B3:B" & lr), order1:=xlAscending
 
@@ -184,7 +184,7 @@ With shtMix
 
     Set collr = getSeperateRows()
 
-    For i = 1 To collr.count - 1
+    For i = 1 To collr.Count - 1
     
         sr = collr(i)
         er = collr(i + 1) - 1
@@ -219,7 +219,7 @@ With shtMix
 
     Set collr = getSeperateRows()
 
-    For i = 1 To collr.count - 1
+    For i = 1 To collr.Count - 1
     
         sr = collr(i)
         er = collr(i + 1) - 1
@@ -250,7 +250,7 @@ With shtMix
 
     Set collr = getSeperateRows()
 
-    For i = 1 To collr.count - 1
+    For i = 1 To collr.Count - 1
     
         sr = collr(i)
         er = collr(i + 1) - 1
@@ -275,7 +275,7 @@ Private Function getMixSum(ByVal targetMix As String) '取得已做基數
 
 With shtRec
 
-    lr = .Cells(Rows.count, 1).End(xlUp).Row
+    lr = .Cells(Rows.Count, 1).End(xlUp).Row
     
     For r = 3 To lr
     
@@ -295,7 +295,7 @@ With shtMix
 
     .UsedRange.EntireRow.Hidden = False '摺疊會出問題!
     
-    lr = .Cells(Rows.count, 4).End(xlUp).Row
+    lr = .Cells(Rows.Count, 4).End(xlUp).Row
     
     For r = 3 To lr
     
@@ -317,7 +317,7 @@ With shtMix
     
     .UsedRange.EntireRow.Hidden = False '摺疊會出問題!
     
-    lr = .Cells(Rows.count, 4).End(xlUp).Row + 1
+    lr = .Cells(Rows.Count, 4).End(xlUp).Row + 1
     
     .Cells(lr, 1) = MixName
     .Cells(lr, 2) = MixDefine
@@ -446,7 +446,7 @@ Call myFunc.showList(coll_unit_names)
 
 With Sheets("Mix")
 
-    lr = .Cells(.Rows.count, 4).End(xlUp).Row
+    lr = .Cells(.Rows.Count, 4).End(xlUp).Row
     
     For Each unit_name In coll_unit_names
     
@@ -495,7 +495,7 @@ For Each UnitName In coll_unit_names
     Set coll_rows = myFunc.getRowsByUser2("Mix_TMP", UnitName, 1, "單元名稱")
     
     sr = coll_rows(1)
-    er = coll_rows(coll_rows.count)
+    er = coll_rows(coll_rows.Count)
     
     Set coll_uqItems = myFunc.getUniqueItemsToLastRow("Mix_TMP", sr, er, "C")
     
@@ -526,7 +526,7 @@ For Each UnitName In coll_unit_names
             
             Call myFunc.AppendData("Mix_TMP", Array("合計", UnitName, it, unit_Sum, mix_Unit, mix_len, all_Sum))
             
-            If j = 0 Then lr = .Cells(.Rows.count, 1).End(xlUp).Row
+            If j = 0 Then lr = .Cells(.Rows.Count, 1).End(xlUp).Row
             
             .Range("A" & lr & ":G" & lr).Borders(xlEdgeTop).LineStyle = 1
              .Range("A" & lr & ":G" & lr).Borders(xlEdgeTop).Weight = xlMedium
@@ -547,7 +547,7 @@ Sub getMixUnitSumAll()
 
 With Sheets("Mix_TMP")
 
-    lr = .Cells(.Rows.count, 1).End(xlUp).Row + 1
+    lr = .Cells(.Rows.Count, 1).End(xlUp).Row + 1
 
     .Range("A" & lr & ":G" & lr).Borders(xlEdgeTop).LineStyle = 1
     .Range("A" & lr & ":G" & lr).Borders(xlEdgeTop).Weight = xlMedium
@@ -609,7 +609,7 @@ Dim myFunc As New clsMyfunction
 
 Set coll_rows = myFunc.getRowsByUser2("Mix", MixName, 2, "工項概要")
 
-If coll_rows.count = 0 Then IsMixNameUsed = False
+If coll_rows.Count = 0 Then IsMixNameUsed = False
 
 End Function
 

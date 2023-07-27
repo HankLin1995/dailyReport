@@ -3,7 +3,7 @@ Sub test_calcRatio()
 
 With Sheets("Num")
 
-    lr = .Cells(.Rows.count, 1).End(xlUp).Row
+    lr = .Cells(.Rows.Count, 1).End(xlUp).Row
     lc = .Cells(1, 1).End(xlToRight).Column
     
     For c = 2 To lc
@@ -49,7 +49,7 @@ Set coll = getMoneyColl
 
 With Sheets("Num")
 
-    lr = .Cells(.Rows.count, 1).End(xlUp).Row
+    lr = .Cells(.Rows.Count, 1).End(xlUp).Row
     lc = .Cells(1, 1).End(xlToRight).Column
     
     For c = 2 To lc
@@ -81,7 +81,7 @@ Dim coll As New Collection
 
 With Sheets("Main")
 
-lr = .Cells(.Rows.count, "I").End(xlUp).Row
+lr = .Cells(.Rows.Count, "I").End(xlUp).Row
 
 For r = 3 To lr
 
@@ -104,7 +104,7 @@ Dim coll As New Collection
 
 With Sheets("Records")
 
-lr = .Cells(.Rows.count, 1).End(xlUp).Row
+lr = .Cells(.Rows.Count, 1).End(xlUp).Row
 
 For r = 3 To lr
 
@@ -137,7 +137,7 @@ Sub getSumNumMain()
 
 With Sheets("Records")
 
-    lr = .Cells(.Rows.count, 1).End(xlUp).Row
+    lr = .Cells(.Rows.Count, 1).End(xlUp).Row
     lc = .Cells(2, 1).End(xlToRight).Column
     
     .Range("A3:K" & lr).Sort key1:=.Range("B3:B" & lr), order1:=xlAscending '¥ý±Æ§Ç
@@ -196,7 +196,7 @@ Function getSumNumByDateAndItemName(ByVal d As Date, ByVal item_name As String)
 
 With Sheets("Records")
 
-    lr = .Cells(.Rows.count, 1).End(xlUp).Row
+    lr = .Cells(.Rows.Count, 1).End(xlUp).Row
     lc = .Cells(2, 1).End(xlToRight).Column
 
     Set rng = .Columns("B").Find(d)
@@ -300,9 +300,9 @@ Dim rec_num As Double
 
 With Sheets("Num")
 
-For c = .Columns.count To 1 Step -1
+For c = .Columns.Count To 1 Step -1
     lr_test = .Cells(1, c).End(xlDown).Row
-    lr = .Rows.count
+    lr = .Rows.Count
     If lr_test <> lr Then lc_num = c: Exit For
     
 Next
@@ -351,7 +351,7 @@ Sub test_countFull()
 
 With Sheets("Sum")
 
-lr = .Cells(.Rows.count, 1).End(xlUp).Row
+lr = .Cells(.Rows.Count, 1).End(xlUp).Row
 
 lc = .Cells(1, 1).End(xlToRight).Column
 

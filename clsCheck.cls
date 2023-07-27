@@ -41,16 +41,16 @@ Set fso = CreateObject("Scripting.FileSystemObject")
 
 With Sheets("Check")
 
-lr = .Cells(.Rows.count, 1).End(xlUp).Row
+lr = .Cells(.Rows.Count, 1).End(xlUp).Row
 
-For r = 2 To lr
+For r = 3 To lr
 
     checkName_eng = .Cells(r, 2)
     checkNum = .Cells(r, 3)
     
-    wbPath = getThisWorkbookPath & "\查驗表Output\" & checkName_eng & "-" & checkNum & ".xlsx"
+    wbpath = getThisWorkbookPath & "\抽查表Output\" & checkName_eng & "-" & checkNum & ".xls"
     
-    If fso.fileexists(wbPath) = True Then
+    If fso.fileexists(wbpath) = True Then
         .Cells(r, "G") = "Printed"
     Else
         .Cells(r, "G") = ""
@@ -60,138 +60,6 @@ Next
 
 End With
 End Sub
-
-'Private Sub CheckExist(ByVal collchn As Object)
-'
-'With Sheets("Check")
-'
-'lr = .Cells(Rows.count, 1).End(xlUp).Row
-'
-'For r = 2 To lr
-'
-'    testchn = .Cells(r, 1) & "-" & .Cells(r, 3)
-'
-'    On Error Resume Next
-'
-'    a = collchn(testchn)
-'
-'    .Cells(r, "G") = "Printed"
-'
-'    If Err <> 0 Then .Cells(r, "G") = ""
-'
-'Next
-'
-'End With
-'
-'End Sub
-
-'Sub AddCheckTable(ByVal frm As UserForm)   'frmData查驗表單內容
-'
-'With frm
-'
-'    .cboCheck.AddItem "開挖(放樣)工程查驗表"
-'    .cboCheck.AddItem "土方工程施工查驗表"
-'    .cboCheck.AddItem "鋼筋施工組立作業查驗表"
-'    .cboCheck.AddItem "模板施工組立作業查驗表"
-'    .cboCheck.AddItem "混凝土施工作業查驗表"
-'    .cboCheck.AddItem "假設工程施工查驗表"
-'    .cboCheck.AddItem "碎石級配工程施工查驗表"
-'    .cboCheck.AddItem "瀝青混凝土工程施工查驗表"
-'    .cboCheck.AddItem "傾倒式閘門工程施工查驗表"
-'    .cboCheck.AddItem "吊門機製造及安裝工程施工查驗表"
-'    .cboCheck.AddItem "自動測報工程施工查驗表"
-'    .cboCheck.AddItem "電氣工程施工查驗表"
-'    .cboCheck.AddItem "焊接工程施工查驗表"
-'
-'End With
-'
-'End Sub
-
-'Sub ExportToCheck() 'Records工作表匯入至Check工作表
-'
-'With shtCheck
-'
-'    lr = .Cells(Rows.count, 1).End(xlUp).Row
-'    If lr > 2 Then .Cells(2, 1).Resize(lr, 7).ClearContents '強制清除
-'
-'End With
-'
-'With shtRec
-'
-'    sr = 3
-'    lr = .Cells(Rows.count, 1).End(xlUp).Row
-'
-'    For r = sr To lr
-'
-'        checkday = .Cells(r, 2)
-'        CheckLoc = .Cells(r, 3) & "," & .Cells(r, 4)
-'        If .Cells(r, 4) = "" Then CheckLoc = .Cells(r, 3)
-'        'CheckedLog = .Cells(r, "J")
-'        CheckType_origin = .Cells(r, "H")
-'        CheckImp_origin = .Cells(r, "I")
-'
-'        'If CheckedLog <> "" Then GoTo KEEPHANDLE
-'
-'        CheckType_tmp = Split(CheckType_origin, ",")
-'        CheckImp_tmp = Split(CheckImp_origin, ",")
-'
-'        'If UBound(CheckType_tmp) <> -1 And CheckedLog = "" Then .Cells(r, "J") = Format(Now, "yyyy / mm / dd")
-'
-'        For i = LBound(CheckType_tmp) To UBound(CheckType_tmp)
-'
-'            CheckType = CheckType_tmp(i)
-'            CheckImp = CheckImp_tmp(i)
-'
-'            arr = Array(CheckType, checkday, CheckImp, CheckLoc)
-'
-'            Call WriteToCheck(arr)
-'
-'            If CheckType = "混凝土" Then
-'
-'                arr(0) = "混凝土完成"
-'                Call WriteToCheck(arr)
-'
-'            End If
-'
-'        Next
-'
-'KEEPHANDLE:
-'
-'    Next
-'
-'End With
-'
-'End Sub
-
-'Private Sub WriteToCheck(ByVal arr As Variant) '將arr資料帶入至Check工作表
-'
-'CheckType = arr(0)
-'checkday = arr(1)
-'CheckImp = arr(2)
-'CheckLoc = arr(3)
-'
-'Select Case CheckImp
-'
-'Case 0: CheckImp_Ch = "施工抽查點"
-'
-'Case 1: CheckImp_Ch = "檢驗停留點"
-'
-'End Select
-'
-'With shtCheck '取消查驗表(代碼)填入
-'
-'    arr = Array(CheckType, checkday, CheckImp, CheckLoc)
-'
-'    lr_data = .Cells(Rows.count, 1).End(xlUp).Row + 1
-'
-'    .Range("A" & lr_data) = CheckType
-'    .Range("D" & lr_data) = checkday
-'    .Range("E" & lr_data) = CheckImp_Ch
-'    .Range("F" & lr_data) = CheckLoc
-'
-'End With
-'
-'End Sub
 
 Sub printCheckTable() '列印查驗表
 
@@ -204,7 +72,7 @@ conName = Inf_obj.conName
 
 With ThisWorkbook.Sheets("Check")
 
-    For r = 2 To .Cells(.Rows.count, 1).End(xlUp).Row
+    For r = 3 To .Cells(.Rows.Count, 1).End(xlUp).Row
     
         '==============基本資料取入===============
     
@@ -213,7 +81,7 @@ With ThisWorkbook.Sheets("Check")
         checkName_eng = .Cells(r, 2)
         checkNum = .Cells(r, 3)
         CheckDate = .Cells(r, 4)
-        CheckLoc = .Cells(r, "F")
+        checkloc = .Cells(r, "F")
         CheckType = .Cells(r, "E")
         CheckLog = .Cells(r, "G")
         CheckPrintAgain = .Cells(r, "H")
@@ -231,7 +99,7 @@ With ThisWorkbook.Sheets("Check")
         '==============從查驗TMP裡面取範本copy到成果=======
         
         fs_name = checkName & "[" & checkName_eng & "]"
-        fs = getThisWorkbookPath & "\抽查記錄表範本\" & fs_name & ".xls"
+        fs = getThisWorkbookPath & "\抽查表TMP\" & fs_name & ".xls"
         
         Set wb = Workbooks.Open(fs) '範例檔案
         
@@ -243,13 +111,13 @@ With ThisWorkbook.Sheets("Check")
         
             If a(0) <> "" Then .Range(a(0)) = checkNum
             If a(1) <> "" Then .Range(a(1)) = conName
-            If a(2) <> "" Then .Range(a(2)) = CheckLoc
+            If a(2) <> "" Then .Range(a(2)) = checkloc
             If a(3) <> "" Then .Range(a(3)) = CheckDate
             If a(4) <> "" Then .Range(a(4)) = prompt
         
         End With
         
-        Call print_obj.SpecificShtObjToXLS(sht, checkName_eng & "-" & checkNum, getThisWorkbookPath & "\查驗表Output\" & checkName_eng & "-" & checkNum)
+        Call print_obj.SpecificShtObjToXLS(sht, checkName_eng & "-" & checkNum, getThisWorkbookPath & "\抽查表Output\" & checkName_eng & "-" & checkNum)
         
         p = p & checkName & ">" & checkName_eng & "-" & checkNum & vbNewLine
          
@@ -270,6 +138,67 @@ End If
 'Application.ScreenUpdating = True
 
 End Sub
+
+Sub collectFilesBySelect()
+
+Application.ScreenUpdating = False
+
+Set coll_path_sort = getFilePathBySelect
+
+Set wb_combine = Workbooks.Add
+
+For Each filePath In coll_path_sort
+
+    filename = mid(filePath, InStrRev(filePath, "\") + 1)
+    fileExtension = mid(filename, InStrRev(filename, ".") + 1)
+    
+    filename_short = mid(filename, 1, InStrRev(filename, ".") - 1)
+    
+    Set wb_check = Workbooks.Open(filePath)
+    Set sht = wb_check.Sheets(1)
+    sht.Name = filename_short
+    
+    sht.Copy before:=wb_combine.Sheets(wb_combine.Sheets.Count)
+    
+    wb_check.Close False
+    
+    Set wb_check = Nothing
+Next
+
+Application.DisplayAlerts = False
+wb_combine.Sheets("工作表1").Delete
+wb_combine.Activate
+Application.DisplayAlerts = True
+
+Application.ScreenUpdating = True
+
+End Sub
+
+Private Function getFilePathBySelect()
+
+Dim coll_rows As New Collection
+Dim coll_path_sort As New Collection
+
+For Each rng In Selection
+
+On Error Resume Next
+coll_rows.Add rng.Row, CStr(rng.Row)
+On Error GoTo 0
+
+Next
+
+For Each r In coll_rows
+
+    myPath = getThisWorkbookPath & "\抽查表Output\" & Sheets("Check").Cells(r, 2) & "-" & Sheets("Check").Cells(r, 3) & ".xls"
+
+    coll_path_sort.Add myPath
+
+Next
+
+Set getFilePathBySelect = coll_path_sort
+
+End Function
+
 
 Private Function CollectRange(ByVal sht As Worksheet) '取得查驗表填寫欄位
 
@@ -321,14 +250,14 @@ FindKeyAddress = rng_last.Address
 
 End Function
 
-'=======202307======
+'=======202307=====
 
 
 Function getCheckFileNames()
 
 Dim coll As New Collection
 
-myFolder = getThisWorkbookPath & "\抽查記錄表範本" ' getSavedFolder
+myFolder = getThisWorkbookPath & "\抽查表TMP" ' getSavedFolder
 
 'MsgBox myFolder
 
@@ -353,8 +282,8 @@ Function countChecks(ByVal check_name As String)
 
 Dim myFunc As New clsMyfunction
 
-Set coll_rows = myFunc.getRowsByUser2("Check", check_name, 1, "查驗表(中文)")
+Set coll_rows = myFunc.getRowsByUser2("Check", check_name, 2, "抽查表名稱")
 
-countChecks = coll_rows.count
+countChecks = coll_rows.Count
 
 End Function

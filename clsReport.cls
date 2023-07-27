@@ -99,7 +99,7 @@ With shtMain
         MsgBox "查無該日有報表資料!請先進行變更設計資料有無匯入至報表!", vbCritical: Call cmdExportToReport
     End If
 
-    lr = .Cells(Rows.count, c).End(xlUp).Row
+    lr = .Cells(Rows.Count, c).End(xlUp).Row
     
     ItemCount = lr - 3 + 1
     
@@ -139,7 +139,7 @@ Dim REC_obj As New clsRecord
 
 With shtRecords
 
-    lr = .Cells(Rows.count, 1).End(xlUp).Row
+    lr = .Cells(Rows.Count, 1).End(xlUp).Row
 
     For i = 1 To UBound(ItemArr, 1)
     

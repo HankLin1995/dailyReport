@@ -42,7 +42,7 @@ Set coll_items = PCCES_obj.getAllItemsByRecDate(CDate(pay_date))
 
 For Each it In coll_items
 
-    lr = .Cells(.Rows.count, 2).End(xlUp).Row
+    lr = .Cells(.Rows.Count, 2).End(xlUp).Row
     .Cells(lr + 1, 2) = it
 
 Next
@@ -61,7 +61,7 @@ t_change = Inf_obj.getContractChangesByDate(pay_date)
 
 With Sheets("PAY")
 
-    lr = .Cells(.Rows.count, 2).End(xlUp).Row
+    lr = .Cells(.Rows.Count, 2).End(xlUp).Row
     
     For r = 2 To lr
     
@@ -114,7 +114,7 @@ If IsPayDateLater(pay_date) = False Then MsgBox "¶Ù≈ÁÆ…∂°§£Ø‡§Ò§w∏g¶Ù≈Á™∫¡Ÿ≠n§ß´
 
 With Sheets("PAY")
  
-    lr = .Cells(.Rows.count, 1).End(xlUp).Row
+    lr = .Cells(.Rows.Count, 1).End(xlUp).Row
 
     'Set coll = myFunc.getUniqueItems("PAY_EX", 2, "F")
     
@@ -150,7 +150,7 @@ Dim myFunc As New clsMyfunction
 
 Set coll_second_name = PCCES_obj.getCollSeconedName
 
-For i = 1 To coll_second_name.count
+For i = 1 To coll_second_name.Count
 
     item_second_name = coll_second_name(i)
     
@@ -160,7 +160,7 @@ For i = 1 To coll_second_name.count
 
     With Sheets("PAY")
     
-        lr = .Cells(.Rows.count, 1).End(xlUp).Row
+        lr = .Cells(.Rows.Count, 1).End(xlUp).Row
         c1 = 0
         c2 = 0
         c3 = 0
@@ -234,7 +234,7 @@ Application.ScreenUpdating = False
 
 With Sheets("PAY_Report")
 
-    lr = .Cells(.Rows.count, 1).End(xlUp).Row
+    lr = .Cells(.Rows.Count, 1).End(xlUp).Row
     
     For r = 42 To lr
         
@@ -269,7 +269,7 @@ Dim coll As New Collection
 
 With Sheets("PAY_Report")
 
-    lr = .Cells(.Rows.count, 1).End(xlUp).Row
+    lr = .Cells(.Rows.Count, 1).End(xlUp).Row
 
     For r = 42 To lr
     
@@ -287,7 +287,7 @@ With Sheets("PAY_Report")
     
     r_data = 9
     
-    For i = 1 To coll.count - 1
+    For i = 1 To coll.Count - 1
 
         s = .Cells(coll(i), 1)
         
@@ -354,9 +354,9 @@ Sub fs_kill(ByVal cnt)
 
 Set fso = CreateObject("Scripting.FileSystemObject")
 
-If fso.fileexists(getThisWorkbookPath & "\PAY\" & "≤ƒ" & cnt & "¶∏¶Ù≈Á.xls") = True Then
+If fso.fileexists(getThisWorkbookPath & "\¶Ù≈ÁOutput\" & "≤ƒ" & cnt & "¶∏¶Ù≈Á.xls") = True Then
 
-    Set f = fso.getFile(getThisWorkbookPath & "\PAY\" & "≤ƒ" & cnt & "¶∏¶Ù≈Á.xls")
+    Set f = fso.getFile(getThisWorkbookPath & "\¶Ù≈ÁOutput\" & "≤ƒ" & cnt & "¶∏¶Ù≈Á.xls")
     Kill f
 
 End If
@@ -369,7 +369,7 @@ End Sub
 Function getPayCounts()
 
 Set coll = myFunc.getUniqueItems("PAY_EX", 2, , "¶Ù≈Á§È¥¡")
-getPayCounts = coll.count
+getPayCounts = coll.Count
 
 End Function
 
@@ -387,10 +387,10 @@ IsPayDateLater = True
 
 Set coll = myFunc.getUniqueItems("PAY_EX", 2, , "¶Ù≈Á§È¥¡")
 
-If coll.count = 0 Then
+If coll.Count = 0 Then
     Exit Function
 Else
-    For i = 1 To coll.count
+    For i = 1 To coll.Count
     
         pay_ex_date = CDate(coll(i))
         

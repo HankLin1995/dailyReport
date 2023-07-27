@@ -19,7 +19,7 @@ collBlank.Add 1
 
 With sht
 
-    lr = .Cells(.Rows.count, col).End(xlUp).Row
+    lr = .Cells(.Rows.Count, col).End(xlUp).Row
 
     For r = 2 To lr
     
@@ -39,7 +39,7 @@ Sub ClearData(ByVal sht As Object, ByVal sr As Integer, ByVal col As Integer, By
 
 With sht
 
-    lr = .Cells(.Rows.count, col).End(xlUp).Row
+    lr = .Cells(.Rows.Count, col).End(xlUp).Row
     .Cells(sr, col).Resize(lr, xrange).ClearContents
 
 End With
@@ -99,7 +99,7 @@ Public Function tranColls2Array(ParamArray colls() As Variant) ''ByVal colls As 
 Dim arr()
 Dim k As Integer
 
-ReDim arr(0 To colls(0).count - 1, UBound(colls))
+ReDim arr(0 To colls(0).Count - 1, UBound(colls))
 
 m = 0
 
@@ -127,9 +127,9 @@ Public Function tranColls2OneArray(ParamArray colls() As Variant) As Double()
 '各集合依序儲存成同一維度 (常見於XY座標集合轉換成Vertices)
 
 Dim arr() As Double
-ReDim arr(0 To colls(0).count * (UBound(colls) + 1) - 1)
+ReDim arr(0 To colls(0).Count * (UBound(colls) + 1) - 1)
 
-For i = 1 To colls(0).count
+For i = 1 To colls(0).Count
 
     For j = 0 To UBound(colls)
     
@@ -149,9 +149,9 @@ Public Function tranColl2Array(ByVal coll As Collection, Optional lboundcount As
 Dim arr()
 Dim k As Integer
 
-ReDim arr(0 + lboundcount To coll.count - 1 + lboundcount)
+ReDim arr(0 + lboundcount To coll.Count - 1 + lboundcount)
 
-For i = 1 To coll.count
+For i = 1 To coll.Count
     arr(0 + lboundcount + k) = coll(i)
     k = k + 1
 Next
@@ -386,7 +386,7 @@ Public Function ReverseColl(ByVal coll)
 
 Dim coll_tmp As New Collection
 
-For i = coll.count To 1 Step -1
+For i = coll.Count To 1 Step -1
 
     coll_tmp.Add coll(i)
 
@@ -558,7 +558,7 @@ With Sheets(shtName)
         
     End If
 
-    lr = .Cells(.Rows.count, find_col_eng).End(xlUp).Row
+    lr = .Cells(.Rows.Count, find_col_eng).End(xlUp).Row
 
     For r = sr To lr
     
@@ -646,7 +646,7 @@ Sub AppendData(ByVal shtName As String, ByVal arr) ', Optional ByVal sc As Integ
 
 With Sheets(shtName)
 
-lr = .Cells(.Rows.count, 1).End(xlUp).Row
+lr = .Cells(.Rows.Count, 1).End(xlUp).Row
 
 r = lr + 1
 
@@ -844,6 +844,20 @@ Function splitFileName_Check(ByVal filename As String, ByRef filename_ch, ByRef 
     filename_ch = mid(filename, 1, pt2 - 1)
     filename_eng = mid(filename, pt2 + 1, Len(filename) - pt2 - 1)
 
+End Function
+
+Function FileOpen(initialFilename As String, _
+  Optional sDesc As String = "Excel (*.xls)", _
+  Optional sFilter As String = "*.xls") As String
+  With Application.FileDialog(msoFileDialogOpen)
+    .ButtonName = "&Open"
+    .initialFilename = initialFilename
+    .Filters.Clear
+    .Filters.Add sDesc, sFilter, 1
+    .Title = "File Select"
+    .AllowMultiSelect = False
+    If .Show = -1 Then FileOpen = .SelectedItems(1)
+  End With
 End Function
 
 

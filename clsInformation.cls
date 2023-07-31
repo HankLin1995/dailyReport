@@ -174,6 +174,8 @@ With Sheets("Budget")
 
 lc = .Cells(1, .Columns.Count).End(xlToLeft).Column
 
+If lc = 1 Then MsgBox "查無預算書資料，請先匯入!", vbCritical: End
+
 For c = 1 To lc
 
     If .Cells(1, c) Like "*>*" Then
@@ -196,10 +198,7 @@ getContractChangesByDate = cnt - 1
 
 If cnt = 0 Then
 
-'Dim Inf_obj As New clsInformation
-'Inf_obj.getBasicInformation
-
-MsgBox "日期需在開工日期【" & Inf_obj.startDate & "】之後!", vbCritical: End
+MsgBox "日期需在開工日期【" & startDate & "】之後!", vbCritical: End
 
 End If
 

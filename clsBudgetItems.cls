@@ -205,7 +205,7 @@ With Sheets("Budget")
     
     s = item_index ' .Range("A19")
     
-    tmp = Split(s, ".")
+    tmp = split(s, ".")
     
     If UBound(tmp) > 1 Then
     

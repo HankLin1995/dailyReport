@@ -23,7 +23,7 @@ If f = "" Then f = Application.GetOpenFilename
 
 If f = "False" Then MsgBox "未取得檔案", vbCritical: End
 
-tmp = Split(f, "\")
+tmp = split(f, "\")
 
 wbname = tmp(UBound(tmp))
 
@@ -217,7 +217,7 @@ With Sheets("Budget")
     For r = 3 To lr
     
         item_num = .Cells(r, 1)
-        tmp = Split(item_num, ".")
+        tmp = split(item_num, ".")
         item_cont = .Cells(r, 2)
         item_amount = .Cells(r, 5)
         
@@ -301,7 +301,7 @@ For Each it In collSeconedName
                 item_name = .Cells(r, 2)
                 item_sum_cost = .Cells(r, 6)
             
-                tmp = Split(item_num, ".")
+                tmp = split(item_num, ".")
                 
                 If UBound(tmp) >= 1 Then
                 
@@ -357,7 +357,7 @@ For Each it In collSeconedName
                 item_name = .Cells(r, 2)
                 item_sum_cost = .Cells(r, c + 2)
             
-                tmp = Split(item_num, ".")
+                tmp = split(item_num, ".")
                 
                 If UBound(tmp) >= 1 Then
                 
@@ -403,7 +403,7 @@ With Sheets("Budget")
         item_num = .Cells(r, 1)
         item_name = .Cells(r, 2)
         
-        tmp = Split(item_num, ".")
+        tmp = split(item_num, ".")
         
         If UBound(tmp) = 1 Then
         
@@ -770,7 +770,7 @@ End Function
 
 Function get2ndIndex(ByVal item_index As String)
 
-tmp = Split(item_index, ".")
+tmp = split(item_index, ".")
 
 ch = ""
 For j = LBound(tmp) To 1

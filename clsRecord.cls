@@ -280,7 +280,7 @@ Sub Recording_Detail() 'useless
 
 With shtRecord
 
-    DetailArr = Split(frmData.txtDetailTable.Text, ",")
+    DetailArr = split(frmData.txtDetailTable.Text, ",")
 
     lr = .Cells(Rows.Count, 1).End(xlUp).Row + 1
 

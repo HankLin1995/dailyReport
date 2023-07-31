@@ -19,6 +19,7 @@ Attribute VB_Exposed = False
 
 
 
+
 Private Sub cboItem_Change()
 
 If Me.cboItem = "" Then Exit Sub
@@ -54,7 +55,7 @@ With Me
     MixDefineTotal = .txtDefineTotal
     MixUnit = .txtUnit
     MixChannel = .txtChannel
-    tmp = Split(mid(.txtMixTable, 2), ",")
+    tmp = split(mid(.txtMixTable, 2), ",")
     
 End With
 

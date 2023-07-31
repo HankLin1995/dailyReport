@@ -374,15 +374,15 @@ With Sheets("Diary")
         
             For i = 1 To collProg.Count
                 
-                tmp = Split(collProg(i), ":")
+                tmp = split(collProg(i), ":")
                 
                 If r <= CInt(tmp(0)) Then
                 
-                    r1 = Split(collProg(i - 1), ":")(0)
-                    p1 = Split(collProg(i - 1), ":")(1)
+                    r1 = split(collProg(i - 1), ":")(0)
+                    p1 = split(collProg(i - 1), ":")(1)
                     
-                    r2 = Split(collProg(i), ":")(0)
-                    p2 = Split(collProg(i), ":")(1)
+                    r2 = split(collProg(i), ":")(0)
+                    p2 = split(collProg(i), ":")(1)
                     
                     newProg = Round(((r2 - r) * p1 + (r - r1) * p2) / (r2 - r1), 4)
                     
@@ -577,10 +577,10 @@ With Sheets("Diary")
     
     For i = 1 To coll.Count - 1
     
-        sr = Split(coll(i), ":")(0)
-        b_pgs = Split(coll(i), ":")(1)
-        er = Split(coll(i + 1), ":")(0)
-        e_pgs = Split(coll(i + 1), ":")(1)
+        sr = split(coll(i), ":")(0)
+        b_pgs = split(coll(i), ":")(1)
+        er = split(coll(i + 1), ":")(0)
+        e_pgs = split(coll(i + 1), ":")(1)
     
         If b_pgs > e_pgs Then
         

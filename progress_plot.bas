@@ -58,7 +58,7 @@ For Each i In myIndexs
     
         Debug.Print targetMix & ":" & it2
         
-        tmp = Split(it2, ";")
+        tmp = split(it2, ";")
 
         tmp_date = tmp(1)
         Call getSLocAndELoc(tmp(0), sloc, eloc)
@@ -70,8 +70,8 @@ For Each i In myIndexs
         
         Call AddText(X0 + 10, (Y0 + Y1) / 2 - 15 / 2, 15, 50, tmp_date)
         
-        Call AddText(X0 - 40, Y0 - 15 / 2, 15, 30, Split(tmp(0), "~")(0), 1)
-        Call AddText(X0 - 40, Y1 - 15 / 2, 15, 30, Split(tmp(0), "~")(1), 1)
+        Call AddText(X0 - 40, Y0 - 15 / 2, 15, 30, split(tmp(0), "~")(0), 1)
+        Call AddText(X0 - 40, Y1 - 15 / 2, 15, 30, split(tmp(0), "~")(1), 1)
 
     Next
 
@@ -107,7 +107,7 @@ Else
     indexDefault = plot_order
 End If
 
-getShowIndex = Split(InputBox(prompt, "顯示序位選擇器", indexDefault), ",")
+getShowIndex = split(InputBox(prompt, "顯示序位選擇器", indexDefault), ",")
 
 If UBound(getShowIndex) = -1 Then MsgBox "取消操作!", vbCritical: End
 
@@ -229,7 +229,7 @@ With Sheets("Records")
         
         End If
     
-            tmp = Split(myContent, "、")
+            tmp = split(myContent, "、")
             
             For i = 0 To UBound(tmp)
         

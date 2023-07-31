@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} frmData 
    Caption         =   "¶ñ¼g¬I§@¸ê®Æ"
-   ClientHeight    =   5475
+   ClientHeight    =   5472
    ClientLeft      =   120
    ClientTop       =   468
    ClientWidth     =   10176
@@ -13,6 +13,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
 
 
 
@@ -162,7 +163,7 @@ strLoc = txtWhere.Text
 
 If strLoc Like "*¡B*" Then
 
-    loc_tmp = Split(strLoc, "¡B")
+    loc_tmp = split(strLoc, "¡B")
     
     For Each it In loc_tmp
     

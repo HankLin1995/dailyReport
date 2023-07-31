@@ -233,7 +233,7 @@ Private Function FindKeyAddress(ByVal rng As Range) '°w¹ï¯S©wÀx¦s®æ¨ú¨ä¦³®Ä¿é¤J¦
 If rng.MergeCells = True Then
 
     Set ma = rng.MergeArea
-    tmp = Split(ma.Address, ":")
+    tmp = split(ma.Address, ":")
     
     Row1 = Val(mid(tmp(0), InStr(2, tmp(0), "$") + 1))
     Row2 = Val(mid(tmp(1), InStr(2, tmp(1), "$") + 1))

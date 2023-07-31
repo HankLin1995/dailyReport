@@ -17,6 +17,7 @@ Attribute VB_Exposed = False
 
 
 
+
 Private Sub cmdOutput_Click()
 
 Dim myFunc As New clsMyfunction
@@ -59,8 +60,10 @@ If r <> 0 Then
     
     Set fso = CreateObject("Scripting.FileSystemObject")
     
-    Set f = fso.getFile(getThisWorkbookPath & "\抽查表Output\" & check_item_eng & "-" & check_cnt & ".xls")
-    Kill f
+    If fso.fileExists(getThisWorkbookPath & "\抽查表Output\" & check_item_eng & "-" & check_cnt & ".xls") Then
+        Set f = fso.getFile(getThisWorkbookPath & "\抽查表Output\" & check_item_eng & "-" & check_cnt & ".xls")
+        Kill f
+    End If
 
 Else
 
@@ -157,7 +160,7 @@ check_loc = REC_obj.getExistLocByRecDate(check_date)
 
 If check_loc Like "*,*" Then
 
-    tmp = Split(check_loc, ",")
+    tmp = split(check_loc, ",")
     
     Me.txtCheckCanal = tmp(0)
     Me.txtCheckLocDetail = tmp(1)

@@ -91,9 +91,9 @@ Next
 
 For Each it In coll
 
-    If rec_date >= CDate(Split(it, ">")(0)) Then
+    If rec_date >= CDate(split(it, ">")(0)) Then
     
-        sum_cnt = sum_cnt + CInt(Split(it, ">")(2))
+        sum_cnt = sum_cnt + CInt(split(it, ">")(2))
     
     End If
 
@@ -180,7 +180,7 @@ For c = 1 To lc
 
     If .Cells(1, c) Like "*>*" Then
     
-        changeDate = Split(.Cells(1, c), ">")(1)
+        changeDate = split(.Cells(1, c), ">")(1)
         
         If recDate >= CDate(changeDate) Then
         

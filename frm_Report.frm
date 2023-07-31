@@ -19,6 +19,7 @@ Attribute VB_Exposed = False
 
 
 
+
 Private Sub CommandButton1_Click()
 
 Dim obj As New clsFetchURL
@@ -36,7 +37,7 @@ End Sub
 
 Private Sub UserForm_Initialize()
 
-s = Split(Application.StatusBar, ",")
+s = split(Application.StatusBar, ",")
 
 account = mid(s(1), 5)
 

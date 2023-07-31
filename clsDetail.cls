@@ -120,7 +120,7 @@ End Function
 
 Sub setAmount(ByVal s As String) '設定已做數量
 
-tmp = Split(mid(s, 2), ",")
+tmp = split(mid(s, 2), ",")
 
 For i = LBound(tmp) To UBound(tmp) Step 3
 
@@ -145,7 +145,7 @@ End Sub
 
 Function calcRatio(ByVal s As String)
 
-tmp = Split(mid(s, 2), ",")
+tmp = split(mid(s, 2), ",")
 
 For i = LBound(tmp) To UBound(tmp) Step 3
 

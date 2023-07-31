@@ -856,7 +856,7 @@ End With
         If .Cells(r, 4) = CDate(checkday) And .Cells(r, 5) = "¿À≈Á∞±Ød¬I" Then
         
             checkitem = .Cells(r, 1)
-            tmp = Split(.Cells(r, 6), ",")
+            tmp = split(.Cells(r, 6), ",")
             checkch = tmp(0)
             checkloc = tmp(1)
         
@@ -954,6 +954,8 @@ r = Selection.Row
 
 If r < 3 Then GoTo ERRORHANDLE
 
+On Error GoTo 0
+
 With Sheets("Check")
 
     .Rows(r).Select
@@ -964,6 +966,7 @@ With Sheets("Check")
     check_date = .Cells(r, 4)
     check_style = .Cells(r, 5)
     check_loc = .Cells(r, 6)
+    photo_lst = splitPhotoList(.Cells(r, "I"))
     
     If check_name = "" Then GoTo ERRORHANDLE
     
@@ -981,10 +984,25 @@ With Sheets("Check")
             .txtCheckDate = check_date
             .txtCheckDate.Enabled = False
             .cboCheckStyle.Value = check_style
-            tmp = Split(check_loc, ",")
+            tmp = split(check_loc, ",")
             .txtCheckCanal = tmp(0)
             .txtCheckLocDetail = tmp(1)
             .txtCheckLoc = check_loc
+            
+            If photo_lst <> "" Then
+            
+            For i = LBound(photo_lst) To UBound(photo_lst)
+            
+                .lstCheckTable.AddItem ""
+                .lstCheckTable.List(i, 0) = photo_lst(i, 0)
+                .lstCheckTable.List(i, 1) = photo_lst(i, 1)
+            
+            Next
+            
+            End If
+            
+            '.lstCheckTable = splitPhotoList(photo_lst)
+            
             .Show
             
         End With

@@ -103,8 +103,13 @@ With ThisWorkbook.Sheets("Check")
     End If
     
 If IsXLS Then
-    wb.SaveAs getThisWorkbookPath & "\촥톨롭ㆉOutput\" & checkitem & "-" & check_num & ".xls"
+
+    Application.DisplayAlerts = False
+    wb.Sheets("쨠�@ろ1").Delete
+    wb.SaveAs getThisWorkbookPath & "\촥톨롭ㆉOutput\" & checkitem & "-" & check_num & ".xls", FileFormat:=xlExcel8
     wb.Close
+    Application.DisplayAlerts = True
+    
 End If
 
 End With

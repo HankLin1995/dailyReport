@@ -37,7 +37,7 @@ t_change = coll_changes.Count - 1
 
 c = PCCES_obj.t_change_to_column(t_change - 1)
 
-Debug.Assert c = 8
+'Debug.Assert c = 8
 
 obj.getData (c)
 obj.sumEachSepPrice

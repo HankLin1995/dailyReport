@@ -3,8 +3,8 @@ Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} frm_Info
    Caption         =   "監造日報表VBA"
    ClientHeight    =   6540
    ClientLeft      =   120
-   ClientTop       =   465
-   ClientWidth     =   11145
+   ClientTop       =   468
+   ClientWidth     =   11148
    OleObjectBlob   =   "frm_Info.frx":0000
    StartUpPosition =   1  '所屬視窗中央
 End
@@ -33,7 +33,7 @@ ActiveWorkbook.FollowHyperlink Address:="https://hankvba.blogspot.com/2018/12/ex
 End Sub
 
 Private Sub Label14_Click()
-ActiveWorkbook.FollowHyperlink Address:="https://docs.google.com/presentation/d/132MMur_e6uODkpuSzM5mrXqzTRqHeDuA/edit?usp=sharing&ouid=112944893851556117594&rtpof=true&sd=true", NewWindow:=True
+ActiveWorkbook.FollowHyperlink Address:="https://docs.google.com/presentation/d/1JCvb9UrkNpCMiK6UO5loroEKePje5LWq/edit?usp=sharing&ouid=112944893851556117594&rtpof=true&sd=true", NewWindow:=True
 End Sub
 
 Private Sub Label15_Click()

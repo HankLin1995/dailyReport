@@ -50,15 +50,17 @@ With Sheets("Report")
     
     For r = 8 To obj.getReportLastRow
     
+        'If r = 10 Then Stop
+    
         conNum = .Cells(r, "F")
         sumNum = .Cells(r, "I")
         
-        If conNum <> sumNum Then
+        If conNum <> sumNum And conNum <> 1 Then
         
             ItemName = .Cells(r, "B")
             numDiff = Round(sumNum - conNum, 4)
             
-            If Abs(numDiff) < CDbl(allowence) Then
+            If Abs(numDiff) < CDbl(allowence) And numDiff <> 0 Then
             
                 Call dealOverNum(ItemName, numDiff)
             
@@ -69,9 +71,12 @@ With Sheets("Report")
         End If
     
     Next
-    
-    MsgBox prompt, vbInformation
 
+    If Len(prompt) > 16 Then
+        MsgBox prompt, vbInformation
+    Else
+        MsgBox "查無需要校正回歸項目!", vbInformation
+    End If
 End With
 
 End Sub
@@ -642,8 +647,7 @@ cnt = InputBox("請輸入要打開的檔案" & vbNewLine & p, , PAY_obj.getPayCounts)
 
 If cnt = "" Then MsgBox "未選取資料!", vbCritical: Exit Sub
 
-If fso.fileexists(getThisWorkbookPath & "\估驗Output\" & "第" & cnt & "次估驗.xls") = True Then
-
+If fso.fileExists(getThisWorkbookPath & "\估驗Output\" & "第" & cnt & "次估驗.xls") = True Then
     Workbooks.Open (getThisWorkbookPath & "\估驗Output\" & "第" & cnt & "次估驗.xls")
 Else
 
@@ -827,11 +831,11 @@ Dim print_obj As New clsPrintOut
 Dim Inf_obj As New clsInformation
 Dim myFunc As New clsMyfunction
 
-Set checkdaylist = myFunc.getUniqueItems("Check", 2, , "時間") ' getTimeList
+Set checkdaylist = myFunc.getUniqueItems("Check", 3, , "時間") ' getTimeList
 
 With Sheets("Check")
 
-lr = .Cells(1, 1).End(xlDown).Row
+lr = .Cells(2, 1).End(xlDown).Row
 
 For Each checkday In checkdaylist
 
@@ -876,8 +880,9 @@ End With
     If myRow = 15 Then
         i = i - 1
     Else
-        'Sheets("CheckList").PrintOut
+        Sheets("CheckList").Visible = True
         Call print_obj.SpecificShtToXLS("CheckList", getThisWorkbookPath & "\抽查表Output\EN-" & i & ".xls")
+        Sheets("CheckList").Visible = False
     End If
 
 Next
@@ -891,6 +896,144 @@ Sub cmdMergeChecks()
 Dim check_obj As New clsCheck
 
 check_obj.collectFilesBySelect
+
+End Sub
+
+Sub cmdPastePhoto()
+
+Dim o As New clsReportPhoto
+Dim Inf_obj As New clsInformation
+
+Sheets("ReportPhoto").Range("A1") = Inf_obj.conName
+
+msg = MsgBox("是否列印PDF?", vbYesNo)
+
+If msg = vbYes Then
+    o.IsXLS = False
+Else
+    o.IsXLS = True
+End If
+
+If Sheets("Check").Range("E1") = "Y" Then
+    o.IsShowText = True
+Else
+    o.IsShowText = False
+End If
+
+With Sheets("Check")
+
+    lr = .Cells(.Rows.Count, 1).End(xlUp).Row
+    
+    For r = 3 To lr
+    
+        check_name = .Cells(r, 1)
+        check_eng = .Cells(r, 2)
+        check_num = .Cells(r, 3)
+        
+        check_photo_inf = .Cells(r, "I")
+        
+        If check_photo_inf <> "" Then
+        
+            Call o.GetReportByItem(r)
+        
+        End If
+    
+    Next
+    
+.Activate
+
+End With
+
+End Sub
+
+
+Sub cmdEditCheck()
+
+On Error GoTo ERRORHANDLE
+r = Selection.Row
+
+If r < 3 Then GoTo ERRORHANDLE
+
+With Sheets("Check")
+
+    .Rows(r).Select
+    
+    check_name = .Cells(r, 1)
+    check_eng = .Cells(r, 2)
+    check_num = .Cells(r, 3)
+    check_date = .Cells(r, 4)
+    check_style = .Cells(r, 5)
+    check_loc = .Cells(r, 6)
+    
+    If check_name = "" Then GoTo ERRORHANDLE
+    
+    msg = MsgBox("請問是否要編輯[" & check_eng & "]-" & check_num & "?", vbInformation + vbYesNo)
+    
+    If msg = vbNo Then
+        Exit Sub
+    Else
+
+        With frm_Check
+        
+            .Label_Row = CInt(r)
+            .cboCheckItem.Value = check_name & "[" & check_eng & "]"
+            .cboCheckItem.Enabled = False
+            .txtCheckDate = check_date
+            .txtCheckDate.Enabled = False
+            .cboCheckStyle.Value = check_style
+            tmp = Split(check_loc, ",")
+            .txtCheckCanal = tmp(0)
+            .txtCheckLocDetail = tmp(1)
+            .txtCheckLoc = check_loc
+            .Show
+            
+        End With
+        
+    End If
+
+End With
+
+Exit Sub
+
+ERRORHANDLE:
+
+MsgBox "請框選要編修的儲存格!", vbInformation
+
+End Sub
+
+Sub cmdDeleteCheckBySelect()
+
+On Error GoTo ERRORHANDLE
+
+Dim coll As New Collection
+
+For Each rng In Selection
+
+    r = rng.Row
+    
+    On Error Resume Next
+    
+    coll.Add r, CStr(r)
+    
+    On Error GoTo 0
+
+Next
+
+Dim myFunc As New clsMyfunction
+
+Call myFunc.BubbleSort_coll(coll)
+
+Set coll_rows = myFunc.ReverseColl(coll)
+
+For Each r In coll_rows
+
+    Sheets("Check").Rows(r).Delete
+    
+Next
+
+Exit Sub
+ERRORHANDLE:
+MsgBox "請框選要刪除的欄位!", vbCritical
 
 End Sub
 

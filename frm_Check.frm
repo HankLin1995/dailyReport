@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} frm_Check 
    Caption         =   "抽查紀錄表單"
-   ClientHeight    =   9285.001
+   ClientHeight    =   9288.001
    ClientLeft      =   120
-   ClientTop       =   465
-   ClientWidth     =   11970
+   ClientTop       =   468
+   ClientWidth     =   11976
    OleObjectBlob   =   "frm_Check.frx":0000
    StartUpPosition =   1  '所屬視窗中央
 End
@@ -48,11 +48,30 @@ If cnt <> -1 Then photo_prompt = mid(photo_prompt, 1, Len(photo_prompt) - 1)
 
 arr = Array(check_item, check_item_eng, check_cnt, check_date, check_style, check_loc, , , photo_prompt)
 
-Call myFunc.AppendData("Check", arr)
+r = CInt(.Label_Row)
+
+If r <> 0 Then
+
+    check_cnt = Sheets("Check").Range("C" & r)
+    arr = Array(check_item, check_item_eng, check_cnt, check_date, check_style, check_loc, , , photo_prompt)
+    Sheets("Check").Range("A" & r & ":I" & r) = arr
+    
+    Set fso = CreateObject("Scripting.FileSystemObject")
+    
+    Set f = fso.getFile(getThisWorkbookPath & "\抽查表Output\" & check_item_eng & "-" & check_cnt & ".xls")
+    Kill f
+
+Else
+
+    Call myFunc.AppendData("Check", arr)
+
+End If
 
 End With
 
 Unload Me
+
+If r <> 0 Then Call cmdPrintCheck
 
 End Sub
 

@@ -175,7 +175,7 @@ Set coll = o.getContractChanges
 
 With Sheets("Budget")
 
-    cnt = coll.count  'InputBox("請輸入本次為第幾次變更設計", , 1)
+    cnt = coll.Count  'InputBox("請輸入本次為第幾次變更設計", , 1)
     changeDate = InputBox("請輸入變更設計日期", , Format(Now(), "yyyy/mm/dd"))
     
     Set coll_changes = o.getContractChanges
@@ -188,8 +188,8 @@ With Sheets("Budget")
     
     Next
     
-    lr = .Cells(.Rows.count, 1).End(xlUp).Row
-    lc = .Cells(2, .Columns.count).End(xlToLeft).Column
+    lr = .Cells(.Rows.Count, 1).End(xlUp).Row
+    lc = .Cells(2, .Columns.Count).End(xlToLeft).Column
     
     .Range("D2:F" & lr).Copy .Cells(2, lc + 1)
     
@@ -220,7 +220,7 @@ Next
 
 If p <> "" Then i = CInt(InputBox("預計要修改的日期為第幾次?" & vbNewLine & p, , j - 1))
 
-If i <= coll_changes.count And i > 0 Then
+If i <= coll_changes.Count And i > 0 Then
 
 
     On Error GoTo ERRORHANDLE

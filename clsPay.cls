@@ -354,7 +354,7 @@ Sub fs_kill(ByVal cnt)
 
 Set fso = CreateObject("Scripting.FileSystemObject")
 
-If fso.fileexists(getThisWorkbookPath & "\估驗Output\" & "第" & cnt & "次估驗.xls") = True Then
+If fso.fileExists(getThisWorkbookPath & "\估驗Output\" & "第" & cnt & "次估驗.xls") = True Then
 
     Set f = fso.getFile(getThisWorkbookPath & "\估驗Output\" & "第" & cnt & "次估驗.xls")
     Kill f

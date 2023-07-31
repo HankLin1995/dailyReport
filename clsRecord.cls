@@ -153,6 +153,8 @@ With MixData_Main
     recDate = .txtDay
     RecChannelName = .cboChannel
     RecLocation = .txtWhere
+    RecItem = .cboItem
+    If .txtAmount <> "" Then RecAmount = .txtAmount
     
 '    If myFunc.IsNumericWithPlusAndParentheses(RecLocation) = True Then
 '

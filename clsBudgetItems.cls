@@ -8,7 +8,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Public collSep As New Collection
-Public collItem As New Collection
+Public collitem As New Collection
 Public collItemIndex As New Collection
 Public collUnit As New Collection
 Public collPrice As New Collection
@@ -49,7 +49,7 @@ With Sheets("Budget")
         
             collSep.Add Sep '主要分類項
             'collSep.Add test_getParentItem(Sep) '主要分類項
-            collItem.Add Item, Item '工程項目
+            collitem.Add Item, Item '工程項目
             collUnit.Add unit '單位
             collPrice.Add price '單價
             collNum.Add num '數量
@@ -69,7 +69,7 @@ End Sub
 
 Private Sub getItemIndex() '將原本的collection中的值與count互換,可以用it去查i
 
-For Each it In collItem
+For Each it In collitem
 
     i = i + 1
     
@@ -108,7 +108,7 @@ For Each mSepEach In collSepEach
     Sum = 0
     CSum = 0
     
-    For i = 1 To collSep.count
+    For i = 1 To collSep.Count
     
         mSep = collSep(i)
     
@@ -155,7 +155,7 @@ Function CBudget_changeIndex()
 
 With Sheets("Budget")
 
-    lr = .Cells(.Rows.count, 1).End(xlUp).Row
+    lr = .Cells(.Rows.Count, 1).End(xlUp).Row
 
     For r = lr To 3 Step -1
     
@@ -180,7 +180,7 @@ Function CBudget_recover()
 
 With Sheets("Budget")
 
-    lr = .Cells(.Rows.count, 1).End(xlUp).Row
+    lr = .Cells(.Rows.Count, 1).End(xlUp).Row
 
     For r = 3 To lr
     

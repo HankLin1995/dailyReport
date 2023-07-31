@@ -26,7 +26,7 @@ Sub AppendData(arr)
 
 With Sheets("Budget_DB")
 
-lr = .Cells(.Rows.count, 1).End(xlUp).Row
+lr = .Cells(.Rows.Count, 1).End(xlUp).Row
 
 r = lr + 1
 
@@ -48,7 +48,7 @@ Dim coll As New Collection
 
 With shtDB
 
-    lr = .Cells(.Rows.count, 1).End(xlUp).Row
+    lr = .Cells(.Rows.Count, 1).End(xlUp).Row
 
     For r = 2 To lr
     
@@ -72,7 +72,7 @@ Sub clearRows(ByVal find_col_eng As String, ByVal find_str As String)
 
 With shtDB
 
-    lr = .Cells(.Rows.count, 1).End(xlUp).Row
+    lr = .Cells(.Rows.Count, 1).End(xlUp).Row
 
     For r = lr To 2 Step -1
 

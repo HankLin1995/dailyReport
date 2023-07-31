@@ -1,50 +1,102 @@
 Attribute VB_Name = "test"
-Sub test_pastePhoto()
-
-Dim o As New clsReportPhoto
-Dim Inf_obj As New clsInformation
-
-Sheets("ReportPhoto").Range("A1") = Inf_obj.conName
-
-msg = MsgBox("是否列印PDF?", vbYesNo)
-
-If msg = vbYes Then
-    o.IsXLS = False
-Else
-    o.IsXLS = True
-End If
-
-If Sheets("Check").Range("E1") = "Y" Then
-    o.IsShowText = True
-Else
-    o.IsShowText = False
-End If
+Sub reCountChecks() ' not yet
 
 With Sheets("Check")
 
     lr = .Cells(.Rows.Count, 1).End(xlUp).Row
     
     For r = 3 To lr
-    
-        check_name = .Cells(r, 1)
-        check_eng = .Cells(r, 2)
-        check_num = .Cells(r, 3)
         
-        check_photo_inf = .Cells(r, "I")
+        origin_name = .Cells(r, 2) & "-" & .Cells(r, 3)
         
-        If check_photo_inf <> "" Then
+        cnt = 0
         
-            Call o.GetReportByItem(r)
+        For rr = 3 To r
+        
+            If .Cells(rr, 2) = .Cells(r, 2) Then cnt = cnt + 1
+        
+        Next
+        
+        new_name = .Cells(r, 2) & "-" & cnt
+        
+        If origin_name <> new_name Then
+        
+            .Cells(r, 3) = cnt
+            
+            file_path = getThisWorkbookPath & "\抽查表Output\" & origin_name & ".xls"
+            Call killSpecitficFile(file_path)
+            
+            file_path = getThisWorkbookPath & "\抽查表Output\" & new_name & ".xls"
+            Call killSpecitficFile(file_path)
         
         End If
     
     Next
     
-.Activate
+    Call cmdPrintCheck
 
 End With
 
 End Sub
+
+Sub killSpecitficFile(ByVal file_path As String)
+
+Set fso = CreateObject("Scripting.FileSystemObject")
+
+'file_path = getThisWorkbookPath & "\抽查表Output\" & check_file_name & ".xls"
+
+'If fso.fileExists(file_path) Then
+    
+    Set f = fso.getFile(file_path)
+    Kill f
+
+'End If
+
+End Sub
+
+
+
+
+
+'===================
+
+Sub test_RngToJPG()
+
+Call ExcelToJPGImage(Range("C1:E24"))
+
+End Sub
+
+Sub ExcelToJPGImage(imageRng As Range)
+    'Code from officetricks.com
+    Dim sImageFilePath As String
+    sImageFilePath = ThisWorkbook.Path & Application.PathSeparator & "ExcelRangeToImage_"
+    sImageFilePath = sImageFilePath & VBA.Format(VBA.Now, "DD_MMM_YY_HH_MM_SS_AM/PM") & ".jpg"
+    
+    'Create Temporary workbook to hold image
+    Dim wbTemp As Workbook
+    Set wbTemp = Workbooks.Add(1)
+    
+    'Copy image & Save to new file
+    imageRng.CopyPicture xlScreen, xlPicture
+    wbTemp.Activate
+    With wbTemp.Worksheets("工作表1").ChartObjects.Add(imageRng.Left, imageRng.Top, imageRng.Width, imageRng.Height)
+        .Activate
+        .Chart.Paste
+        .Chart.Export filename:=sImageFilePath, FilterName:="jpg"
+    End With
+
+    'Close Temp workbook
+    wbTemp.Close False
+    Set wbTemp = Nothing
+    'MsgBox "Image File Saved To: " & sImageFilePath
+    
+    frm_Photo_TMP.TextBox1.Text = sImageFilePath
+    
+    Call frm_Photo_TMP.Show
+    
+End Sub
+
+
 
 
 'TODO:

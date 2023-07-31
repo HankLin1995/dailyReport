@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} frm_Detail 
    Caption         =   "一式計算項目"
-   ClientHeight    =   6045
+   ClientHeight    =   6048
    ClientLeft      =   120
-   ClientTop       =   465
-   ClientWidth     =   7545
+   ClientTop       =   468
+   ClientWidth     =   7548
    OleObjectBlob   =   "frm_Detail.frx":0000
    StartUpPosition =   1  '所屬視窗中央
 End
@@ -23,7 +23,7 @@ Private Sub cboItem_Change()
 subItem = Me.cboItem.Text
 
 Dim obj As New clsDetail
-Call obj.getPropertiesByName(Me.Label15.caption)
+Call obj.getPropertiesByName(Me.Label15.Caption)
 
 Me.lblUnit = obj.getUnit(subItem)
 Me.lblLast = obj.getLast(subItem)
@@ -50,7 +50,7 @@ Private Sub CommandButton2_Click()
 
 Dim obj As New clsDetail
 
-mainItem = Me.Label15.caption
+mainItem = Me.Label15.Caption
 subItem = Me.cboItem.Text
 
 '========IsExisted==============

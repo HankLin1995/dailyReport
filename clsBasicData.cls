@@ -9,7 +9,7 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Private collChannel As New Collection
 Private collTest As New Collection
-Private collItem As New Collection
+Private collitem As New Collection
 Private collItemRule As New Collection
 
 Private shtMain As Object
@@ -85,7 +85,7 @@ Call GetMainRow
 
 With shtMain
     
-    Set collItem = PCCES_obj.getRecordingItemsByRecDate(CDate(rec_date))
+    Set collitem = PCCES_obj.getRecordingItemsByRecDate(CDate(rec_date))
     
     '----about t_change------
     
@@ -122,7 +122,7 @@ Sub DiaryReset() '重整Diary工作表
 
 With shtDiary
 
-    lr = .Cells(Rows.count, 1).End(xlUp).Row
+    lr = .Cells(Rows.Count, 1).End(xlUp).Row
 
     .Activate
 
@@ -149,7 +149,7 @@ Dim obj As New clsInformation
 startDate = obj.GetStartDate
 endDate = obj.GetEndDate
 
-count = endDate - startDate + 1
+Count = endDate - startDate + 1
 
 With shtDiary
 
@@ -157,9 +157,9 @@ With shtDiary
 
     MyRowH = 25
     
-    lr = .Cells(Rows.count, 1).End(xlUp).Row
+    lr = .Cells(Rows.Count, 1).End(xlUp).Row
     
-    For r = 2 To count + 1
+    For r = 2 To Count + 1
         
         'If r = 110 Then
         
@@ -178,7 +178,7 @@ With shtDiary
     
     Next
 
-    Do Until lr <= count + 1
+    Do Until lr <= Count + 1
     
         .Rows(r).Delete
     
@@ -195,20 +195,20 @@ Sub Init() '於frmData表單新增施作位置、工程項目、試體項目
 
 With frmData
 
-    For i = 1 To collChannel.count
+    For i = 1 To collChannel.Count
         
         .cboChannel.AddItem collChannel.Item(i)
     
     Next
     
-    For i = 1 To collItem.count '設定不顯示的百分比項目
+    For i = 1 To collitem.Count '設定不顯示的百分比項目
     
         'If collItemRule.Item(i) <> 5 Then
-        .cboItem.AddItem collItem.Item(i)
+        .cboItem.AddItem collitem.Item(i)
     
     Next
     
-    For i = 1 To collTest.count
+    For i = 1 To collTest.Count
     
         .cboItem.AddItem collTest.Item(i)
     
@@ -225,14 +225,14 @@ Sub Init_Mix() '於MixData表單新增工程項目、試體項目
 Dim PCCES_obj As New clsPCCES
 Dim Inf_obj As New clsInformation
 
-Set collItem = PCCES_obj.getRecordingItemsAll
+Set collitem = PCCES_obj.getRecordingItemsAll
 
 With MixData
 
-    For i = 1 To collItem.count '設定不顯示的百分比項目
+    For i = 1 To collitem.Count '設定不顯示的百分比項目
     
         'If collItemRule.Item(i) <> 5 Then
-        .cboItem.AddItem collItem.Item(i)
+        .cboItem.AddItem collitem.Item(i)
     
     Next
     
@@ -254,7 +254,7 @@ TargetItem = frmData.cboItem
 
 With shtMain
 
-    For r = ItemRow + 1 To .Cells(Rows.count, c_Main).End(xlUp).Row
+    For r = ItemRow + 1 To .Cells(Rows.Count, c_Main).End(xlUp).Row
     
         If .Cells(r, c_Main) = TargetItem Then
         
@@ -292,7 +292,7 @@ TargetItem = MixData.cboItem
 
 With shtMain
 
-    For r = ItemRow + 1 To .Cells(Rows.count, c_Main).End(xlUp).Row
+    For r = ItemRow + 1 To .Cells(Rows.Count, c_Main).End(xlUp).Row
     
         If .Cells(r, c_Main) = TargetItem Then
         
@@ -364,7 +364,7 @@ Set collProg = getProgColl
 
 With Sheets("Diary")
 
-    lr = .Cells(.Rows.count, 4).End(xlUp).Row
+    lr = .Cells(.Rows.Count, 4).End(xlUp).Row
 
     For r = 2 To lr
     
@@ -372,7 +372,7 @@ With Sheets("Diary")
         
         If myProg = "" Then
         
-            For i = 1 To collProg.count
+            For i = 1 To collProg.Count
                 
                 tmp = Split(collProg(i), ":")
                 
@@ -457,7 +457,7 @@ Dim myFunc As New clsMyfunction
 
 Set coll_rows = myFunc.getUniqueItems("Diary", 2, , "預定進度")
 
-If coll_rows.count = 0 Then MsgBox "請先輸入預定進度資料!", vbCritical: End
+If coll_rows.Count = 0 Then MsgBox "請先輸入預定進度資料!", vbCritical: End
 
 stop_date_begin = InputBox("請輸入起始停工日期", , "2023/8/1")
 stop_date_end = InputBox("請輸入結束停工日期", , "2023/8/6")
@@ -474,7 +474,7 @@ With Sheets("Diary")
     
     
 
-    lr = .Cells(.Rows.count, 1).End(xlUp).Row
+    lr = .Cells(.Rows.Count, 1).End(xlUp).Row
         
     For i = 1 To cnt
     
@@ -520,7 +520,7 @@ fixStartDate = Inf_obj.startDate
 
 With Sheets("Diary")
 
-    lr = .Cells(.Rows.count, 1).End(xlUp).Row
+    lr = .Cells(.Rows.Count, 1).End(xlUp).Row
     
     progStartDate = .Cells(2, 2)
     progStartProg = .Cells(2, 4)
@@ -558,7 +558,7 @@ Dim coll As New Collection
 
 With Sheets("Diary")
 
-    lr = .Cells(.Rows.count, 1).End(xlUp).Row
+    lr = .Cells(.Rows.Count, 1).End(xlUp).Row
 
     '------main-----------
     
@@ -575,7 +575,7 @@ With Sheets("Diary")
     
     Next
     
-    For i = 1 To coll.count - 1
+    For i = 1 To coll.Count - 1
     
         sr = Split(coll(i), ":")(0)
         b_pgs = Split(coll(i), ":")(1)
@@ -594,7 +594,7 @@ End With
 
 Set getProgColl = coll
 
-If coll.count = 2 Then MsgBox ("建議在預定進度的欄位「D」填寫進度，內差成果才會比較準確!"), vbCritical
+If coll.Count = 2 Then MsgBox ("建議在預定進度的欄位「D」填寫進度，內差成果才會比較準確!"), vbCritical
 
 End Function
 

@@ -50,7 +50,7 @@ For r = 3 To lr
     
     wbpath = getThisWorkbookPath & "\抽查表Output\" & checkName_eng & "-" & checkNum & ".xls"
     
-    If fso.fileexists(wbpath) = True Then
+    If fso.fileExists(wbpath) = True Then
         .Cells(r, "G") = "Printed"
     Else
         .Cells(r, "G") = ""
@@ -157,9 +157,9 @@ For Each filePath In coll_path_sort
     Set wb_check = Workbooks.Open(filePath)
     Set sht = wb_check.Sheets(1)
     sht.Name = filename_short
-    
+    Application.DisplayAlerts = False
     sht.Copy before:=wb_combine.Sheets(wb_combine.Sheets.Count)
-    
+    Application.DisplayAlerts = True
     wb_check.Close False
     
     Set wb_check = Nothing
@@ -191,7 +191,7 @@ For Each r In coll_rows
 
     myPath = getThisWorkbookPath & "\抽查表Output\" & Sheets("Check").Cells(r, 2) & "-" & Sheets("Check").Cells(r, 3) & ".xls"
 
-    coll_path_sort.Add myPath
+    If Sheets("Check").Cells(r, 2) <> "" Then coll_path_sort.Add myPath
 
 Next
 

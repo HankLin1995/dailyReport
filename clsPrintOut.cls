@@ -237,7 +237,7 @@ wb.Sheets("¤u§@ªí1").Delete
 
 If file_path <> "False" And file_path <> "" Then
 
-    wb.SaveAs filename:=file_path
+    wb.SaveAs filename:=file_path, FileFormat:=xlExcel8
     wb.Close
     
 End If

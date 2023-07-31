@@ -15,7 +15,7 @@ Attribute VB_Exposed = False
 Dim XMLHTTP As Object
 Dim DOM As Object
 
-Const URL As String = "https://script.google.com/macros/s/AKfycbxrYIn8VplAjH7mDaTzTUBcDSrJcW8s0fv6oW2qM6gXjjfrWGA3G3iKoVUMpdYntxkR/exec"
+Const URL As String = "https://script.google.com/macros/s/AKfycbwy9q-zIA26v5PMlanKJ8KaSzVD2C4q5JZ-lnXLdFYgtSpTo3rRQudyR5Cwr-sur69x/exec"
 
 Sub Class_Initialize()
 

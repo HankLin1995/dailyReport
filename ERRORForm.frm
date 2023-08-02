@@ -2,9 +2,9 @@ VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} ERRORForm 
    Caption         =   "系統回報"
    ClientHeight    =   4644
-   ClientLeft      =   108
-   ClientTop       =   456
-   ClientWidth     =   4452
+   ClientLeft      =   105
+   ClientTop       =   450
+   ClientWidth     =   4455
    OleObjectBlob   =   "ERRORForm.frx":0000
    StartUpPosition =   1  '所屬視窗中央
 End

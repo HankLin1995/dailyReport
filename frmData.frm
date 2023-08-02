@@ -3,8 +3,8 @@ Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} frmData
    Caption         =   "填寫施作資料"
    ClientHeight    =   5472
    ClientLeft      =   120
-   ClientTop       =   468
-   ClientWidth     =   10176
+   ClientTop       =   465
+   ClientWidth     =   10170
    OleObjectBlob   =   "frmData.frx":0000
    StartUpPosition =   1  '所屬視窗中央
 End

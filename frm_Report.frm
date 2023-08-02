@@ -3,8 +3,8 @@ Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} frm_Report
    Caption         =   "回饋表單"
    ClientHeight    =   4764
    ClientLeft      =   120
-   ClientTop       =   468
-   ClientWidth     =   4572
+   ClientTop       =   465
+   ClientWidth     =   4575
    OleObjectBlob   =   "frm_Report.frx":0000
    StartUpPosition =   1  '所屬視窗中央
 End

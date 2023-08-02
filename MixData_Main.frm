@@ -3,8 +3,8 @@ Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} MixData_Main
    Caption         =   "填寫組合工項"
    ClientHeight    =   5052
    ClientLeft      =   120
-   ClientTop       =   468
-   ClientWidth     =   9912.001
+   ClientTop       =   465
+   ClientWidth     =   9915.001
    OleObjectBlob   =   "MixData_Main.frx":0000
    StartUpPosition =   1  '所屬視窗中央
 End

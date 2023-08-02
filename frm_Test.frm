@@ -3,8 +3,8 @@ Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} frm_Test
    Caption         =   "試體設定"
    ClientHeight    =   4920
    ClientLeft      =   120
-   ClientTop       =   468
-   ClientWidth     =   9072.001
+   ClientTop       =   465
+   ClientWidth     =   9075.001
    OleObjectBlob   =   "frm_Test.frx":0000
    StartUpPosition =   1  '所屬視窗中央
 End

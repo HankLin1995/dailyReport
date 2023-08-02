@@ -3,8 +3,8 @@ Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} frm_Info
    Caption         =   "監造日報表VBA"
    ClientHeight    =   6540
    ClientLeft      =   120
-   ClientTop       =   468
-   ClientWidth     =   11148
+   ClientTop       =   465
+   ClientWidth     =   11145
    OleObjectBlob   =   "frm_Info.frx":0000
    StartUpPosition =   1  '所屬視窗中央
 End

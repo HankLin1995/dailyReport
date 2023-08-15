@@ -599,7 +599,7 @@ PAY_obj.clearPAY
 
 'Sheets("Records").Activate
 
-Dim print_obj As New clsPrintOut
+Dim Print_obj As New clsPrintOut
 Dim f As String
 
 On Error Resume Next
@@ -614,7 +614,7 @@ f = getThisWorkbookPath & "\估驗Output\" & file_name & ".xls"
 
 ThisWorkbook.Sheets("PAY_Report").Visible = True
 
-Call print_obj.SpecificShtToXLS("PAY_Report", f) '& ".xls")
+Call Print_obj.SpecificShtToXLS("PAY_Report", f) '& ".xls")
 ThisWorkbook.Sheets("PAY_Report").Visible = False
 
 ThisWorkbook.Sheets("PAY").Activate
@@ -647,7 +647,7 @@ cnt = InputBox("請輸入要打開的檔案" & vbNewLine & p, , PAY_obj.getPayCounts)
 
 If cnt = "" Then MsgBox "未選取資料!", vbCritical: Exit Sub
 
-If fso.fileExists(getThisWorkbookPath & "\估驗Output\" & "第" & cnt & "次估驗.xls") = True Then
+If fso.FileExists(getThisWorkbookPath & "\估驗Output\" & "第" & cnt & "次估驗.xls") = True Then
     Workbooks.Open (getThisWorkbookPath & "\估驗Output\" & "第" & cnt & "次估驗.xls")
 Else
 
@@ -795,11 +795,11 @@ Dim obj As New clsRecord
 
 obj.getReportSum
 
-Dim print_obj As New clsPrintOut
+Dim Print_obj As New clsPrintOut
 
 ThisWorkbook.Sheets("Report_Sum").Visible = True
 
-print_obj.SpecificShtToXLS ("Report_Sum")
+Print_obj.SpecificShtToXLS ("Report_Sum")
 
 ThisWorkbook.Sheets("Report_Sum").Visible = False
 
@@ -827,62 +827,202 @@ End Sub
 
 Sub cmdGetCheckTable() '檢驗停留點申請單
 
-Dim print_obj As New clsPrintOut
+Dim Print_obj As New clsPrintOut
 Dim Inf_obj As New clsInformation
 Dim myFunc As New clsMyfunction
 
 Set checkdaylist = myFunc.getUniqueItems("Check", 3, , "時間") ' getTimeList
 
-With Sheets("Check")
-
-lr = .Cells(2, 1).End(xlDown).Row
-
 For Each checkday In checkdaylist
 
-myRow = 15
+    cnt = cnt + 1
+    
+    p = p & cnt & "." & checkday & vbNewLine
 
-i = i + 1
+Next
 
-With Sheets("CheckList")
- 
-    .Range("W4") = i
-    .Range("W6") = CDate(checkday) - 1
-    .Cells(15, 1).Resize(10, 26).ClearContents
+j = InputBox("請問要列印哪一天?" & vbNewLine & p, , 1)
 
-End With
+Show_CheckDate = checkdaylist(CInt(j))
 
-    For r = 2 To lr
-        
-        If .Cells(r, 4) = CDate(checkday) And .Cells(r, 5) = "檢驗停留點" Then
-        
-            checkitem = .Cells(r, 1)
-            tmp = split(.Cells(r, 6), ",")
-            checkch = tmp(0)
-            checkloc = tmp(1)
-        
-            With Sheets("CheckList")
+msg = MsgBox("是否要將停留點申請單全部更新?", vbInformation + vbYesNo)
+
+If msg = vbYes Then
+
+    With Sheets("Check")
+    
+    lr = .Cells(2, 1).End(xlDown).Row
+    
+    For Each checkday In checkdaylist
+    
+    myRow = 15
+    
+    i = i + 1
+    
+    With Sheets("CheckList")
+     
+        .Range("W4") = i
+        .Range("W6") = CDate(checkday) - 1
+        .Cells(15, 1).Resize(10, 26).ClearContents
+    
+    End With
+    
+        For r = 2 To lr
+            
+            If .Cells(r, 4) = CDate(checkday) And .Cells(r, 5) = "檢驗停留點" Then
+            
+                checkitem = .Cells(r, 1)
+                tmp = split(.Cells(r, 6), ",")
+                checkch = tmp(0)
+                checkloc = tmp(1)
+            
+                With Sheets("CheckList")
+                    
+                    .Range("E8") = Inf_obj.conName
+                    .Range("E10") = Inf_obj.contractor
+                    .Range("A" & myRow) = checkch
+                    .Range("G" & myRow) = checkday
+                    .Range("M" & myRow) = checkloc
+                    .Range("R" & myRow) = checkitem
                 
-                .Range("E8") = Inf_obj.conName
-                .Range("E10") = Inf_obj.contractor
-                .Range("A" & myRow) = checkch
-                .Range("G" & myRow) = checkday
-                .Range("M" & myRow) = checkloc
-                .Range("R" & myRow) = checkitem
+                    myRow = myRow + 1
+                
+                End With
             
-                myRow = myRow + 1
+            End If
             
-            End With
+        Next
+    
+        If myRow = 15 Then
+        
+            i = i - 1
+            
+        Else
+        
+            Sheets("CheckList").Visible = True
+            
+            Call Print_obj.SpecificShtToXLS("CheckList", getThisWorkbookPath & "\抽查表Output\EN-" & i & ".xls", "EN-" & i)
+            
+            Sheets("CheckList").Visible = False
+            
+        End If
+    
+    Next
+    
+    End With
+
+End If
+
+If myFunc.IsFileExists(getThisWorkbookPath & "\抽查表Output\EN-" & j & ".xls") = True Then
+
+Workbooks.Open (getThisWorkbookPath & "\抽查表Output\EN-" & j & ".xls")
+
+Else
+
+MsgBox "找不到該日報表，請全部更新後再試一次!", vbCritical
+
+End If
+
+End Sub
+
+Sub cmdMergeChecks()
+
+Dim coll_rows As New Collection
+
+For Each rng In Selection
+
+    If rng.Row > 2 Then
+    
+        On Error Resume Next
+        coll_rows.Add rng.Row, CStr(rng.Row)
+        On Error GoTo 0
+        
+    End If
+
+Next
+
+Dim myFunc As New clsMyfunction
+
+Dim coll As New Collection
+
+With Sheets("Check")
+
+    For Each r In coll_rows
+    
+        check_index = .Cells(r, 2)
+        check_num = .Cells(r, 3)
+        check_date = .Cells(r, 4)
+        
+        check_inf = .Cells(r, 7)
+        photo_inf = .Cells(r, 9)
+        
+        If check_inf <> "" Then
+        
+            check_path = getThisWorkbookPath & "\抽查表Output\" & check_index & "-" & check_num & ".xls"
+            coll.Add check_path
+        
+        End If
+        
+        If photo_inf <> "" Then
+        
+            photo_path = getThisWorkbookPath & "\查驗照片Output\" & check_index & "-" & check_num & ".xls"
+            
+            If myFunc.IsFileExists(photo_path) = False Then
+            
+                Call PastePhoto(r, True)
+                coll.Add photo_path
+            Else
+            
+                coll.Add photo_path
+            
+            End If
         
         End If
         
     Next
 
-    If myRow = 15 Then
-        i = i - 1
-    Else
-        Sheets("CheckList").Visible = True
-        Call print_obj.SpecificShtToXLS("CheckList", getThisWorkbookPath & "\抽查表Output\EN-" & i & ".xls")
-        Sheets("CheckList").Visible = False
+End With
+
+Dim Print_obj As New clsPrintOut
+
+Call Print_obj.combineFiles(coll)
+
+End Sub
+
+Sub cmdPastePhotos()
+
+Dim myFunc As clsMyfunction
+Dim IsXLS As Boolean
+
+mode_msg = MsgBox("是否列印PDF?", vbInformation + vbYesNo)
+
+If mode_msg = vbYes Then
+    IsXLS = False
+Else
+    IsXLS = True
+End If
+
+With Sheets("Check")
+
+For Each rng In Selection
+
+    r = rng.Row
+
+    If r > 3 Then
+    
+        check_index = .Cells(r, 2)
+        check_num = .Cells(r, 3)
+    
+        filePath = getThisWorkbookPath & "\查驗照片Output\" & check_index & "-" & check_num & ".xls"
+    
+        If myFunc.IsFileExists(filePath) = True Then
+        
+            msg = MsgBox("查驗照片Output中已存在【" & check_index & "-" & check_num & "】，是否要取代?", vbYesNo + vbInformation)
+            
+            If msg = vbYes Then Call PastePhoto(r, IsXLS)
+        
+        End If
+    
     End If
 
 Next
@@ -891,28 +1031,31 @@ End With
 
 End Sub
 
-Sub cmdMergeChecks()
-
-Dim check_obj As New clsCheck
-
-check_obj.collectFilesBySelect
-
-End Sub
-
-Sub cmdPastePhoto()
+Sub PastePhoto(ByVal r As Integer, ByVal IsXLS As Boolean)
 
 Dim o As New clsReportPhoto
 Dim Inf_obj As New clsInformation
+Dim myFunc As clsMyfunction
 
 Sheets("ReportPhoto").Range("A1") = Inf_obj.conName
 
-msg = MsgBox("是否列印PDF?", vbYesNo)
+o.IsXLS = IsXLS
 
-If msg = vbYes Then
-    o.IsXLS = False
-Else
-    o.IsXLS = True
-End If
+''If IsAsk = True Then
+'
+'    'msg = MsgBox("是否列印PDF?", vbYesNo)
+'
+'    If msg = vbYes Then
+'        o.IsXLS = False
+'    Else
+'        o.IsXLS = True
+'    End If
+'
+'Else
+'
+'o.IsXLS = True
+
+'End If
 
 If Sheets("Check").Range("E1") = "Y" Then
     o.IsShowText = True
@@ -922,9 +1065,9 @@ End If
 
 With Sheets("Check")
 
-    lr = .Cells(.Rows.Count, 1).End(xlUp).Row
+    'lr = .Cells(.Rows.Count, 1).End(xlUp).Row
     
-    For r = 3 To lr
+    'For r = 3 To lr
     
         check_name = .Cells(r, 1)
         check_eng = .Cells(r, 2)
@@ -938,7 +1081,7 @@ With Sheets("Check")
         
         End If
     
-    Next
+    'Next
     
 .Activate
 
@@ -989,16 +1132,16 @@ With Sheets("Check")
             .txtCheckLocDetail = tmp(1)
             .txtCheckLoc = check_loc
             
-            If photo_lst <> "" Then
-            
-            For i = LBound(photo_lst) To UBound(photo_lst)
-            
-                .lstCheckTable.AddItem ""
-                .lstCheckTable.List(i, 0) = photo_lst(i, 0)
-                .lstCheckTable.List(i, 1) = photo_lst(i, 1)
-            
-            Next
-            
+            If IsEmpty(photo_lst) = False Then
+      
+                For i = LBound(photo_lst) To UBound(photo_lst)
+                
+                    .lstCheckTable.AddItem ""
+                    .lstCheckTable.List(i, 0) = photo_lst(i, 0)
+                    .lstCheckTable.List(i, 1) = photo_lst(i, 1)
+                
+                Next
+                
             End If
             
             '.lstCheckTable = splitPhotoList(photo_lst)

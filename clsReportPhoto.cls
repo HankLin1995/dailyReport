@@ -34,7 +34,7 @@ End Sub
 
 Sub GetReportByItem(ByVal r As Integer)
 
-Dim print_obj As New clsPrintOut
+Dim Print_obj As New clsPrintOut
 
 If IsXLS Then Set wb = Workbooks.Add
 

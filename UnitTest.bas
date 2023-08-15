@@ -1,4 +1,17 @@
 Attribute VB_Name = "UnitTest"
+
+Sub unitTest_countCheckLists()
+
+check_date = CDate("2023/8/2")
+
+Dim o As New clsCheck
+
+result = o.countCheckLists(check_date)
+
+Debug.Assert result = 4
+
+End Sub
+
 Sub unittest_getRecLocInvolvedPrompt()
 
 rec_loc = "0+350~0+3880" '表單新增

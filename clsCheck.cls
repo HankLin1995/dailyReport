@@ -50,7 +50,7 @@ For r = 3 To lr
     
     wbpath = getThisWorkbookPath & "\抽查表Output\" & checkName_eng & "-" & checkNum & ".xls"
     
-    If fso.fileExists(wbpath) = True Then
+    If fso.FileExists(wbpath) = True Then
         .Cells(r, "G") = "Printed"
     Else
         .Cells(r, "G") = ""
@@ -65,7 +65,7 @@ Sub printCheckTable() '列印查驗表
 
 'Application.ScreenUpdating = False
 
-Dim print_obj As New clsPrintOut
+Dim Print_obj As New clsPrintOut
 Dim Inf_obj As New clsInformation
 
 conName = Inf_obj.conName
@@ -117,7 +117,7 @@ With ThisWorkbook.Sheets("Check")
         
         End With
         
-        Call print_obj.SpecificShtObjToXLS(sht, checkName_eng & "-" & checkNum, getThisWorkbookPath & "\抽查表Output\" & checkName_eng & "-" & checkNum)
+        Call Print_obj.SpecificShtObjToXLS(sht, checkName_eng & "-" & checkNum, getThisWorkbookPath & "\抽查表Output\" & checkName_eng & "-" & checkNum)
         
         p = p & checkName & ">" & checkName_eng & "-" & checkNum & vbNewLine
          
@@ -141,40 +141,44 @@ End Sub
 
 Sub collectFilesBySelect()
 
+Dim Print_obj As New clsPrintOut
+
 Application.ScreenUpdating = False
 
 Set coll_path_sort = getFilePathBySelect
 
-Set wb_combine = Workbooks.Add
+'Print_obj.combineFiles (coll_path_sort)
 
-For Each filePath In coll_path_sort
-
-    filename = mid(filePath, InStrRev(filePath, "\") + 1)
-    fileExtension = mid(filename, InStrRev(filename, ".") + 1)
-    
-    filename_short = mid(filename, 1, InStrRev(filename, ".") - 1)
-    
-    Set wb_check = Workbooks.Open(filePath)
-    Set sht = wb_check.Sheets(1)
-    sht.Name = filename_short
-    Application.DisplayAlerts = False
-    sht.Copy before:=wb_combine.Sheets(wb_combine.Sheets.Count)
-    Application.DisplayAlerts = True
-    wb_check.Close False
-    
-    Set wb_check = Nothing
-Next
-
-Application.DisplayAlerts = False
-wb_combine.Sheets("工作表1").Delete
-wb_combine.Activate
-Application.DisplayAlerts = True
+'Set wb_combine = Workbooks.Add
+'
+'For Each filePath In coll_path_sort
+'
+'    filename = mid(filePath, InStrRev(filePath, "\") + 1)
+'    fileExtension = mid(filename, InStrRev(filename, ".") + 1)
+'
+'    filename_short = mid(filename, 1, InStrRev(filename, ".") - 1)
+'
+'    Set wb_check = Workbooks.Open(filePath)
+'    Set sht = wb_check.Sheets(1)
+'    sht.Name = filename_short
+'    Application.DisplayAlerts = False
+'    sht.Copy before:=wb_combine.Sheets(wb_combine.Sheets.Count)
+'    Application.DisplayAlerts = True
+'    wb_check.Close False
+'
+'    Set wb_check = Nothing
+'Next
+'
+'Application.DisplayAlerts = False
+'wb_combine.Sheets("工作表1").Delete
+'wb_combine.Activate
+'Application.DisplayAlerts = True
 
 Application.ScreenUpdating = True
 
 End Sub
 
-Private Function getFilePathBySelect()
+Function getFilePathBySelect()
 
 Dim coll_rows As New Collection
 Dim coll_path_sort As New Collection
@@ -285,5 +289,25 @@ Dim myFunc As New clsMyfunction
 Set coll_rows = myFunc.getRowsByUser2("Check", check_name, 2, "抽查表名稱")
 
 countChecks = coll_rows.Count
+
+End Function
+
+Function countCheckLists(ByVal check_date As Date)
+
+Dim myFunc As New clsMyfunction
+
+Set coll_items = myFunc.getUniqueItems("Check", 3, , "時間")
+
+For Each it In coll_items
+
+    cnt = cnt + 1
+    
+    If CDate(it) = check_date Then
+
+        countCheckLists = cnt: Exit Function
+
+    End If
+
+Next
 
 End Function

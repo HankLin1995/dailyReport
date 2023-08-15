@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} MixData 
    Caption         =   "組合工項"
-   ClientHeight    =   6612
+   ClientHeight    =   6615
    ClientLeft      =   120
    ClientTop       =   465
    ClientWidth     =   8130

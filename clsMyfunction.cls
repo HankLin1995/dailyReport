@@ -861,6 +861,18 @@ Function FileOpen(initialFilename As String, _
   End With
 End Function
 
+Function IsFileExists(ByVal file_path As String)
+
+Set fso = CreateObject("Scripting.FileSystemObject")
+
+If fso.FileExists(file_path) = True Then
+    IsFileExists = True
+Else
+    IsFileExists = False
+End If
+
+End Function
+
 
 
 

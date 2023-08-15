@@ -217,7 +217,7 @@ Application.DisplayAlerts = True
 
 End Sub
 
-Sub SpecificShtToXLS(ByVal shtName As String, Optional file_path As String = "")
+Sub SpecificShtToXLS(ByVal shtName As String, Optional file_path As String = "", Optional shtName_replace As String = "")
 
 Application.DisplayAlerts = False
 
@@ -230,6 +230,8 @@ Set wb = Workbooks.Add
     With sht
         
         .Name = shtName
+        
+        If shtName_replace <> "" Then .Name = shtName_replace
     
     End With
 
@@ -271,6 +273,43 @@ If file_path <> "False" And file_path <> "" Then
     
 End If
 
+Application.DisplayAlerts = True
+
+End Sub
+
+Sub combineFiles(ByVal coll_path_sort)
+
+Set wb_combine = Workbooks.Add
+
+For Each filePath In coll_path_sort
+
+    filename = mid(filePath, InStrRev(filePath, "\") + 1)
+    fileExtension = mid(filename, InStrRev(filename, ".") + 1)
+    
+    filename_short = mid(filename, 1, InStrRev(filename, ".") - 1)
+    
+    Set wb_check = Workbooks.Open(filePath)
+    
+    For Each sht In wb_check.Sheets
+    
+    Debug.Print sht.Name
+    
+    'Set sht = wb_check.Sheets(1)
+    'sht.Name = filename_short
+    Application.DisplayAlerts = False
+    sht.Copy before:=wb_combine.Sheets(wb_combine.Sheets.Count)
+    Application.DisplayAlerts = True
+    
+    Next
+    
+    wb_check.Close False
+    
+    Set wb_check = Nothing
+Next
+
+Application.DisplayAlerts = False
+wb_combine.Sheets("¤u§@ªí1").Delete
+wb_combine.Activate
 Application.DisplayAlerts = True
 
 End Sub

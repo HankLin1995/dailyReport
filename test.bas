@@ -1,4 +1,10 @@
 Attribute VB_Name = "test"
+Sub mergeCheckAndPhoto()
+
+
+
+End Sub
+
 Function splitPhotoList(ByVal s As String)
 
 If s = "" Then Exit Function

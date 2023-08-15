@@ -66,7 +66,7 @@ If r <> 0 Then
     
     Set fso = CreateObject("Scripting.FileSystemObject")
     
-    If fso.fileExists(getThisWorkbookPath & "\抽查表Output\" & check_item_eng & "-" & check_cnt & ".xls") Then
+    If fso.FileExists(getThisWorkbookPath & "\抽查表Output\" & check_item_eng & "-" & check_cnt & ".xls") Then
         Set f = fso.getFile(getThisWorkbookPath & "\抽查表Output\" & check_item_eng & "-" & check_cnt & ".xls")
         Kill f
     End If

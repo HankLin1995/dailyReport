@@ -1,9 +1,133 @@
 Attribute VB_Name = "test"
-Sub mergeCheckAndPhoto()
+Sub importOldData()
 
+'getfile
 
+Set wb = Workbooks(getWorkbookName)
+
+Debug.Print wb.Name
+
+'collectMainInf
+
+With wb.Sheets("Main")
+
+Set rng_last = .Cells.SpecialCells(xlCellTypeLastCell)
+
+Set rngs = .Range("B1:C6")
+rngs.Copy ThisWorkbook.Sheets("Main").Range("B1:C6")
+
+'collectTestInf
+
+Set rngs = .Range("A14:D" & rng_last.Row)
+rngs.Copy ThisWorkbook.Sheets("Main").Range("A10")
+
+'collectReportInf
+Set rngs = .Range("F1:" & rng_last.Address)
+rngs.Copy ThisWorkbook.Sheets("Main").Range("F1")
+
+End With
+
+With wb.Sheets("Budget")
+
+'collectRecords
+Set rng_last = .Cells.SpecialCells(xlCellTypeLastCell)
+Set rngs = .Range("A2:" & rng_last.Address)
+rngs.Copy ThisWorkbook.Sheets("Budget").Range("A2")
+
+End With
+
+With wb.Sheets("Records")
+
+'collectRecords
+Set rng_last = .Cells.SpecialCells(xlCellTypeLastCell)
+Set rngs = .Range("A2:" & rng_last.Address)
+rngs.Copy ThisWorkbook.Sheets("Records").Range("A2")
+
+End With
+'collectDiary
+With wb.Sheets("Diary")
+
+Set rng_last = .Cells.SpecialCells(xlCellTypeLastCell)
+Set rngs = .Range("A2:" & rng_last.Address)
+rngs.Copy ThisWorkbook.Sheets("Diary").Range("A2")
+
+End With
+'collectMix
+With wb.Sheets("Mix")
+
+Set rng_last = .Cells.SpecialCells(xlCellTypeLastCell)
+Set rngs = .Range("A2:" & rng_last.Address)
+rngs.Copy ThisWorkbook.Sheets("Mix").Range("A2")
+
+End With
 
 End Sub
+
+Function getWorkbookName()
+
+Dim coll As New Collection
+
+For Each wb In Workbooks
+
+    If wb.Name <> ThisWorkbook.Name Then
+    
+    coll.Add wb.Name
+    
+    End If
+
+Next
+
+If coll.Count = 0 Then MsgBox "請先開啟要匯入的舊檔!", vbCritical: End
+
+For i = 1 To coll.Count
+
+    p = p & i & "." & coll(i) & vbNewLine
+
+Next
+
+If coll.Count = 1 Then
+
+getWorkbookName = coll(1)
+
+Else
+
+myIndex = InputBox("請輸入要匯入的檔案名稱" & vbNewLine & p)
+
+getWorkbookName = coll(myIndex)
+
+End If
+
+End Function
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 Function splitPhotoList(ByVal s As String)
 

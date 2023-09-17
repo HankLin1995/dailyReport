@@ -410,7 +410,7 @@ Set coll_recDates = myFunc.getUniqueItems("Records", 3, "B")
 For Each recDate_str In coll_recDates
     
     ItemAndAmount = getRecordsByDate(CDate(recDate_str))
-    LocAndCheck = "" 'ready
+    LocAndCheck = getChecksInfByDate(CDate(recDate_str)) 'ready
     
     Call FindDate(CDate(recDate_str), ItemAndAmount, LocAndCheck)
 
@@ -486,6 +486,44 @@ For i = 1 To coll_rows.Count
 Next
 
 getRecordsByDate = mid(s, 2)
+
+End Function
+
+Function getChecksInfByDate(ByVal mydate As Date)
+
+Dim f As New clsMyfunction
+
+With Sheets("Check")
+
+    'Set coll_checkdates = f.getUniqueItems("Check", 3, "D")
+    
+    'Call f.showList(coll_checkdates)
+
+    'For Each check_date In coll_checkdates
+    
+        p = ""
+        
+        'Debug.Print check_date
+        
+        Set coll_rows = f.getRowsByUser("Check", "D", mydate)
+        
+        If coll_rows.Count = 0 Then Exit Function
+        
+        'Call f.showList(coll_rows)
+    
+        For Each r In coll_rows
+        
+            p = p & .Cells(r, "A") & "[" & .Cells(r, "B") & "-" & .Cells(r, "C") & "]" & vbNewLine
+        
+        Next
+    
+        'Debug.Print p
+        
+        getChecksInfByDate = p
+    
+    'Next
+
+End With
 
 End Function
 

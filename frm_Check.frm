@@ -18,6 +18,7 @@ Attribute VB_Exposed = False
 
 
 
+
 Private Sub cmdOutput_Click()
 
 Dim myFunc As New clsMyfunction
@@ -50,8 +51,6 @@ If cnt <> -1 Then photo_prompt = mid(photo_prompt, 1, Len(photo_prompt) - 1)
 
 arr = Array(check_item, check_item_eng, check_cnt, check_date, check_style, check_loc, , , photo_prompt)
 
-Stop
-
 If .Label_Row = "" Then
     r = 0
 Else
@@ -81,7 +80,7 @@ End With
 
 Unload Me
 
-If r <> 0 Then Call cmdPrintCheck
+Call cmdPrintCheck
 
 End Sub
 

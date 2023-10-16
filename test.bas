@@ -1,4 +1,97 @@
 Attribute VB_Name = "test"
+Sub test_getTestItems()
+
+Dim coll_tests As New Collection
+
+With Sheets("Budget")
+
+lr = .Cells(.Rows.Count, 1).End(xlUp).Row
+
+    For r = 3 To lr
+    
+        pcces_item = .Cells(r, 2)
+        
+        If pcces_item Like "*試驗規範及標準*" Then
+            
+            If pcces_item Like "*;*" Then MsgBox pcces_item & vbNewLine & "含有非法字符【;】，請修正!", vbCritical: End
+            
+            pcces_unit = .Cells(r, 3)
+            pcces_amount = .Cells(r, 4)
+            
+            test_name = getTestReplaceName(pcces_item)
+        
+            If test_name <> "" Then
+                
+                coll_tests.Add test_name & ";" & pcces_amount & ";" & pcces_unit
+                
+            End If
+            
+        End If
+    
+    Next
+
+End With
+
+Call extractToMainTest(coll_tests)
+
+Call cmdResetReport
+
+End Sub
+
+Sub extractToMainTest(ByVal coll)
+
+Call ReturnMainRow(arr)
+
+With Sheets("Main")
+
+    .Cells(arr(1) + 1, 1).Resize(arr(2) - arr(1) - 1, 5).ClearContents
+
+    For i = 1 To coll.Count
+    
+        tmp = split(coll(i), ";")
+    
+        r = arr(1) + i
+    
+        .Cells(r, 1) = tmp(0)
+        .Cells(r, 2) = tmp(1)
+        .Cells(r, 3) = tmp(2)
+    
+    Next
+
+End With
+
+End Sub
+
+Function getTestReplaceName(ByVal test_item As String)
+
+Dim f As New clsMyfunction
+
+shtName = "TestReplace"
+
+Set coll_rows = f.getRowsByUser(shtName, "A", test_item)
+
+If coll_rows.Count = 0 Then
+
+        getTestReplaceName = InputBox(test_item & ":未定義別名!" & vbNewLine & "請輸入別名:", , test_item)
+        Call f.AppendData(shtName, Array(test_item, getTestReplaceName))
+        Exit Function
+
+End If
+
+For Each r In coll_rows
+
+    Set rng = Sheets(shtName).Cells(r, 1)
+    
+    r = rng.Row
+    getTestReplaceName = rng.Offset(0, 1).Value
+
+    Exit For 'only deal one time
+    
+Next
+
+
+End Function
+
 Sub importOldData()
 
 'getfile

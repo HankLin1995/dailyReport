@@ -344,6 +344,8 @@ With Sheets("Main")
 
 End With
 
+If t_change = 0 Then Call test_getTestItems
+
 End Sub
 
 Sub cmdReArrange()
@@ -537,6 +539,7 @@ PAY_obj.clearPAY
 PAY_obj.getPayItems
 PAY_obj.getOtherInf
 
+Sheets("PAY").Visible = True
 Sheets("PAY").Activate
 
 End Sub

@@ -19,6 +19,7 @@ Attribute VB_Exposed = False
 
 
 
+
 Private Sub cmdOutput_Click()
 
 Dim myFunc As New clsMyfunction

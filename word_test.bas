@@ -35,7 +35,7 @@ Call ReplaceText
 strPageRange = InputBox("Enter the page range to print (e.g. 1-3, 5):", "Print Specific Pages")
 
 'Print the specified page range
-wdDoc.PrintOut Range:=wdPrintFromTo, From:=strPageRange, To:=strPageRange
+wdDoc.PrintOut Range:=wdPrintFromTo, From:=strPageRange, to:=strPageRange
 
 'Close the document
 wdDoc.Close False

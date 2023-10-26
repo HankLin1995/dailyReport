@@ -1,4 +1,236 @@
 Attribute VB_Name = "test"
+
+Sub test_collectFilePaths()
+
+Dim f As New clsMyfunction
+Dim coll As New Collection
+
+With Sheets("Check")
+
+    lr = .Cells(.Rows.Count, 1).End(xlUp).Row
+    
+    For r = 3 To lr
+    
+        MyCode = .Cells(r, 2)
+        myNum = .Cells(r, 3)
+    
+        myPath = ThisWorkbook.Path & "\抽查表PDF\" & MyCode & "-" & myNum & ".pdf"
+    
+        If f.IsFileExists(myPath) = True Then
+            
+            coll.Add myPath
+        
+        End If
+        
+        myPath = ThisWorkbook.Path & "\查驗照片Output\" & MyCode & "-" & myNum & ".pdf"
+    
+        If f.IsFileExists(myPath) = True Then
+        
+            coll.Add myPath
+        
+        End If
+    Next
+
+End With
+
+Call WriteCollectionToTxt(coll)
+
+myTime = Now()
+
+Call RunTestGPTWithParameters
+
+Call CheckFileCreateTimeWithRetryAndDelay(myTime)
+
+End Sub
+
+Sub RunTestGPTWithParameters()
+
+    Dim path1 As String
+    Dim myret As Long
+    Dim command As String
+    Dim searchKeyword As String
+    Dim savePath As String
+
+    ' 設置可執行文件所在的目錄
+    'path1 = ThisWorkbook.Path ' ThisWorkbook.Path & "\GooglePhotoDownloader"
+    'ChDir path1
+
+    PDF_PATH = ThisWorkbook.Path & "\Lib\Merge\merge.pdf"
+    TXT_PATH = ThisWorkbook.Path & "\Lib\Merge\file_with_paths.txt"
+    
+    command = ThisWorkbook.Path & "\Lib\Merge\Merge.exe """ & TXT_PATH & """ """ & PDF_PATH & """"
+    
+    ' 使用Shell函數運行可執行文件並等待其完成
+    myret = Shell(command, 1)
+
+End Sub
+
+Sub CheckFileCreateTimeWithRetryAndDelay(ByVal CurrentTime)
+    ' 文件路?
+    FilePath = ThisWorkbook.Path & "\Lib\merge\merge.pdf"
+    
+    ' ?置容忍的差异??（?里?置?1小?）
+    ToleranceHours = 0 '1 / 24
+    
+    ' 最大??次?
+    MaxTries = 20
+    
+    Dim FileCreateTime As Date
+    'Dim CurrentTime As Date
+    Dim Tries As Integer
+    
+    Tries = 1
+    
+    Do While Tries <= MaxTries
+    
+        Debug.Print Tries
+    
+        If Dir(FilePath) = "" Then
+            ' 文件不存在，等待2秒?再??
+            Tries = Tries + 1
+            If Tries <= MaxTries Then
+                Application.Wait Now + TimeValue("00:00:02")
+            End If
+        Else
+            ' 文件存在，?取文件的?建??
+            FileCreateTime = FileDateTime(FilePath)
+            
+            ' ?取?前??
+            'CurrentTime = Now
+            
+            ' 比?文件?建??和?前??，考?容忍??
+            If FileCreateTime > CurrentTime Then
+                Shell "cmd /c start " & FilePath, vbNormalFocus
+                Exit Do
+            Else
+                ' 文件?建??在容忍范?外，等待2秒?然后重?
+                Tries = Tries + 1
+                If Tries <= MaxTries Then
+                    Application.Wait Now + TimeValue("00:00:02")
+                End If
+            End If
+        End If
+    Loop
+    
+    If Tries > MaxTries Then
+        MsgBox "已?到最大重?次?。"
+    End If
+End Sub
+
+
+
+
+Sub WriteCollectionToTxt(ByVal coll)
+    'Dim col As Collection
+    Dim Item As Variant
+    Dim FilePath As String
+    Dim FileName As String
+    Dim FileNumber As Integer
+    
+    ' ?建一?新的集合并添加?据（?里只是示例，你需要自己填充你的集合）
+    'Set col = New Collection
+    'col.Add "Item1"
+    'col.Add "Item2"
+    'col.Add "Item3"
+    
+    ' 指定文件名和路?
+    FileName = "file_with_paths.txt"
+    FilePath = ThisWorkbook.Path & "\Lib\Merge\" & FileName
+    
+    ' 打?文本文件以?行?入
+    FileNumber = FreeFile
+    Open FilePath For Output As FileNumber
+    
+    ' 遍?集合并?每??目?入文本文件
+    For Each Item In coll
+        Print #FileNumber, Item
+    Next Item
+    
+    ' ??文件
+    Close FileNumber
+End Sub
+
+
+Sub test_CopyFileToFolder()
+    Dim SourceFilePath As String
+    Dim DestinationFolder As String
+    Dim SourceFileName As String
+    Dim NewFilePath As String
+    
+    With Sheets("Check")
+    
+        For Each rng In Selection
+    
+            r = rng.Row
+    
+            If r > 2 Then
+            
+                If .Cells(r, 2) <> "" Then
+                
+                    newFileName = .Cells(r, 2) & "-" & .Cells(r, 3)
+                
+                End If
+            
+            End If
+    
+            Exit For
+            
+        Next
+    
+    End With
+    
+    If newFileName = "" Then MsgBox "請先框選要歸檔的位置!", vbCritical
+
+    ' 讓使用者選擇一個檔案
+    With Application.FileDialog(msoFileDialogFilePicker)
+        .Title = "選擇要複製的檔案"
+        If .Show = -1 Then
+            SourceFilePath = .SelectedItems(1)
+        Else
+            'MsgBox "未選擇檔案。操作已取消。"
+            Exit Sub
+        End If
+    End With
+
+    ' 指定目標資料夾
+    DestinationFolder = ThisWorkbook.Path & "\抽查表PDF\"
+
+    ' 獲得原始檔案名稱
+    SourceFileName = mid(SourceFilePath, InStrRev(SourceFilePath, "\") + 1)
+
+    ' 組合新的檔案路徑
+    NewFilePath = DestinationFolder & newFileName & ".pdf" 'SourceFileName
+
+    ' 檢查目標資料夾是否存在，如不存在則創建
+    If Dir(DestinationFolder, vbDirectory) = "" Then
+        MkDir DestinationFolder
+    End If
+
+    ' 複製檔案
+    FileCopy SourceFilePath, NewFilePath
+
+    ' 檢查檔案是否成功複製
+    
+    With Sheets("Check")
+    
+        If Dir(NewFilePath) <> "" Then
+            'MsgBox "檔案已成功複製到 " & NewFilePath
+            .Cells(r, "H") = "V" 'NewFilePath
+            
+            On Error Resume Next
+            .Cells(r, "H").Comment.Delete
+            On Error GoTo 0
+            
+            .Cells(r, "H").AddComment
+            .Cells(r, "H").Comment.Text Text:=NewFilePath
+    
+        End If
+        
+    End With
+    
+End Sub
+
+
 Sub test_getTestItems()
 
 Dim coll_tests As New Collection
@@ -332,7 +564,7 @@ Sub ExcelToJPGImage(imageRng As Range)
     With wbTemp.Worksheets("工作表1").ChartObjects.Add(imageRng.Left, imageRng.Top, imageRng.Width, imageRng.Height)
         .Activate
         .Chart.Paste
-        .Chart.Export filename:=sImageFilePath, FilterName:="jpg"
+        .Chart.Export FileName:=sImageFilePath, FilterName:="jpg"
     End With
 
     'Close Temp workbook

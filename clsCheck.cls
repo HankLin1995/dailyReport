@@ -51,7 +51,7 @@ For r = 3 To lr
     wbpath = getThisWorkbookPath & "\抽查表Output\" & checkName_eng & "-" & checkNum & ".xls"
     
     If fso.FileExists(wbpath) = True Then
-        .Cells(r, "G") = "Printed"
+        .Cells(r, "G") = "V"
     Else
         .Cells(r, "G") = ""
     End If
@@ -88,7 +88,7 @@ With ThisWorkbook.Sheets("Check")
         
         If CheckLog <> "" And CheckPrintAgain <> "Y" Then GoTo PrintPass
         
-        .Cells(r, "G") = "Printed"
+        .Cells(r, "G") = "V"
         
         If CheckType = "檢驗停留點" Then
             prompt = "■檢驗停留點                       □施工抽查點"
@@ -267,11 +267,11 @@ myFolder = getThisWorkbookPath & "\抽查表TMP" ' getSavedFolder
 
 Set coll_path = GetFilePathsInFolder(myFolder)
 
-For Each filePath In coll_path
+For Each FilePath In coll_path
 
-    filename = mid(filePath, InStrRev(filePath, "\") + 1)
-    pt = InStrRev(filename, ".")
-    filename_short = mid(filename, 1, pt - 1)
+    FileName = mid(FilePath, InStrRev(FilePath, "\") + 1)
+    pt = InStrRev(FileName, ".")
+    filename_short = mid(FileName, 1, pt - 1)
 
     coll.Add filename_short
 

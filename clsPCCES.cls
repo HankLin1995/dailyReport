@@ -637,6 +637,9 @@ End With
 
 Sheets("Main").Range("B4") = beginDate
 
+Sheets("Report").Range("C2") = beginDate
+Sheets("Report").Range("K2") = 1 ' beginDate
+
 End Sub
 
 Sub check_item_name_repeat()

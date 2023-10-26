@@ -838,12 +838,12 @@ If p = "" Then IsRecLocPass = True
 
 End Function
 
-Function splitFileName_Check(ByVal filename As String, ByRef filename_ch, ByRef filename_eng)
+Function splitFileName_Check(ByVal FileName As String, ByRef filename_ch, ByRef filename_eng)
     
-    pt2 = InStrRev(filename, "[")
+    pt2 = InStrRev(FileName, "[")
 
-    filename_ch = mid(filename, 1, pt2 - 1)
-    filename_eng = mid(filename, pt2 + 1, Len(filename) - pt2 - 1)
+    filename_ch = mid(FileName, 1, pt2 - 1)
+    filename_eng = mid(FileName, pt2 + 1, Len(FileName) - pt2 - 1)
 
 End Function
 

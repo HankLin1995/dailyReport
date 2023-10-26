@@ -9,7 +9,7 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Private Sub Worksheet_Activate()
 
-If IsError(Sheets("Report").Range("C2")) = True Then Exit Sub
+If IsError(ThisWorkbook.Sheets("Report").Range("C2")) = True Then Exit Sub
 
 Dim obj As New clsBasicData
 obj.DiaryReset

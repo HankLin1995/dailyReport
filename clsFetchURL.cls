@@ -56,7 +56,7 @@ On Error GoTo ERRORHANDLE
 With XMLHTTP
 
     .Open "GET", myURL, False
-    .send
+    .Send
     
     'Debug.Print myURL
     

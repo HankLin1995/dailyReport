@@ -356,7 +356,7 @@ End Sub
 Sub KeyInPGS(ByVal mydate As Date, ByVal pgs_total As Double)
 
 Set coll_rows = myFunc.getRowsByUser2("Diary", Format(mydate, "yyyy/mm/dd(aaa)"), 1, "報表日期")
-Sheets("Diary").Cells(coll_rows(1), 9) = pgs_total
+If coll_rows.Count <> 0 Then Sheets("Diary").Cells(coll_rows(1), 9) = pgs_total
 
 End Sub
 

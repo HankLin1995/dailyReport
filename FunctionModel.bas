@@ -271,10 +271,43 @@ obj.ToPaper
 
 End Sub
 
+Sub cmdOpenCheck()
+
+Dim coll_rows As New Collection
+
+For Each rng In Selection
+
+    On Error Resume Next
+    coll_rows.Add rng.Row, CStr(rng.Row)
+    On Error GoTo 0
+
+Next
+
+With Sheets("Check")
+
+For Each r In coll_rows
+
+    MyCode = .Cells(r, 2)
+    myNum = .Cells(r, 3)
+    
+    If MyCode <> "" Then
+        
+        myFilePath = getThisWorkbookPath & "\抽查表Output\" & MyCode & "-" & myNum & ".xls"
+    
+        Workbooks.Open (myFilePath)
+
+    End If
+
+Next
+
+End With
+
+End Sub
+
 Sub cmdPrintCheck()
-
+'
 'MsgBox "測試中..."
-
+'
 'Exit Sub
 
 Dim obj As New clsCheck
@@ -419,6 +452,8 @@ o.addNewDiaryDays
 'endDate = obj.GetEndDate
 '
 'obj.ProgressNew
+
+Sheets("Report").Range("C2") = "=VLOOKUP(K2,Diary!$1:$65536,2)"
 
 End Sub
 
@@ -926,6 +961,10 @@ MsgBox "找不到該日報表，請全部更新後再試一次!", vbCritical
 
 End If
 
+'Call SendEmail("apple84026113@gmail.com", getThisWorkbookPath & "\抽查表Output\EN-" & j & ".xls")
+
+'MsgBox "已將信件發送給主辦提請抽查!", vbInformation
+
 End Sub
 
 Sub cmdMergeChecks()
@@ -994,7 +1033,8 @@ End Sub
 
 Sub cmdPastePhotos()
 
-Dim myFunc As clsMyfunction
+Dim myFunc As New clsMyfunction
+Dim FilePath As String
 Dim IsXLS As Boolean
 
 mode_msg = MsgBox("是否列印PDF?", vbInformation + vbYesNo)
@@ -1011,18 +1051,22 @@ For Each rng In Selection
 
     r = rng.Row
 
-    If r > 3 Then
+    If r > 2 Then
     
         check_index = .Cells(r, 2)
         check_num = .Cells(r, 3)
     
-        filePath = getThisWorkbookPath & "\查驗照片Output\" & check_index & "-" & check_num & ".xls"
+        FilePath = getThisWorkbookPath & "\查驗照片Output\" & check_index & "-" & check_num & ".xls"
     
-        If myFunc.IsFileExists(filePath) = True Then
+        If myFunc.IsFileExists(FilePath) = True Then
         
             msg = MsgBox("查驗照片Output中已存在【" & check_index & "-" & check_num & "】，是否要取代?", vbYesNo + vbInformation)
             
             If msg = vbYes Then Call PastePhoto(r, IsXLS)
+            
+        Else
+        
+            Call PastePhoto(r, IsXLS)
         
         End If
     
@@ -1189,11 +1233,26 @@ Call myFunc.BubbleSort_coll(coll)
 
 Set coll_rows = myFunc.ReverseColl(coll)
 
-For Each r In coll_rows
+With Sheets("Check")
 
-    Sheets("Check").Rows(r).Delete
+For Each r In coll_rows
+    
+    MyCode = .Cells(r, 2)
+    myNum = .Cells(r, 3)
+    
+    myFilePath = getThisWorkbookPath & "\查驗照片Output\" & MyCode & "-" & myNum & ".xls"
+    
+    If myFunc.IsFileExists(myFilePath) = True Then Kill myFilePath
+    
+    myFilePath = getThisWorkbookPath & "\抽查表Output\" & MyCode & "-" & myNum & ".xls"
+    
+    If myFunc.IsFileExists(myFilePath) = True Then Kill myFilePath
+    
+    .Rows(r).Delete
     
 Next
+
+End With
 
 Exit Sub
 ERRORHANDLE:

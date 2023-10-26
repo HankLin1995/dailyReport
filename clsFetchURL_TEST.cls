@@ -41,7 +41,7 @@ Function ExecHTTP(ByVal myURL As String)
 With XMLHTTP
 
     .Open "GET", myURL, False
-    .send
+    .Send
 
     
     If .Status = 200 Then

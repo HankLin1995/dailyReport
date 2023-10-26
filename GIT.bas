@@ -40,13 +40,13 @@ Sub killFilesInFolder(folderPath)
 
 Set coll_path = GetFilePathsInFolder(folderPath)
 
-For Each filePath In coll_path
+For Each FilePath In coll_path
 
-    filename = mid(filePath, InStrRev(filePath, "\") + 1)
-    fileExtension = mid(filename, InStrRev(filename, ".") + 1)
+    FileName = mid(FilePath, InStrRev(FilePath, "\") + 1)
+    fileExtension = mid(FileName, InStrRev(FileName, ".") + 1)
     
     If fileExtension = "frm" Or fileExtension = "bas" Or fileExtension = "cls" Or fileExtension = "doccls" Then
-        Kill filePath
+        Kill FilePath
     End If
 Next
 
@@ -58,23 +58,23 @@ myFolder = getSavedFolder
 
 Set coll_path = GetFilePathsInFolder(myFolder)
 
-For Each filePath In coll_path
+For Each FilePath In coll_path
 
-    filename = mid(filePath, InStrRev(filePath, "\") + 1)
-    fileExtension = mid(filename, InStrRev(filename, ".") + 1)
+    FileName = mid(FilePath, InStrRev(FilePath, "\") + 1)
+    fileExtension = mid(FileName, InStrRev(FileName, ".") + 1)
     
     If fileExtension = "frm" Or fileExtension = "bas" Or fileExtension = "cls" Then
-        Call ImportCode(filePath, filename)
+        Call ImportCode(FilePath, FileName)
     End If
 
 Next
 
 End Sub
 
-Sub ImportCode(ByVal filePath As String, ByVal filename As String)
+Sub ImportCode(ByVal FilePath As String, ByVal FileName As String)
 
-extension = mid(filename, InStrRev(filename, ".") + 1)
-CodeName = mid(filename, 1, InStrRev(filename, ".") - 1)
+extension = mid(FileName, InStrRev(FileName, ".") + 1)
+CodeName = mid(FileName, 1, InStrRev(FileName, ".") - 1)
 
 If CodeName = "GIT" Then Exit Sub
 
@@ -87,7 +87,7 @@ Set VBProj = ThisWorkbook.VBProject
 '
 'End If
 
-VBProj.VBComponents.Import (filePath)
+VBProj.VBComponents.Import (FilePath)
 
 End Sub
 
@@ -180,24 +180,24 @@ Next
 
 End Function
 
-Function CountFileLines(ByVal filePath)
+Function CountFileLines(ByVal FilePath)
 
     Dim fileContent As String
-    Dim fileNumber As Integer
+    Dim FileNumber As Integer
     Dim lineCount As Long
     
     ' Open the text file
-    fileNumber = FreeFile
-    Open filePath For Input As fileNumber
+    FileNumber = FreeFile
+    Open FilePath For Input As FileNumber
     
     ' Read the file content line by line and count the lines
-    Do Until EOF(fileNumber)
-        Line Input #fileNumber, fileContent
+    Do Until EOF(FileNumber)
+        Line Input #FileNumber, fileContent
         lineCount = lineCount + 1
     Loop
     
     ' Close the file
-    Close fileNumber
+    Close FileNumber
     
     ' Display the line count in cell A1
     CountFileLines = lineCount

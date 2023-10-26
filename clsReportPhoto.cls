@@ -106,7 +106,9 @@ If IsXLS Then
 
     Application.DisplayAlerts = False
     wb.Sheets("쨠�@ろ1").Delete
-    wb.SaveAs getThisWorkbookPath & "\촥톨롭ㆉOutput\" & checkitem & "-" & check_num & ".xls", FileFormat:=xlExcel8
+    myFileName = getThisWorkbookPath & "\촥톨롭ㆉOutput\" & checkitem & "-" & check_num
+    wb.SaveAs myFileName & ".xls", FileFormat:=xlExcel8
+    wb.ExportAsFixedFormat Type:=xlTypePDF, FileName:=myFileName, Quality:=xlQualityStandard, IncludeDocProperties:=True, IgnorePrintAreas:=False, OpenAfterPublish:=False
     wb.Close
     Application.DisplayAlerts = True
     
@@ -116,17 +118,17 @@ End With
 
 End Sub
 
-Sub PrintXLS(ByVal filename As String)
+Sub PrintXLS(ByVal FileName As String)
 
 shtReport.Copy after:=wb.Sheets(wb.Sheets.Count)
 
-filename = Replace(filename, "\", "1")
+FileName = Replace(FileName, "\", "1")
 
-wb.Sheets(wb.Sheets.Count).Name = filename
+wb.Sheets(wb.Sheets.Count).Name = FileName
 
 End Sub
 
-Sub PrintReport(ByVal filename As String)
+Sub PrintReport(ByVal FileName As String)
 
 wbpath = getThisWorkbookPath
 
@@ -136,8 +138,8 @@ On Error Resume Next
 MkDir wbpath & "\" & "촥톨롭ㆉOutput"
 On Error GoTo 0
 
-ActiveSheet.ExportAsFixedFormat Type:=xlTypePDF, filename:= _
-wbpath & "\" & "촥톨롭ㆉOutput\" & filename, Quality:= _
+ActiveSheet.ExportAsFixedFormat Type:=xlTypePDF, FileName:= _
+wbpath & "\" & "촥톨롭ㆉOutput\" & FileName, Quality:= _
 xlQualityStandard, IncludeDocProperties:=True, IgnorePrintAreas:=False, _
 OpenAfterPublish:=False
 

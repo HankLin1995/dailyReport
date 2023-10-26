@@ -98,7 +98,7 @@ Dim initialFolder As String
 
 If Me.txtFilePath = "" Then
 
-initialFolder = getThisWorkbookPath
+initialFolder = getThisWorkbookPath & "\¬I¤u·Ó¤ù\"
 
 Else
 

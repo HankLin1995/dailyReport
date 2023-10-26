@@ -7,7 +7,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
-Private filename As String
+Private FileName As String
 Private sht As Object
 
 Sub BeforePrintCheck()
@@ -43,7 +43,7 @@ For i = sr To er
         
         On Error Resume Next
         
-        ActiveSheet.ExportAsFixedFormat Type:=xlTypePDF, filename:= _
+        ActiveSheet.ExportAsFixedFormat Type:=xlTypePDF, FileName:= _
         wbpath & "\" & "監造日報表Output\" & Range("K2"), Quality:= _
         xlQualityStandard, IncludeDocProperties:=True, IgnorePrintAreas:=False, _
         OpenAfterPublish:=False
@@ -99,7 +99,7 @@ Sub ToPDF_Check(ByVal sht As Worksheet, ByVal fname As String, ByVal mode) '查驗
     
     On Error Resume Next
     
-    sht.ExportAsFixedFormat Type:=xlTypePDF, filename:= _
+    sht.ExportAsFixedFormat Type:=xlTypePDF, FileName:= _
     wbpath & "\" & "查驗表Output\" & fname, Quality:= _
     xlQualityStandard, IncludeDocProperties:=True, IgnorePrintAreas:=False, _
     OpenAfterPublish:=False
@@ -221,6 +221,10 @@ Sub SpecificShtToXLS(ByVal shtName As String, Optional file_path As String = "",
 
 Application.DisplayAlerts = False
 
+visible_status = ThisWorkbook.Sheets(shtName).Visible
+
+If visible_status <> True Then ThisWorkbook.Sheets(shtName).Visible = True
+
 Set wb = Workbooks.Add
     
     ThisWorkbook.Sheets(shtName).Copy (wb.Sheets(1))
@@ -239,11 +243,12 @@ wb.Sheets("工作表1").Delete
 
 If file_path <> "False" And file_path <> "" Then
 
-    wb.SaveAs filename:=file_path, FileFormat:=xlExcel8
+    wb.SaveAs FileName:=file_path, FileFormat:=xlExcel8
     wb.Close
     
 End If
 
+ThisWorkbook.Sheets(shtName).Visible = visible_status
 Application.DisplayAlerts = True
 
 End Sub
@@ -268,7 +273,7 @@ wb.Sheets("工作表1").Delete
 
 If file_path <> "False" And file_path <> "" Then
 
-    wb.SaveAs filename:=file_path, FileFormat:=xlExcel8
+    wb.SaveAs FileName:=file_path, FileFormat:=xlExcel8
     wb.Close
     
 End If
@@ -281,14 +286,14 @@ Sub combineFiles(ByVal coll_path_sort)
 
 Set wb_combine = Workbooks.Add
 
-For Each filePath In coll_path_sort
+For Each FilePath In coll_path_sort
 
-    filename = mid(filePath, InStrRev(filePath, "\") + 1)
-    fileExtension = mid(filename, InStrRev(filename, ".") + 1)
+    FileName = mid(FilePath, InStrRev(FilePath, "\") + 1)
+    fileExtension = mid(FileName, InStrRev(FileName, ".") + 1)
     
-    filename_short = mid(filename, 1, InStrRev(filename, ".") - 1)
+    filename_short = mid(FileName, 1, InStrRev(FileName, ".") - 1)
     
-    Set wb_check = Workbooks.Open(filePath)
+    Set wb_check = Workbooks.Open(FilePath)
     
     For Each sht In wb_check.Sheets
     

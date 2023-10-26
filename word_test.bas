@@ -69,6 +69,6 @@ targetDoc.Range.ParagraphFormat.SpaceAfter = sourceDoc.Range.ParagraphFormat.Spa
 targetDoc.Range.Font.Name = sourceDoc.Range.Font.Name
 targetDoc.Range.Font.Size = sourceDoc.Range.Font.Size
 targetDoc.Range.ParagraphFormat.Alignment = sourceDoc.Range.ParagraphFormat.Alignment
-targetDoc.SaveAs filename:="提取的頁面.docx", FileFormat:=wdFormatXMLDocument
+targetDoc.SaveAs FileName:="提取的頁面.docx", FileFormat:=wdFormatXMLDocument
 
 End Sub

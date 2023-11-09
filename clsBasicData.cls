@@ -273,8 +273,17 @@ With shtMain
         If TargetItem = .Cells(r, 1) Then
         
             frmData.lblUnit = .Cells(r, 3) '將試驗單價改為試驗單位
-            frmData.lblLast = .Cells(r, 2 + t_change * 3)
-            frmData.lblStore = .Cells(r, 2 + t_change * 3)
+            
+            testNum = .Cells(r, 2 + t_change * 3)
+            
+            If testNum = "" Then
+            
+                testNum = .Cells(r, 2)
+            
+            End If
+        
+            frmData.lblLast = testNum '.Cells(r, 2 + t_change * 3)
+            frmData.lblStore = testNum '.Cells(r, 2 + t_change * 3)
             
         End If
         

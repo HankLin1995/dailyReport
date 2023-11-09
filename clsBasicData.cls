@@ -274,14 +274,10 @@ With shtMain
         
             frmData.lblUnit = .Cells(r, 3) '將試驗單價改為試驗單位
             
-            testNum = .Cells(r, 2 + t_change * 3)
+            tmp = split(.Cells(r, 2), ",")
             
-            If testNum = "" Then
+            testNum = getTargetIndex(tmp, t_change)
             
-                testNum = .Cells(r, 2)
-            
-            End If
-        
             frmData.lblLast = testNum '.Cells(r, 2 + t_change * 3)
             frmData.lblStore = testNum '.Cells(r, 2 + t_change * 3)
             
@@ -292,6 +288,24 @@ With shtMain
 End With
 
 End Sub
+
+Function getTargetIndex(ByVal arr, ByVal cnt As Integer)
+
+i = UBound(arr)
+
+If cnt <= i Then
+
+    getTargetIndex = arr(cnt)
+
+
+Else
+
+    getTargetIndex = arr(i)
+    MsgBox "變更次數【" & cnt & "】大於試驗設定次數【" & i & "】,以最後一期為計算!"
+    
+End If
+
+End Function
 
 Sub RetrunUnit_Mix() '查詢TargetItem對應剩餘數、單位
 

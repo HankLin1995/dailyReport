@@ -1,5 +1,27 @@
 Attribute VB_Name = "UnitTest"
 
+Sub unitTest_getTargetIndex()
+
+s = "1,2"
+
+tmp = split(s, ",")
+
+Dim o As New clsBasicData
+
+result = o.getTargetIndex(tmp, 1)
+
+Debug.Assert result = "2"
+
+result = o.getTargetIndex(tmp, 2)
+
+Debug.Assert result = "2"
+
+result = o.getTargetIndex(tmp, 0)
+
+Debug.Assert result = "1"
+
+End Sub
+
 Sub unitTest_countCheckLists()
 
 check_date = CDate("2023/8/2")

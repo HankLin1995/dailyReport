@@ -266,7 +266,7 @@ End With
 
 Call extractToMainTest(coll_tests)
 
-Call cmdResetReport
+'Call cmdResetReport
 
 End Sub
 
@@ -423,36 +423,6 @@ getWorkbookName = coll(myIndex)
 End If
 
 End Function
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 Function splitPhotoList(ByVal s As String)
 

@@ -548,10 +548,14 @@ With shtDiary
     key_value = Format(recDate, "yyyy/mm/dd(aaa)")
     Set rng = .Columns("B").Find(what:=key_value, LookIn:=xlValues)
     
+    If Not rng Is Nothing Then
+    
     r = rng.Row
         
     If s1 <> "" And .Cells(r, "E").Interior.ColorIndex = -4142 Then .Cells(r, 5) = s1
     If s2 <> "" And .Cells(r, "F").Interior.ColorIndex = -4142 Then .Cells(r, 6) = s2
+            
+    End If
             
 
 End With

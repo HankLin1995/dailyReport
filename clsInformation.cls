@@ -198,7 +198,7 @@ getContractChangesByDate = cnt - 1
 
 If cnt = 0 Then
 
-MsgBox "日期需在開工日期【" & startDate & "】之後!", vbCritical: End
+MsgBox "日期需在開工日期【" & startDate & "】之後!", vbCritical ': End
 
 End If
 

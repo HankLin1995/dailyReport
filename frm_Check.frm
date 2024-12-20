@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} frm_Check 
    Caption         =   "©â¬d¬ö¿ýªí³æ"
-   ClientHeight    =   9285.001
+   ClientHeight    =   9285
    ClientLeft      =   120
    ClientTop       =   465
    ClientWidth     =   11970
@@ -13,6 +13,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
 
 
 

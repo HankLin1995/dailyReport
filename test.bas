@@ -1,5 +1,56 @@
 Attribute VB_Name = "test"
+Sub test_bindBudgetIndex()
 
+With Sheets("Budget")
+
+    If .Cells(2, "H") <> "層" Then
+    
+        .Cells(2, "H") = "層"
+        MsgBox "請開始填寫目前的分類屬於PCCES的第幾層"
+    
+    Else
+
+        lr = .Cells(.Rows.Count, "H").End(xlUp).Row
+        
+        For r = 3 To lr
+        
+            '取得第一層及r
+            lay = .Cells(r, "H")
+            txt = .Cells(r, "A")
+            
+            If lay = 1 Then
+            
+                index_1 = txt
+                new_txt = index_1
+                
+            ElseIf lay = 2 Then
+            
+                index_2 = index_1 & "." & txt
+                new_txt = index_2
+                
+            ElseIf lay = 3 Then
+            
+                index_3 = index_2 & "." & txt
+                new_txt = index_3
+            
+            ElseIf lay = 4 Then
+            
+                index_4 = index_3 & "." & txt
+                new_txt = index_4
+                
+            End If
+            
+            .Cells(r, "A") = new_txt
+            
+        Next
+
+        .Columns("H").Delete
+
+    End If
+
+End With
+
+End Sub
 Sub test_collectFilePaths()
 
 Dim f As New clsMyfunction
@@ -423,6 +474,36 @@ getWorkbookName = coll(myIndex)
 End If
 
 End Function
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 Function splitPhotoList(ByVal s As String)
 

@@ -268,6 +268,36 @@ Function getMixItems()
 
 Dim coll As New Collection
 
+With Sheets("Mix") 'get item orders by records
+
+    lr = .Cells(.Rows.Count, 1).End(xlUp).Row
+    
+    For r = 3 To lr
+    
+        s = .Cells(r, "A")
+    
+        Set rng = Sheets("Records").Columns("J").Find(s)
+    
+        If s <> "" And Not rng Is Nothing Then
+    
+        On Error Resume Next
+        coll.Add s, CStr(s)
+        On Error GoTo 0
+    
+        End If
+    
+    Next
+    
+    Set getMixItems = coll
+
+End With
+
+End Function
+
+Function getMixItems2()
+
+Dim coll As New Collection
+
 With Sheets("Records") 'get item orders by records
 
     lr = .Cells(.Rows.Count, 1).End(xlUp).Row

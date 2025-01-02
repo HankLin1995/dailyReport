@@ -28,6 +28,124 @@ End With
 
 End Sub
 
+
+Sub plotBarProgressByChname() 'ByVal chname As String)
+
+chname = InputBox("請輸入渠道名稱")
+
+Dim myfunc As New clsMyfunction
+
+specific_date = Format(Now(), "yyyy/m/d")
+
+Call clearAllShape
+
+Set collMixItems = getMixItemsByChname(chname)
+Set collPropIndex = getSepIndexByChname(chname)
+
+'myIndexs = getShowIndex(collMixItems)
+
+X_gap = 120
+Y_origin = CDbl(InputBox("請輸入起始樁號")) - 50
+
+For Each i In collMixItems
+    
+    targetMix = i
+    
+    prop = getPropByMixName(targetMix) '取得分類
+    '取得分類所處Index
+    myindex = myfunc.getCollIndex(collPropIndex, prop)
+    
+    Set collDoLoc = getDoLocationsByMix(targetMix)
+    
+    X0 = myindex * X_gap + 20 'X0 + X_gap '這裡會每跳一次就累加120
+    X1 = X0
+    
+    Debug.Print X0
+    
+    Call AddText(X0 - 50 / 2, 15, 15, 70, targetMix, 2)
+    
+    For Each it2 In collDoLoc
+    
+        Debug.Print targetMix & ":" & it2
+        
+        tmp = split(it2, ";")
+
+        tmp_date = tmp(1)
+        Call getSLocAndELoc(tmp(0), sloc, eloc)
+        
+        Y0 = sloc - Y_origin
+        Y1 = eloc - Y_origin
+    
+        Call AddLine(X0, Y0, X1, Y1)
+        
+        Call AddText(X0 + 10, (Y0 + Y1) / 2 - 15 / 2, 15, 50, tmp_date)
+        
+        Call AddText(X0 - 40, Y0 - 15 / 2, 15, 30, split(tmp(0), "~")(0), 1)
+        Call AddText(X0 - 40, Y1 - 15 / 2, 15, 30, split(tmp(0), "~")(1), 1)
+
+    Next
+
+Next
+
+Call AddPaper(X0 + X_gap, 1000)
+
+Dim o As New clsPrintOut
+
+o.SpecificShtToXLS ("plot")
+
+End Sub
+
+Function getSepIndexByChname(ByVal chname As String)
+
+    'chanme = "土厝小排2-5"
+    
+    Dim coll As New Collection
+    
+    With Sheets("Mix")
+    
+        lr = .Cells(.Rows.Count, 1).End(xlUp).Row
+        
+        For r = 2 To lr
+        
+            If .Cells(r, "I") = chname Then
+            
+                prop = .Cells(r, "J")
+                
+                If prop <> "" Then
+                
+                    On Error Resume Next
+                    
+                    coll.Add prop, CStr(prop)
+                    
+                    On Error GoTo 0
+                
+                End If
+                
+            End If
+        
+        Next
+    
+    End With
+    
+    Set getSepIndexByChname = coll
+
+
+End Function
+
+Function getPropByMixName(ByVal mix_name As String)
+
+With Sheets("Mix")
+
+Set rng = .Columns("A").Find(mix_name)
+
+r = rng.Row
+
+getPropByMixName = .Cells(r, "J")
+
+End With
+
+End Function
+
 Sub plotBarProgress()
 
 specific_date = Format(Now(), "yyyy/m/d")
@@ -49,7 +167,7 @@ For Each i In myIndexs
     
     Set collDoLoc = getDoLocationsByMix(targetMix)
     
-    X0 = X0 + X_gap
+    X0 = X0 + X_gap '這裡會每跳一次就累加120
     X1 = X0
     
     Call AddText(X0 - 50 / 2, 15, 15, 70, targetMix, 2)
@@ -84,6 +202,11 @@ Dim o As New clsPrintOut
 o.SpecificShtToXLS ("plot")
 
 End Sub
+
+Function getX0_ByPropIndex(ByVal prop As String)
+
+
+End Function
 
 Function getShowIndex(ByVal collMixItems)
 
@@ -289,6 +412,37 @@ With Sheets("Mix") 'get item orders by records
     Next
     
     Set getMixItems = coll
+
+End With
+
+End Function
+
+Function getMixItemsByChname(ByVal chname As String)
+
+Dim coll As New Collection
+
+With Sheets("Mix") 'get item orders by records
+
+    lr = .Cells(.Rows.Count, 1).End(xlUp).Row
+    
+    For r = 3 To lr
+    
+        s = .Cells(r, "A")
+        ch = .Cells(r, "I")
+    
+        Set rng = Sheets("Records").Columns("J").Find(s)
+    
+        If s <> "" And Not rng Is Nothing And ch = chname Then
+    
+        On Error Resume Next
+        coll.Add s, CStr(s)
+        On Error GoTo 0
+    
+        End If
+    
+    Next
+    
+    Set getMixItemsByChname = coll
 
 End With
 

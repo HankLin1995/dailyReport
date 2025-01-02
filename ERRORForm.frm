@@ -22,6 +22,8 @@ Attribute VB_Exposed = False
 
 
 
+
+
 Private Sub cmdSubmit_Click()
 
 '=====SignDetail==========
@@ -45,6 +47,3 @@ Unload Me
     
 End Sub
 
-Private Sub UserForm_Click()
-
-End Sub

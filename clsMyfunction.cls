@@ -779,17 +779,17 @@ Function IsRecLocPass(ByVal rec_loc As String, ByVal item_loc As String) ', ByVa
 
 IsRecLocPass = False
 
-Dim myFunc As New clsMyfunction
+Dim myfunc As New clsMyfunction
 
 tmp = split(rec_loc, "~")
 
-rec_sloc = myFunc.TranLoc(tmp(0))
-rec_eloc = myFunc.TranLoc(tmp(1))
+rec_sloc = myfunc.TranLoc(tmp(0))
+rec_eloc = myfunc.TranLoc(tmp(1))
 
 tmp2 = split(item_loc, "~")
 
-item_sloc = myFunc.TranLoc(tmp2(0))
-item_eloc = myFunc.TranLoc(tmp2(1))
+item_sloc = myfunc.TranLoc(tmp2(0))
+item_eloc = myfunc.TranLoc(tmp2(1))
 
 'If rec_sloc = 0 Then
 '    err_prompt = "表單起點【" & tmp(0) & "】請再檢查。": Exit Function
@@ -870,6 +870,20 @@ If fso.FileExists(file_path) = True Then
 Else
     IsFileExists = False
 End If
+
+End Function
+
+Function getCollIndex(ByVal coll, ByVal item As String) '20250102
+
+getCollIndex = 0
+
+For Each it In coll
+
+    j = j + 1
+
+    If it = item Then getCollIndex = j: Exit Function
+
+Next
 
 End Function
 

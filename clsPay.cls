@@ -12,7 +12,7 @@ Public pay_date As Date
 Private shtPay As Object
 Private PCCES_obj As New clsPCCES
 Private Inf_obj As New clsInformation
-Private myFunc As New clsMyfunction
+Private myfunc As New clsMyfunction
 
 Private Sub Class_Initialize()
 
@@ -67,7 +67,7 @@ With Sheets("PAY")
     
         item_name = .Cells(r, 2)
         
-        Set coll_rows = myFunc.getRowsByUser("Budget", "B", item_name)
+        Set coll_rows = myfunc.getRowsByUser("Budget", "B", item_name)
         
         With Sheets("Budget")
         
@@ -131,7 +131,7 @@ With Sheets("PAY")
             pay_money = item_contract_money * pay_num
         
             arr = Array(item_index, item_name, item_unit, pay_num, pay_money, pay_date)
-            Call myFunc.AppendData("PAY_EX", arr)
+            Call myfunc.AppendData("PAY_EX", arr)
         
         End If
         
@@ -146,7 +146,7 @@ Sub exportPayNumToReport()
 Call clearPAY_Report
 
 Dim PCCES_obj As New clsPCCES
-Dim myFunc As New clsMyfunction
+Dim myfunc As New clsMyfunction
 
 Set coll_second_name = PCCES_obj.getCollSeconedName
 
@@ -154,9 +154,9 @@ For i = 1 To coll_second_name.Count
 
     item_second_name = coll_second_name(i)
     
-    arr_title = Array("第" & myFunc.ch(i) & "號明細表(" & item_second_name & ")")
+    arr_title = Array("第" & myfunc.ch(i) & "號明細表(" & item_second_name & ")")
     
-    Call myFunc.AppendData("PAY_Report", arr_title)
+    Call myfunc.AppendData("PAY_Report", arr_title)
 
     With Sheets("PAY")
     
@@ -190,7 +190,7 @@ For i = 1 To coll_second_name.Count
                     pay_num_ex, pay_cost_ex, pay_num, pay_cost, _
                     pay_num_sum, pay_cost_sum, item_num * item_contract_money)
                 
-                Call myFunc.AppendData("PAY_Report", arr)
+                Call myfunc.AppendData("PAY_Report", arr)
                 
                 c1 = c1 + pay_cost_ex
                 c2 = c2 + pay_cost
@@ -204,7 +204,7 @@ For i = 1 To coll_second_name.Count
 
     arr_sum = Array("計", , , , c1, , c2, , c3)
     
-    Call myFunc.AppendData("PAY_Report", arr_sum)
+    Call myfunc.AppendData("PAY_Report", arr_sum)
 
 Next
 
@@ -321,7 +321,7 @@ End Sub
 
 Sub getPayInfo()
 
-Dim myFunc As New clsMyfunction
+Dim myfunc As New clsMyfunction
 Dim inf As New clsInformation
 
 'Call inf.getBasicInformation
@@ -335,12 +335,12 @@ With Sheets("PAY_Report")
     
     'If IsPayDateLater(pay_date) = False Then msgbox End: Sheets("PAY").Activate
     
-    Set coll = myFunc.getUniqueItems("PAY_EX", 2, , "估驗日期")
+    Set coll = myfunc.getUniqueItems("PAY_EX", 2, , "估驗日期")
     
     .Range("G5") = pay_date
     .Range("D3") = getPayCounts + 1
     
-    Set coll_rows = myFunc.getRowsByUser("Diary", "B", Format(pay_date, "yyyy/mm/dd(aaa)"))
+    Set coll_rows = myfunc.getRowsByUser("Diary", "B", Format(pay_date, "yyyy/mm/dd(aaa)"))
 
     pgs = Sheets("Diary").Cells(coll_rows(1), "I")
     
@@ -368,7 +368,7 @@ End Sub
 
 Function getPayCounts()
 
-Set coll = myFunc.getUniqueItems("PAY_EX", 2, , "估驗日期")
+Set coll = myfunc.getUniqueItems("PAY_EX", 2, , "估驗日期")
 getPayCounts = coll.Count
 
 End Function
@@ -385,7 +385,7 @@ Function IsPayDateLater(ByVal pay_date As Date)
 
 IsPayDateLater = True
 
-Set coll = myFunc.getUniqueItems("PAY_EX", 2, , "估驗日期")
+Set coll = myfunc.getUniqueItems("PAY_EX", 2, , "估驗日期")
 
 If coll.Count = 0 Then
     Exit Function
@@ -403,7 +403,7 @@ End Function
 
 Function getPayDates()
 
-Set getPayDates = myFunc.getUniqueItems("PAY_EX", 2, , "估驗日期")
+Set getPayDates = myfunc.getUniqueItems("PAY_EX", 2, , "估驗日期")
 
 End Function
 
@@ -413,7 +413,7 @@ With Sheets("PAY_EX")
 
 lc = .Cells(1, 1).End(xlToRight).Column
 
-Set coll_rows = myFunc.getRowsByUser("PAY_EX", "B", item_name)
+Set coll_rows = myfunc.getRowsByUser("PAY_EX", "B", item_name)
 
 For Each r In coll_rows
     
@@ -434,7 +434,7 @@ With Sheets("PAY_EX")
 
 lc = .Cells(1, 1).End(xlToRight).Column
 
-Set coll_rows = myFunc.getRowsByUser("PAY_EX", "B", item_name)
+Set coll_rows = myfunc.getRowsByUser("PAY_EX", "B", item_name)
 
 For Each r In coll_rows
     

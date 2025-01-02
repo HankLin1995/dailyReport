@@ -22,7 +22,7 @@ Private RecCheck As New Collection
 Private RecCheckType As New Collection
 Private RecDateArr As Variant
 
-Private myFunc As New clsMyfunction
+Private myfunc As New clsMyfunction
 
 Private Sub Class_Initialize()
 
@@ -146,7 +146,7 @@ Sub ReadData_Mix() 'ByRef IsLocOK As Boolean)
 
 'IsLocOK = True
 
-Dim myFunc As New clsMyfunction
+Dim myfunc As New clsMyfunction
 
 With MixData_Main
 
@@ -219,7 +219,7 @@ With shtRecord
 '
 '    Next
     
-    Call myFunc.AppendData("Records", arr)
+    Call myfunc.AppendData("Records", arr)
 
     'Call obj.FindTestNum(RecItem, RecAmount, RecLast, recDate)
 
@@ -268,7 +268,7 @@ With shtRecord
             arr = Array("M-" & lr - 2, recDate, RecChannelName, RecLocation, RecItem, RecAmount, RecUnit)
         End If
         
-        Call myFunc.AppendData("Records", arr)
+        Call myfunc.AppendData("Records", arr)
 
     Next
 
@@ -403,9 +403,9 @@ Sub cmdExportToDiary_Main()
 
 Call sortRecords
 
-Dim myFunc As New clsMyfunction
+Dim myfunc As New clsMyfunction
 
-Set coll_recDates = myFunc.getUniqueItems("Records", 3, "B")
+Set coll_recDates = myfunc.getUniqueItems("Records", 3, "B")
 
 For Each recDate_str In coll_recDates
     
@@ -448,9 +448,9 @@ End Sub
 
 Function getRecordsByDate(ByVal recDate As Date) 'for diary
 
-Dim myFunc As New clsMyfunction
+Dim myfunc As New clsMyfunction
 
-Set coll_rows = myFunc.getRowsByUser("Records", "B", recDate)
+Set coll_rows = myfunc.getRowsByUser("Records", "B", recDate)
 
 For i = 1 To coll_rows.Count
 
@@ -564,7 +564,7 @@ End Sub
 
 Sub getTmpData() 'ByVal IsBlank As Boolean)
 
-Dim myFunc As New clsMyfunction
+Dim myfunc As New clsMyfunction
 Dim PCCES_obj As New clsPCCES
 
 Set shtTmp = Sheets("TMP")
@@ -578,14 +578,14 @@ End With
 
 With shtRecord
     
-    Set coll_chname = myFunc.getUniqueItems("Records", 3, , "渠道名稱")
+    Set coll_chname = myfunc.getUniqueItems("Records", 3, , "渠道名稱")
     Set coll_items = PCCES_obj.getRecordingItemsAll
 
     For Each mychname In coll_chname
 
         For Each item_name In coll_items
         
-            Set coll_rows = myFunc.getRowsByUser2("Records", mychname, 2, "渠道名稱")
+            Set coll_rows = myfunc.getRowsByUser2("Records", mychname, 2, "渠道名稱")
     
             rec_sum = 0
     
@@ -604,7 +604,7 @@ With shtRecord
             Next
             
             arr = Array(mychname, item_name, rec_sum, rec_unit)
-            Call myFunc.AppendData("TMP", arr)
+            Call myfunc.AppendData("TMP", arr)
         
         Next
 
@@ -866,9 +866,9 @@ End Function
 
 Sub getNumAndSumByItemName(ByVal item_name As String, ByVal report_date, ByRef RecAmount, ByRef RecSumAmount)
 
-Dim myFunc As New clsMyfunction
+Dim myfunc As New clsMyfunction
 
-Set rec_rows = myFunc.getRowsByUser("Records", "E", item_name)
+Set rec_rows = myfunc.getRowsByUser("Records", "E", item_name)
 
 RecAmount = 0
 RecSumAmount = 0
@@ -893,13 +893,13 @@ Sub getReportSum()
 Sheets("Report_Sum").Range("A9:L40").ClearContents
 
 Dim REC_obj As New clsRecord
-Dim myFunc As New clsMyfunction
+Dim myfunc As New clsMyfunction
 Dim PCCES_obj As New clsPCCES
 Dim Inf_obj As New clsInformation
 
 Set coll_items = PCCES_obj.getRecordingItemsAll
 
-myFunc.showList (coll_items)
+myfunc.showList (coll_items)
 
 s_date = CDate(InputBox("請輸入統計起始日期", , Inf_obj.startDate))
 e_date = CDate(InputBox("請輸入統計結束日期", , Format(Now(), "yyyy/mm/dd")))
@@ -916,7 +916,7 @@ For Each rec_item In coll_items
     Call REC_obj.getNumAndSumByItemName(rec_item, s_date, rec_num_s, rec_sum_s)
     Call REC_obj.getNumAndSumByItemName(rec_item, e_date, rec_num_e, rec_sum_e)
 
-    Set coll_rows = myFunc.getRowsByUser2("Budget", rec_item, 2, "工程項目")
+    Set coll_rows = myfunc.getRowsByUser2("Budget", rec_item, 2, "工程項目")
     
     item_unit = Sheets("Budget").Cells(coll_rows(1), 3)
     item_num = Sheets("Budget").Cells(coll_rows(1), PCCES_obj.t_change_to_column(t_change))
@@ -969,8 +969,8 @@ rec_name = frmData.cboItem
 rec_loc_all = frmData.txtWhere
 rec_canal = frmData.cboChannel
 
-Set coll_rec_locs = myFunc.SplitAllLocs(rec_loc_all)
-Set coll_rows = myFunc.getRowsByUser2("Records", rec_name, 2, "施作項目")
+Set coll_rec_locs = myfunc.SplitAllLocs(rec_loc_all)
+Set coll_rows = myfunc.getRowsByUser2("Records", rec_name, 2, "施作項目")
 
 With Sheets("Records")
 
@@ -979,15 +979,15 @@ With Sheets("Records")
         item_loc_origin = .Cells(r, "D")
         my_rec_canal = CStr(.Cells(r, "C"))
         
-        If my_rec_canal = rec_canal And myFunc.IsNumericWithPlusAndParentheses(CStr(rec_loc)) = True Then
+        If my_rec_canal = rec_canal And myfunc.IsNumericWithPlusAndParentheses(CStr(rec_loc)) = True Then
         
-            Set coll_item_locs = myFunc.SplitAllLocs(item_loc_origin)
+            Set coll_item_locs = myfunc.SplitAllLocs(item_loc_origin)
             
             For Each rec_loc In coll_rec_locs
             
                 For Each item_loc In coll_item_locs
                 
-                    If myFunc.IsRecLocPass(rec_loc, item_loc) = False Then
+                    If myfunc.IsRecLocPass(rec_loc, item_loc) = False Then
                         getMixLocPrompt_REC = "第" & r & "列:【" & item_loc & "】與表單填報【" & rec_loc & "】衝突!": Exit Function
                     End If
                 
@@ -1008,8 +1008,8 @@ Function getMixLocPrompt_MIX() 'ByVal mix_name As String, ByVal rec_loc As Strin
 mix_name = MixData_Main.cboItem
 rec_loc_all = MixData_Main.txtWhere
 
-Set coll_rec_locs = myFunc.SplitAllLocs(rec_loc_all)
-Set coll_rows = myFunc.getRowsByUser2("Records", mix_name, 2, "組合工項")
+Set coll_rec_locs = myfunc.SplitAllLocs(rec_loc_all)
+Set coll_rows = myfunc.getRowsByUser2("Records", mix_name, 2, "組合工項")
 
 With Sheets("Records")
 
@@ -1017,15 +1017,15 @@ With Sheets("Records")
     
         item_loc_origin = .Cells(r, "D")
 
-        If myFunc.IsNumericWithPlusAndParentheses(CStr(rec_loc)) = True Then
+        If myfunc.IsNumericWithPlusAndParentheses(CStr(rec_loc)) = True Then
         
-            Set coll_item_locs = myFunc.SplitAllLocs(item_loc_origin)
+            Set coll_item_locs = myfunc.SplitAllLocs(item_loc_origin)
         
             For Each rec_loc In coll_rec_locs
         
                 For Each item_loc In coll_item_locs
             
-                    If myFunc.IsRecLocPass(rec_loc, item_loc) = False Then
+                    If myfunc.IsRecLocPass(rec_loc, item_loc) = False Then
                         getMixLocPrompt_MIX = "第" & r & "列:【" & item_loc & "】與表單填報【" & rec_loc & "】衝突!": Exit Function
                     End If
                 
@@ -1044,9 +1044,9 @@ End Function
 Function getExistLocByRecDate(ByVal check_date) ' As String)
 
 Dim coll_locs As New Collection
-Dim myFunc As New clsMyfunction
+Dim myfunc As New clsMyfunction
 
-Set coll_rows = myFunc.getRowsByUser("Records", "B", check_date)
+Set coll_rows = myfunc.getRowsByUser("Records", "B", check_date)
 
 'Set coll_locs = myFunc.getUniqueItemsInCollRows("Records", coll_rows, 2, , "施作位置")
 

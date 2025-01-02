@@ -197,20 +197,20 @@ With frmData
 
     For i = 1 To collChannel.Count
         
-        .cboChannel.AddItem collChannel.Item(i)
+        .cboChannel.AddItem collChannel.item(i)
     
     Next
     
     For i = 1 To collitem.Count '設定不顯示的百分比項目
     
         'If collItemRule.Item(i) <> 5 Then
-        .cboItem.AddItem collitem.Item(i)
+        .cboItem.AddItem collitem.item(i)
     
     Next
     
     For i = 1 To collTest.Count
     
-        .cboItem.AddItem collTest.Item(i)
+        .cboItem.AddItem collTest.item(i)
     
     Next
 
@@ -232,7 +232,7 @@ With MixData
     For i = 1 To collitem.Count '設定不顯示的百分比項目
     
         'If collItemRule.Item(i) <> 5 Then
-        .cboItem.AddItem collitem.Item(i)
+        .cboItem.AddItem collitem.item(i)
     
     Next
     
@@ -408,7 +408,7 @@ cnt = InputBox("請輸入工期")
 
 Sheets("Main").Range("B5") = cnt
 
-Dim myFunc As New clsMyfunction
+Dim myfunc As New clsMyfunction
 Dim Inf_obj As New clsInformation
 
 'Inf_obj.getBasicInformation
@@ -424,7 +424,7 @@ With Sheets("Diary")
     
         diary_date = startDate + i - 1
         
-        Call myFunc.AppendData("Diary", Array(i, diary_date, "晴"))
+        Call myfunc.AppendData("Diary", Array(i, diary_date, "晴"))
         
         '----set formula---
         
@@ -453,9 +453,9 @@ End Sub
 
 Sub addStopDays()
 
-Dim myFunc As New clsMyfunction
+Dim myfunc As New clsMyfunction
 
-Set coll_rows = myFunc.getUniqueItems("Diary", 2, , "預定進度")
+Set coll_rows = myfunc.getUniqueItems("Diary", 2, , "預定進度")
 
 If coll_rows.Count = 0 Then MsgBox "請先輸入預定進度資料!", vbCritical: End
 
@@ -490,7 +490,7 @@ With Sheets("Diary")
         
     Next
     
-    Set coll_rows = myFunc.getRowsByUser2("Diary", Format(stop_date_begin, "yyyy/mm/dd(aaa)"), 1, "報表日期")
+    Set coll_rows = myfunc.getRowsByUser2("Diary", Format(stop_date_begin, "yyyy/mm/dd(aaa)"), 1, "報表日期")
 
     r_begin = coll_rows(1)
     first_pgs = .Cells(r_begin - 1, "D")

@@ -24,6 +24,8 @@ Attribute VB_Exposed = False
 
 
 
+
+
 Private Sub cboItem_Change()
 
 Call ResetItem
@@ -90,12 +92,12 @@ Dim obj As New clsDetail
 
 With frm_Detail
 
-    Item = Me.cboItem.Text
+    item = Me.cboItem.Text
     
-    Call obj.getPropertiesByName(Item)
+    Call obj.getPropertiesByName(item)
     Call obj.setItemToCbo
 
-    .Label15.Caption = Item
+    .Label15.Caption = item
     .Show
 
 End With
@@ -103,7 +105,7 @@ End With
 Exit Sub
 
 ERRORHANDLE:
-MsgBox "Detail找不到" & Item & "!", vbCritical
+MsgBox "Detail找不到" & item & "!", vbCritical
 
 End Sub
 

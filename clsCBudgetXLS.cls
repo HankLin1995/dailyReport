@@ -128,9 +128,9 @@ With shtCBudget
         
             myitem = .Cells(r, 2)
         
-            myIndex = obj.collItemIndex(myitem)
+            myindex = obj.collItemIndex(myitem)
 
-            Call WriteData(myIndex, r)
+            Call WriteData(myindex, r)
         
         End If
         
@@ -184,7 +184,7 @@ End Sub
 
 Sub WriteData(ByVal i As Integer, ByVal r As Integer)
 
-Item = obj.collitem(i)
+item = obj.collitem(i)
 unit = obj.collUnit(i)
 num = obj.collNum(i)
 Num_ch = obj.collCNum(i)
@@ -194,7 +194,7 @@ totalmoney_ch = obj.collCNum(i) * obj.collCPrice(i)
 
 With shtCBudget
 
-.Cells(r, 2) = Item
+.Cells(r, 2) = item
 .Cells(r, 3) = unit '.Cells(r, 3)
 .Cells(r, 4) = num '.Cells(r, 5)
 .Cells(r, 5) = Num_ch '.Cells(r, 4)

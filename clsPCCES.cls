@@ -654,9 +654,9 @@ With Sheets("Budget")
     
         key_value = .Cells(r, 2)
     
-        Dim myFunc As New clsMyfunction
+        Dim myfunc As New clsMyfunction
         
-        Set coll_rows = myFunc.getRowsByUser("Budget", "B", key_value)
+        Set coll_rows = myfunc.getRowsByUser("Budget", "B", key_value)
     
         If coll_rows.Count > 1 Then
             

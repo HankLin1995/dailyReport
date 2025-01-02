@@ -284,9 +284,9 @@ End Function
 
 Function countChecks(ByVal check_name As String)
 
-Dim myFunc As New clsMyfunction
+Dim myfunc As New clsMyfunction
 
-Set coll_rows = myFunc.getRowsByUser2("Check", check_name, 2, "抽查表名稱")
+Set coll_rows = myfunc.getRowsByUser2("Check", check_name, 2, "抽查表名稱")
 
 countChecks = coll_rows.Count
 
@@ -294,9 +294,9 @@ End Function
 
 Function countCheckLists(ByVal check_date As Date)
 
-Dim myFunc As New clsMyfunction
+Dim myfunc As New clsMyfunction
 
-Set coll_items = myFunc.getUniqueItems("Check", 3, , "時間")
+Set coll_items = myfunc.getUniqueItems("Check", 3, , "時間")
 
 For Each it In coll_items
 

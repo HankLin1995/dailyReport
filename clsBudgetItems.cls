@@ -38,7 +38,7 @@ With Sheets("Budget")
         'If r = 43 Then Stop
     
         Sep = .Cells(r, "A")
-        Item = .Cells(r, "B")
+        item = .Cells(r, "B")
         unit = .Cells(r, "C")
         num = .Cells(r, c) 'D
         price = .Cells(r, c).Offset(0, 1)
@@ -49,7 +49,7 @@ With Sheets("Budget")
         
             collSep.Add Sep '主要分類項
             'collSep.Add test_getParentItem(Sep) '主要分類項
-            collitem.Add Item, Item '工程項目
+            collitem.Add item, item '工程項目
             collUnit.Add unit '單位
             collPrice.Add price '單價
             collNum.Add num '數量

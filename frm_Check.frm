@@ -21,16 +21,18 @@ Attribute VB_Exposed = False
 
 
 
+
+
 Private Sub cmdOutput_Click()
 
-Dim myFunc As New clsMyfunction
+Dim myfunc As New clsMyfunction
 Dim check_obj As New clsCheck
 
 With Me
 
 check_name = .cboCheckItem
 
-Call myFunc.splitFileName_Check(check_name, check_item, check_item_eng)
+Call myfunc.splitFileName_Check(check_name, check_item, check_item_eng)
 
 check_cnt = check_obj.countChecks(check_item) + 1
 check_date = .txtCheckDate
@@ -74,7 +76,7 @@ If r <> 0 Then
 
 Else
 
-    Call myFunc.AppendData("Check", arr)
+    Call myfunc.AppendData("Check", arr)
 
 End If
 
@@ -94,7 +96,7 @@ Private Sub CommandButton1_Click()
 
 ' 設定起始資料夾的路徑
 
-Dim myFunc As New clsMyfunction
+Dim myfunc As New clsMyfunction
 Dim initialFolder As String
 
 If Me.txtFilePath = "" Then
@@ -107,7 +109,7 @@ initialFolder = mid(Me.txtFilePath, 1, InStrRev(Me.txtFilePath, "\"))
 
 End If
 
-If f = "" Then f = myFunc.FileOpen(initialFolder, "JPG(*.jpg)", "*.jpg") '.GetOpenFilename
+If f = "" Then f = myfunc.FileOpen(initialFolder, "JPG(*.jpg)", "*.jpg") '.GetOpenFilename
 
 If f = "False" Then MsgBox "未取得檔案", vbCritical: Exit Sub
 

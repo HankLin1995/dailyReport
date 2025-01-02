@@ -117,7 +117,7 @@ With MixData_Main
     
     For i = 1 To collChannel.Count
         
-        .cboChannel.AddItem collChannel.Item(i)
+        .cboChannel.AddItem collChannel.item(i)
     
     Next
 
@@ -438,11 +438,11 @@ End Sub
 
 Sub getMixUnitNum()
 
-Dim myFunc As New clsMyfunction
+Dim myfunc As New clsMyfunction
 
-Set coll_unit_names = myFunc.getUniqueItems("Mix", 3, , "主體單元")
+Set coll_unit_names = myfunc.getUniqueItems("Mix", 3, , "主體單元")
 
-Call myFunc.showList(coll_unit_names)
+Call myfunc.showList(coll_unit_names)
 
 With Sheets("Mix")
 
@@ -452,7 +452,7 @@ With Sheets("Mix")
     
         Debug.Print unit_name
     
-        Set coll_rows = myFunc.getRowsByUser2("Mix", unit_name, 2, "主體單元")
+        Set coll_rows = myfunc.getRowsByUser2("Mix", unit_name, 2, "主體單元")
         
         For Each r In coll_rows
         
@@ -470,7 +470,7 @@ With Sheets("Mix")
                 
                 arr = Array(mix_name, mix_unit_name, mix_item_name, mix_num, mix_Unit, mix_len, mix_len * mix_num)
             
-                Call myFunc.AppendData("Mix_TMP", arr)
+                Call myfunc.AppendData("Mix_TMP", arr)
             
             Next
         
@@ -484,20 +484,20 @@ End Sub
 
 Sub getMixUnitSum()
 
-Dim myFunc As New clsMyfunction
+Dim myfunc As New clsMyfunction
 
-Set coll_unit_names = myFunc.getUniqueItems("Mix", 3, , "主體單元")
+Set coll_unit_names = myfunc.getUniqueItems("Mix", 3, , "主體單元")
 
-Call myFunc.showList(coll_unit_names)
+Call myfunc.showList(coll_unit_names)
 
 For Each UnitName In coll_unit_names
 
-    Set coll_rows = myFunc.getRowsByUser2("Mix_TMP", UnitName, 1, "單元名稱")
+    Set coll_rows = myfunc.getRowsByUser2("Mix_TMP", UnitName, 1, "單元名稱")
     
     sr = coll_rows(1)
     er = coll_rows(coll_rows.Count)
     
-    Set coll_uqItems = myFunc.getUniqueItemsToLastRow("Mix_TMP", sr, er, "C")
+    Set coll_uqItems = myfunc.getUniqueItemsToLastRow("Mix_TMP", sr, er, "C")
     
     With Sheets("Mix_TMP")
     
@@ -524,7 +524,7 @@ For Each UnitName In coll_unit_names
             
             Debug.Print it & ">" & unit_Sum & ">" & all_Sum
             
-            Call myFunc.AppendData("Mix_TMP", Array("合計", UnitName, it, unit_Sum, mix_Unit, mix_len, all_Sum))
+            Call myfunc.AppendData("Mix_TMP", Array("合計", UnitName, it, unit_Sum, mix_Unit, mix_len, all_Sum))
             
             If j = 0 Then lr = .Cells(.Rows.Count, 1).End(xlUp).Row
             
@@ -552,13 +552,13 @@ With Sheets("Mix_TMP")
     .Range("A" & lr & ":G" & lr).Borders(xlEdgeTop).LineStyle = 1
     .Range("A" & lr & ":G" & lr).Borders(xlEdgeTop).Weight = xlMedium
     
-    Dim myFunc As New clsMyfunction
+    Dim myfunc As New clsMyfunction
     
-    Set coll_items = myFunc.getUniqueItems("Mix_TMP", 2, , "工項名稱")
+    Set coll_items = myfunc.getUniqueItems("Mix_TMP", 2, , "工項名稱")
     
     For Each item_name In coll_items
     
-        Set coll_rows = myFunc.getRowsByUser2("Mix_TMP", item_name, 1, "工項名稱")
+        Set coll_rows = myfunc.getRowsByUser2("Mix_TMP", item_name, 1, "工項名稱")
         
         item_num = 0
         item_sum = 0
@@ -576,7 +576,7 @@ With Sheets("Mix_TMP")
         
         Next
         
-        Call myFunc.AppendData("Mix_TMP", Array("總計", , item_name, , item_unit, , item_sum))
+        Call myfunc.AppendData("Mix_TMP", Array("總計", , item_name, , item_unit, , item_sum))
     
     Next
 
@@ -605,9 +605,9 @@ Function IsMixNameUsed(ByVal MixName As String)
 
 IsMixNameUsed = True
 
-Dim myFunc As New clsMyfunction
+Dim myfunc As New clsMyfunction
 
-Set coll_rows = myFunc.getRowsByUser2("Mix", MixName, 2, "工項概要")
+Set coll_rows = myfunc.getRowsByUser2("Mix", MixName, 2, "工項概要")
 
 If coll_rows.Count = 0 Then IsMixNameUsed = False
 

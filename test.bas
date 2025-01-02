@@ -1,4 +1,27 @@
 Attribute VB_Name = "test"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 Sub test_bindBudgetIndex()
 
 With Sheets("Budget")
@@ -173,7 +196,7 @@ End Sub
 
 Sub WriteCollectionToTxt(ByVal coll)
     'Dim col As Collection
-    Dim Item As Variant
+    Dim item As Variant
     Dim FilePath As String
     Dim FileName As String
     Dim FileNumber As Integer
@@ -193,9 +216,9 @@ Sub WriteCollectionToTxt(ByVal coll)
     Open FilePath For Output As FileNumber
     
     ' 遍?集合并?每??目?入文本文件
-    For Each Item In coll
-        Print #FileNumber, Item
-    Next Item
+    For Each item In coll
+        Print #FileNumber, item
+    Next item
     
     ' ??文件
     Close FileNumber
@@ -467,9 +490,9 @@ getWorkbookName = coll(1)
 
 Else
 
-myIndex = InputBox("請輸入要匯入的檔案名稱" & vbNewLine & p)
+myindex = InputBox("請輸入要匯入的檔案名稱" & vbNewLine & p)
 
-getWorkbookName = coll(myIndex)
+getWorkbookName = coll(myindex)
 
 End If
 

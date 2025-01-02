@@ -21,9 +21,7 @@ Attribute VB_Exposed = False
 
 
 
-Private Sub Image1_Click()
 
-End Sub
 
 Private Sub TextBox1_Change()
 
@@ -32,6 +30,3 @@ Me.Image1.PictureSizeMode = 0 ' fmPictureSizeModeStretch
 
 End Sub
 
-Private Sub UserForm_Initialize()
-
-End Sub

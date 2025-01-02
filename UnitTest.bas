@@ -6,6 +6,41 @@ unittest_getRecLocInvolvedPrompt
 unittest_getExRecItem
 unittest_IsTranLocContainALLIneed
 
+unittest_getMixItemsByChname ("土厝小排2-5")
+
+End Sub
+
+
+
+
+Sub unittes_getPropByMixName()
+
+Debug.Assert getPropByMixName("小排3鋼筋0到100") = "鋼筋"
+
+Set collPropIndex = tmp_code.test_getSepIndexByChname("土厝小排2-5")
+
+myindex = tmp_code.getCollIndex(collPropIndex, "鋼筋")
+
+Debug.Assert myindex = 1
+
+End Sub
+
+Sub unittest_getSepIndexByChname()
+
+chname = "土厝小排2-5"
+
+Set collPropIndex = tmp_code.test_getSepIndexByChname(chname)
+
+Debug.Assert collPropIndex.Count > 0
+
+End Sub
+
+Sub unittest_getMixItemsByChname(chname)
+
+Set coll = progress_plot.getMixItemsByChname(chname)
+
+Debug.Assert coll.Count > 0
+
 End Sub
 
 Sub unittest_getRecLocInvolvedPrompt()
@@ -180,9 +215,9 @@ End Sub
 
 Sub test_getPAYCount()
 
-Dim myFunc As New clsMyfunction
+Dim myfunc As New clsMyfunction
 
-Set coll_rows = myFunc.getUniqueItems("PAY_EX", 2, , "估驗日期")
+Set coll_rows = myfunc.getUniqueItems("PAY_EX", 2, , "估驗日期")
 
 Debug.Assert coll_rows.Count + 1 = 1
 

@@ -166,9 +166,9 @@ With Sheets("Mix_Sum")
     
         If .Rows(r).Hidden = False Then
         
-            Item = .Cells(r, 2)
+            item = .Cells(r, 2)
             On Error Resume Next
-            coll.Add Item, Item
+            coll.Add item, item
             On Error GoTo 0
             
         End If
@@ -185,9 +185,9 @@ For Each it In coll
     
         If .Rows(r).Hidden = False Then
             
-            Item = .Cells(r, 2)
+            item = .Cells(r, 2)
             
-            If Item = it Then
+            If item = it Then
             
                 num = .Cells(r, 3) / mylen
                 
@@ -581,10 +581,10 @@ End Sub
 
 Sub cmdClearPayEX()
 
-Dim myFunc As New clsMyfunction
+Dim myfunc As New clsMyfunction
 Dim PAY_obj As New clsPay
 
-Set coll_pay_dates = myFunc.getUniqueItems("PAY_EX", 2, "F")
+Set coll_pay_dates = myfunc.getUniqueItems("PAY_EX", 2, "F")
 
 i = coll_pay_dates.Count
 
@@ -598,7 +598,7 @@ If msg = vbNo Then Exit Sub
 
 Call PAY_obj.fs_kill(i)
 
-Set coll_rows = myFunc.getRowsByUser("PAY_EX", "F", CDate(pay_date))
+Set coll_rows = myfunc.getRowsByUser("PAY_EX", "F", CDate(pay_date))
 
 For i = coll_rows.Count To 1 Step -1
 
@@ -620,11 +620,11 @@ End Sub
 
 Sub cmdExportToPAY()
 
-Dim myFunc As New clsMyfunction
+Dim myfunc As New clsMyfunction
 Dim PAY_obj As New clsPay
 
-Set coll_rows = myFunc.getUniqueItems("PAY_EX", 2, , "估驗日期")
-Set coll_pay_num = myFunc.getUniqueItems("PAY", 2, , "本次估驗")
+Set coll_rows = myfunc.getUniqueItems("PAY_EX", 2, , "估驗日期")
+Set coll_pay_num = myfunc.getUniqueItems("PAY", 2, , "本次估驗")
 
 If coll_pay_num.Count = 0 Then MsgBox "未填寫本次估驗資料，請先填寫!", vbCritical: End
 
@@ -665,9 +665,9 @@ Set fso = CreateObject("Scripting.FileSystemObject")
 
 Dim PAY_obj As New clsPay
 
-Dim myFunc As New clsMyfunction
+Dim myfunc As New clsMyfunction
 
-Set coll_pay_dates = myFunc.getUniqueItems("PAY_EX", 2, , "估驗日期")
+Set coll_pay_dates = myfunc.getUniqueItems("PAY_EX", 2, , "估驗日期")
 
 For i = 1 To coll_pay_dates.Count
 
@@ -720,7 +720,7 @@ Sub cmdEnlargeWorkDays()
 On Error GoTo ERRORHANDLE
 
 Dim Inf_obj As New clsInformation
-Dim myFunc As New clsMyfunction
+Dim myfunc As New clsMyfunction
 
 enlargeDate = CDate(InputBox("請輸入展延開始日期", , Format(Now(), "yyyy/mm/dd")))
 enlargeDays = CInt(InputBox("請輸入展延天數", , 1))
@@ -739,7 +739,7 @@ With Sheets("Diary")
         end_date = Inf_obj.GetEndDate
         diary_date = end_date + i
         
-        Call myFunc.AppendData("Diary", Array(lr + i - 1, diary_date, "晴"))
+        Call myfunc.AppendData("Diary", Array(lr + i - 1, diary_date, "晴"))
         
         '----set formula---
         
@@ -847,13 +847,13 @@ Sub deleteRecIndex()
 
 rec_Index = InputBox("請輸入預計要刪除的流水號:")
 
-Dim myFunc As New clsMyfunction
+Dim myfunc As New clsMyfunction
 
-Set coll_rows = myFunc.getRowsByUser2("Records", rec_Index, 2, "流水號")
+Set coll_rows = myfunc.getRowsByUser2("Records", rec_Index, 2, "流水號")
 
 If coll_rows.Count = 0 Then MsgBox "查無此流水號!", vbCritical: End
 
-Set coll_rows = myFunc.ReverseColl(coll_rows)
+Set coll_rows = myfunc.ReverseColl(coll_rows)
 
 For Each r In coll_rows
     
@@ -867,9 +867,9 @@ Sub cmdGetCheckTable() '檢驗停留點申請單
 
 Dim Print_obj As New clsPrintOut
 Dim Inf_obj As New clsInformation
-Dim myFunc As New clsMyfunction
+Dim myfunc As New clsMyfunction
 
-Set checkdaylist = myFunc.getUniqueItems("Check", 3, , "時間") ' getTimeList
+Set checkdaylist = myfunc.getUniqueItems("Check", 3, , "時間") ' getTimeList
 
 For Each checkday In checkdaylist
 
@@ -951,7 +951,7 @@ If msg = vbYes Then
 
 End If
 
-If myFunc.IsFileExists(getThisWorkbookPath & "\抽查表Output\EN-" & j & ".xls") = True Then
+If myfunc.IsFileExists(getThisWorkbookPath & "\抽查表Output\EN-" & j & ".xls") = True Then
 
 Workbooks.Open (getThisWorkbookPath & "\抽查表Output\EN-" & j & ".xls")
 
@@ -983,7 +983,7 @@ For Each rng In Selection
 
 Next
 
-Dim myFunc As New clsMyfunction
+Dim myfunc As New clsMyfunction
 
 Dim coll As New Collection
 
@@ -1009,7 +1009,7 @@ With Sheets("Check")
         
             photo_path = getThisWorkbookPath & "\查驗照片Output\" & check_index & "-" & check_num & ".xls"
             
-            If myFunc.IsFileExists(photo_path) = False Then
+            If myfunc.IsFileExists(photo_path) = False Then
             
                 Call PastePhoto(r, True)
                 coll.Add photo_path
@@ -1033,7 +1033,7 @@ End Sub
 
 Sub cmdPastePhotos()
 
-Dim myFunc As New clsMyfunction
+Dim myfunc As New clsMyfunction
 Dim FilePath As String
 Dim IsXLS As Boolean
 
@@ -1058,7 +1058,7 @@ For Each rng In Selection
     
         FilePath = getThisWorkbookPath & "\查驗照片Output\" & check_index & "-" & check_num & ".xls"
     
-        If myFunc.IsFileExists(FilePath) = True Then
+        If myfunc.IsFileExists(FilePath) = True Then
         
             msg = MsgBox("查驗照片Output中已存在【" & check_index & "-" & check_num & "】，是否要取代?", vbYesNo + vbInformation)
             
@@ -1082,7 +1082,7 @@ Sub PastePhoto(ByVal r As Integer, ByVal IsXLS As Boolean)
 
 Dim o As New clsReportPhoto
 Dim Inf_obj As New clsInformation
-Dim myFunc As clsMyfunction
+Dim myfunc As clsMyfunction
 
 Sheets("ReportPhoto").Range("A1") = Inf_obj.conName
 
@@ -1227,11 +1227,11 @@ For Each rng In Selection
 
 Next
 
-Dim myFunc As New clsMyfunction
+Dim myfunc As New clsMyfunction
 
-Call myFunc.BubbleSort_coll(coll)
+Call myfunc.BubbleSort_coll(coll)
 
-Set coll_rows = myFunc.ReverseColl(coll)
+Set coll_rows = myfunc.ReverseColl(coll)
 
 With Sheets("Check")
 
@@ -1242,11 +1242,11 @@ For Each r In coll_rows
     
     myFilePath = getThisWorkbookPath & "\查驗照片Output\" & MyCode & "-" & myNum & ".xls"
     
-    If myFunc.IsFileExists(myFilePath) = True Then Kill myFilePath
+    If myfunc.IsFileExists(myFilePath) = True Then Kill myFilePath
     
     myFilePath = getThisWorkbookPath & "\抽查表Output\" & MyCode & "-" & myNum & ".xls"
     
-    If myFunc.IsFileExists(myFilePath) = True Then Kill myFilePath
+    If myfunc.IsFileExists(myFilePath) = True Then Kill myFilePath
     
     .Rows(r).Delete
     
@@ -1265,7 +1265,7 @@ End Sub
 
 Function getRemainedItems(ByVal rec_date As Date)
 
-Dim myFunc As New clsMyfunction
+Dim myfunc As New clsMyfunction
 Dim PCCES_obj As New clsPCCES
 Dim Inf_obj As New clsInformation
 Dim REC_obj As New clsRecord
@@ -1278,7 +1278,7 @@ For i = 1 To coll_item_names.Count
 
     item_name = coll_item_names(i)
 
-    Set coll_rows = myFunc.getRowsByUser("Budget", "B", item_name)
+    Set coll_rows = myfunc.getRowsByUser("Budget", "B", item_name)
     
     contract_num = Sheets("Budget").Cells(coll_rows(1), PCCES_obj.t_change_to_column(t_change))
     

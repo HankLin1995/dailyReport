@@ -23,6 +23,8 @@ Attribute VB_Exposed = False
 
 
 
+
+
 Private Sub cboItem_Change()
 
 If Me.cboItem = "" Then Exit Sub
@@ -96,10 +98,6 @@ Private Sub txtMixName_AfterUpdate()
 Dim Mix_obj As New clsMixData
 
 If Mix_obj.IsMixNameUsed(Me.txtMixName) = True Then MsgBox "工項概要已經被使用!", vbCritical: Me.txtMixName = ""
-
-End Sub
-
-Private Sub txtMixName_Change()
 
 End Sub
 

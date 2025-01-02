@@ -169,7 +169,7 @@ check_loc = REC_obj.getExistLocByRecDate(check_date)
 
 If check_loc Like "*,*" Then
 
-    tmp = split(check_loc, ",")
+    tmp = Split(check_loc, ",")
     
     Me.txtCheckCanal = tmp(0)
     Me.txtCheckLocDetail = tmp(1)

@@ -45,7 +45,7 @@ Function IsRained(ByVal targetDate) As Boolean
 
 IsRained = False
 
-tmp = split(targetDate, "/")
+tmp = Split(targetDate, "/")
 
 M = tmp(1)
 d = tmp(2)

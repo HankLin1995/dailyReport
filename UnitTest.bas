@@ -11,6 +11,17 @@ unittest_getMixItemsByChname ("土厝小排2-5")
 End Sub
 
 
+Sub unittest_getCustomOrder()
+
+Dim myfunc As New clsMyfunction
+
+Set collPropIndex = getSepIndexByChname("土厝小排2-5")
+
+Set new_collPropIndex = myfunc.changeOrder(collPropIndex)
+
+Debug.Assert new_collPropIndex.Count = 0
+
+End Sub
 
 
 Sub unittes_getPropByMixName()

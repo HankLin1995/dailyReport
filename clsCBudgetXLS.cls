@@ -574,7 +574,7 @@ Sub CheckRatio()
 tmp = InputBox("目前的檢查係數為" & ratio & vbctrl & "請輸入欲檢查的分類項目:", _
                 , "三,四,五a,六,七")
 
-chtmps = split(tmp, ",")
+chtmps = Split(tmp, ",")
 
 With shtCBudget
     lr = .Cells(.Rows.Count, 2).End(xlUp).Row

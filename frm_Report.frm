@@ -42,7 +42,7 @@ End Sub
 
 Private Sub UserForm_Initialize()
 
-s = split(Application.StatusBar, ",")
+s = Split(Application.StatusBar, ",")
 
 account = mid(s(1), 5)
 

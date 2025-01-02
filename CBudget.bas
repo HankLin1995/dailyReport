@@ -182,7 +182,7 @@ With Sheets("Budget")
     
     For Each it In coll_changes
     
-        tmp = split(it, ">")
+        tmp = Split(it, ">")
     
         If CDate(changeDate) <= tmp(1) Then MsgBox "日期不能比" & tmp(1) & "還早!", vbCritical: End
     

@@ -168,7 +168,7 @@ strLoc = txtWhere.Text
 
 If strLoc Like "*¡B*" Then
 
-    loc_tmp = split(strLoc, "¡B")
+    loc_tmp = Split(strLoc, "¡B")
     
     For Each it In loc_tmp
     

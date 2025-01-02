@@ -39,13 +39,15 @@ specific_date = Format(Now(), "yyyy/m/d")
 
 Call clearAllShape
 
+Call AddText(X0, 15, 15, 100, chname, 2)
+
 Set collMixItems = getMixItemsByChname(chname)
-Set collPropIndex = getSepIndexByChname(chname)
+Set collPropIndex = myfunc.changeOrder(getSepIndexByChname(chname))
 
 'myIndexs = getShowIndex(collMixItems)
 
 X_gap = 120
-Y_origin = CDbl(InputBox("請輸入起始樁號")) - 50
+Y_origin = CDbl(InputBox("請輸入起始樁號", , 0)) - 50
 
 For Each i In collMixItems
     
@@ -62,13 +64,13 @@ For Each i In collMixItems
     
     Debug.Print X0
     
-    Call AddText(X0 - 50 / 2, 15, 15, 70, targetMix, 2)
+    Call AddText(X0 - 50 / 2, 15, 15, 70, prop, 2)
     
     For Each it2 In collDoLoc
     
         Debug.Print targetMix & ":" & it2
         
-        tmp = split(it2, ";")
+        tmp = Split(it2, ";")
 
         tmp_date = tmp(1)
         Call getSLocAndELoc(tmp(0), sloc, eloc)
@@ -80,20 +82,21 @@ For Each i In collMixItems
         
         Call AddText(X0 + 10, (Y0 + Y1) / 2 - 15 / 2, 15, 50, tmp_date)
         
-        Call AddText(X0 - 40, Y0 - 15 / 2, 15, 30, split(tmp(0), "~")(0), 1)
-        Call AddText(X0 - 40, Y1 - 15 / 2, 15, 30, split(tmp(0), "~")(1), 1)
+        Call AddText(X0 - 40, Y0 - 15 / 2, 15, 30, Split(tmp(0), "~")(0), 1)
+        Call AddText(X0 - 40, Y1 - 15 / 2, 15, 30, Split(tmp(0), "~")(1), 1)
 
     Next
 
 Next
 
-Call AddPaper(X0 + X_gap, 1000)
+'Call AddPaper(X0 + X_gap, 1000)
 
 Dim o As New clsPrintOut
 
 o.SpecificShtToXLS ("plot")
 
 End Sub
+
 
 Function getSepIndexByChname(ByVal chname As String)
 
@@ -176,7 +179,7 @@ For Each i In myIndexs
     
         Debug.Print targetMix & ":" & it2
         
-        tmp = split(it2, ";")
+        tmp = Split(it2, ";")
 
         tmp_date = tmp(1)
         Call getSLocAndELoc(tmp(0), sloc, eloc)
@@ -188,14 +191,14 @@ For Each i In myIndexs
         
         Call AddText(X0 + 10, (Y0 + Y1) / 2 - 15 / 2, 15, 50, tmp_date)
         
-        Call AddText(X0 - 40, Y0 - 15 / 2, 15, 30, split(tmp(0), "~")(0), 1)
-        Call AddText(X0 - 40, Y1 - 15 / 2, 15, 30, split(tmp(0), "~")(1), 1)
+        Call AddText(X0 - 40, Y0 - 15 / 2, 15, 30, Split(tmp(0), "~")(0), 1)
+        Call AddText(X0 - 40, Y1 - 15 / 2, 15, 30, Split(tmp(0), "~")(1), 1)
 
     Next
 
 Next
 
-Call AddPaper(X0 + X_gap, 1000)
+'Call AddPaper(X0 + X_gap, 1000)
 
 Dim o As New clsPrintOut
 
@@ -230,7 +233,7 @@ Else
     indexDefault = plot_order
 End If
 
-getShowIndex = split(InputBox(prompt, "顯示序位選擇器", indexDefault), ",")
+getShowIndex = Split(InputBox(prompt, "顯示序位選擇器", indexDefault), ",")
 
 If UBound(getShowIndex) = -1 Then MsgBox "取消操作!", vbCritical: End
 
@@ -352,7 +355,7 @@ With Sheets("Records")
         
         End If
     
-            tmp = split(myContent, "、")
+            tmp = Split(myContent, "、")
             
             For i = 0 To UBound(tmp)
         

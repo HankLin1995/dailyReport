@@ -354,7 +354,7 @@ With Sheets("Main")
 
     For i = 1 To coll.Count
     
-        tmp = split(coll(i), ";")
+        tmp = Split(coll(i), ";")
     
         r = arr(1) + i
     
@@ -534,7 +534,7 @@ If s = "" Then Exit Function
 
 s = "G:\我的雲端硬碟\ExcelVBA\監造日報表\@監造日報表DEV\上課素材\施工照片\1120130-鋼板樁打設抽查\IMG_3824.JPG>1,G:\我的雲端硬碟\ExcelVBA\監造日報表\@監造日報表DEV\上課素材\施工照片\1120130-鋼板樁打設抽查\IMG_3824.JPG>2"
 
-tmp = split(s, ",")
+tmp = Split(s, ",")
 
 Dim arr
 
@@ -544,7 +544,7 @@ ReDim arr(0 To u, 0 To 1)
 
 For i = LBound(tmp) To UBound(tmp)
 
-    tmp2 = split(tmp(i), ">")
+    tmp2 = Split(tmp(i), ">")
     
     arr(i, 0) = tmp2(0)
     arr(i, 1) = tmp2(1)

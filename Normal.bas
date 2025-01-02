@@ -105,7 +105,7 @@ ReDim arr(5)
 
 With Sheets("Main")
     
-    tmp = split(.Cells(2, 3).Value, ",")
+    tmp = Split(.Cells(2, 3).Value, ",")
     
     For i = 0 To 5
         On Error Resume Next

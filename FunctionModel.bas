@@ -910,7 +910,7 @@ If msg = vbYes Then
             If .Cells(r, 4) = CDate(checkday) And .Cells(r, 5) = "¿À≈Á∞±Ød¬I" Then
             
                 checkitem = .Cells(r, 1)
-                tmp = split(.Cells(r, 6), ",")
+                tmp = Split(.Cells(r, 6), ",")
                 checkch = tmp(0)
                 checkloc = tmp(1)
             
@@ -1174,7 +1174,7 @@ With Sheets("Check")
             .txtCheckDate = check_date
             .txtCheckDate.Enabled = False
             .cboCheckStyle.Value = check_style
-            tmp = split(check_loc, ",")
+            tmp = Split(check_loc, ",")
             .txtCheckCanal = tmp(0)
             .txtCheckLocDetail = tmp(1)
             .txtCheckLoc = check_loc

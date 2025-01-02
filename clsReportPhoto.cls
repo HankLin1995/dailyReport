@@ -47,13 +47,13 @@ With ThisWorkbook.Sheets("Check")
     Count = 0
     photo_inf = .Cells(r, "I")
                     
-    tmp = split(photo_inf, ",")
+    tmp = Split(photo_inf, ",")
     
-    tmp_canal = split(.Cells(r, "F"), ",")
+    tmp_canal = Split(.Cells(r, "F"), ",")
 
     For i = LBound(tmp) To UBound(tmp)
         
-        photo_inf_detail = split(tmp(i), ">")
+        photo_inf_detail = Split(tmp(i), ">")
     
         photo_path = photo_inf_detail(0)
         checkitem = .Cells(r, "B") '¿À¨d∂µ•ÿ

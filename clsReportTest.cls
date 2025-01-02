@@ -167,7 +167,7 @@ With shtMain
         TestName = .Cells(r, 1)
         TestDesign = .Cells(r, 2)
         
-        tmp = split(TestDesign, ",")
+        tmp = Split(TestDesign, ",")
         
         If UBound(tmp) < t_change Then
         
@@ -336,7 +336,7 @@ End Function
 
 Private Function CheckTestNum(ByVal SumTestAmount As Double, ByVal SumRecItemNum As Double, ByVal targetTestStr As String) As Boolean
 
-tmp = split(targetTestStr, ",")
+tmp = Split(targetTestStr, ",")
 
 For i = LBound(tmp) To UBound(tmp)
 
@@ -365,7 +365,7 @@ End Function
 
 Function getTestNeedNum(ByVal num As Double, ByVal s As String)
 
-tmp = split(s, ",")
+tmp = Split(s, ",")
 
 For Each it In tmp
 

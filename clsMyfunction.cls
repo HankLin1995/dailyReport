@@ -701,7 +701,7 @@ Function TranLoc(ByVal Data As String) As Double
 
 '樁號型態轉成可計算之樁號
 
-tmp = split(Data, "+")
+tmp = Split(Data, "+")
 
 If UBound(tmp) = -1 Or Data = "" Then Exit Function ' TranLoc = CDbl(Data): Exit Function
 
@@ -711,11 +711,11 @@ dloc = tmp(1)
 
 If dloc Like "*(*" Then
 
-    tmp2 = split(dloc, "(")
+    tmp2 = Split(dloc, "(")
 
     If tmp2(0) Like "*.*" Then
 
-        tmp3 = split(tmp2(0), ".")
+        tmp3 = Split(tmp2(0), ".")
         dloc = tmp3(0) + tmp3(1) / 10
     
     Else
@@ -745,13 +745,13 @@ Dim coll As New Collection
 
 If rec_loc Like "*~*" Then
 
-    tmp = split(rec_loc, "、")
+    tmp = Split(rec_loc, "、")
 
     For i = LBound(tmp) To UBound(tmp)
     
         coll.Add tmp(i)
     
-        loc_tmp = split(tmp(i), "~")
+        loc_tmp = Split(tmp(i), "~")
 
         For j = LBound(loc_tmp) To UBound(loc_tmp)
 
@@ -781,12 +781,12 @@ IsRecLocPass = False
 
 Dim myfunc As New clsMyfunction
 
-tmp = split(rec_loc, "~")
+tmp = Split(rec_loc, "~")
 
 rec_sloc = myfunc.TranLoc(tmp(0))
 rec_eloc = myfunc.TranLoc(tmp(1))
 
-tmp2 = split(item_loc, "~")
+tmp2 = Split(item_loc, "~")
 
 item_sloc = myfunc.TranLoc(tmp2(0))
 item_eloc = myfunc.TranLoc(tmp2(1))
@@ -887,6 +887,41 @@ Next
 
 End Function
 
+Function changeOrder(ByVal coll)
+
+Dim new_coll As New Collection
+
+For i = 1 To coll.Count
+
+    p = p & i & ":" & coll(i) & vbNewLine
+
+    j = j & "," & i
+
+Next
+
+origin_order = j
+
+custom_order = InputBox("請輸入自定義順序，目前順序:" & vbNewLine & p, , mid(j, 2))
+
+customArray = Split(custom_order, ",")
+
+If UBound(customArray) + 1 <> coll.Count Then
+
+Else
+
+    For Each index In customArray
+    
+        new_coll.Add coll(CInt(index)), coll(CInt(index))
+    
+    Next
+    
+    Set changeOrder = new_coll
+
+End If
+
+Set changeOrder = new_coll
+
+End Function
 
 
 

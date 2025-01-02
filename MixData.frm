@@ -60,7 +60,7 @@ With Me
     MixDefineTotal = .txtDefineTotal
     MixUnit = .txtUnit
     MixChannel = .txtChannel
-    tmp = split(mid(.txtMixTable, 2), ",")
+    tmp = Split(mid(.txtMixTable, 2), ",")
     
 End With
 

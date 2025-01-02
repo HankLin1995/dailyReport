@@ -25,7 +25,7 @@ Sub SendEmail(ByVal RecipientEmail As String, ByVal AttachmentPath As String)
     
     ' 設置郵件屬性
     With OutlookMail
-        .to = RecipientEmail
+        .To = RecipientEmail
         .Subject = EmailSubject
         .Body = EmailBody
         .Attachments.Add AttachmentPath ' 添加附件

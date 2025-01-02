@@ -31,7 +31,7 @@ End Sub
 
 Sub plotBarProgressByChname() 'ByVal chname As String)
 
-chname = InputBox("請輸入渠道名稱")
+chname = InputBox("請輸入渠道名稱，全部則空白")
 
 Dim myfunc As New clsMyfunction
 
@@ -43,8 +43,6 @@ Call AddText(X0, 15, 15, 100, chname, 2)
 
 Set collMixItems = getMixItemsByChname(chname)
 Set collPropIndex = myfunc.changeOrder(getSepIndexByChname(chname))
-
-'myIndexs = getShowIndex(collMixItems)
 
 X_gap = 120
 Y_origin = CDbl(InputBox("請輸入起始樁號", , 0)) - 50
@@ -59,7 +57,7 @@ For Each i In collMixItems
     
     Set collDoLoc = getDoLocationsByMix(targetMix)
     
-    X0 = myindex * X_gap + 20 'X0 + X_gap '這裡會每跳一次就累加120
+    X0 = myindex * X_gap + 100 'X0 + X_gap '這裡會每跳一次就累加120
     X1 = X0
     
     Debug.Print X0
@@ -102,6 +100,16 @@ Function getSepIndexByChname(ByVal chname As String)
 
     'chanme = "土厝小排2-5"
     
+    If chname = "" Then
+    
+        Dim myfunc As New clsMyfunction
+        
+        Set getSepIndexByChname = myfunc.getUniqueItems("Mix", 3, , "分類")
+        
+        Exit Function
+    
+    End If
+    
     Dim coll As New Collection
     
     With Sheets("Mix")
@@ -112,7 +120,7 @@ Function getSepIndexByChname(ByVal chname As String)
         
             If .Cells(r, "I") = chname Then
             
-                prop = .Cells(r, "J")
+                prop = .Cells(r, "K")
                 
                 If prop <> "" Then
                 
@@ -421,6 +429,14 @@ End With
 End Function
 
 Function getMixItemsByChname(ByVal chname As String)
+
+If chname = "" Then
+
+    Set getMixItemsByChname = getMixItems
+    
+    Exit Function
+
+End If
 
 Dim coll As New Collection
 

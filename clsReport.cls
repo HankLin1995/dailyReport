@@ -246,6 +246,9 @@ End Sub
 
 Sub WriteReport() '***
 
+Dim pgs_today As Double
+Dim pgs_total As Double
+
 Call checkItemsRow
 
 'Call GetPercentItem
@@ -323,13 +326,22 @@ With shtReport
     .Range("G" & lr) = WorksheetFunction.RoundDown(ReportMoney, 0)
     .Range("I" & lr) = WorksheetFunction.RoundDown(SumReportMoney, 0)
     
+    '-----進度部分-----
+    
     pgs_today = .Range("G" & lr) / .Range("F" & lr)
     pgs_total = .Range("I" & lr) / .Range("F" & lr)
 
-    .Range("F6") = pgs_today
-    .Range("I6") = pgs_total
+
+    '先無條件捨棄後放入Diary
     
     Call KeyInPGS(.Range("C2").Value, pgs_total)
+    
+    '取得正確的pgs_todya及pgs_total
+    
+    Call getCorrectPgs(.Range("C2").Value, pgs_today, pgs_total)
+
+    .Range("F6") = pgs_today
+    .Range("I6") = pgs_total
 
 End With
 
@@ -339,6 +351,38 @@ End With
 'obj2.CollTestArr
 'obj2.GetTestRec
 'obj2.WriteReport
+
+End Sub
+
+Sub getCorrectPgs(ByVal mydate As Date, ByRef pgs_today As Double, ByRef pgs_total As Double)
+
+With Sheets("Diary")
+    
+    Set coll_rows = myfunc.getRowsByUser2("Diary", Format(mydate, "yyyy/mm/dd(aaa)"), 1, "報表日期")
+    
+    If coll_rows.Count <> 0 Then
+        
+        r = coll_rows(1)
+        
+        If r = 2 Then
+        
+            pgs_today = .Cells(r, "I")
+            pgs_total = pgs_today
+        
+        Else
+        
+            pgs_total_1 = .Cells(r - 1, "I")
+            pgs_total_2 = .Cells(r, "I")
+            
+            pgs_today = pgs_total_2 - pgs_total_1
+            pgs_total = pgs_total_2
+    
+        End If
+    
+    End If
+
+End With
+
 
 End Sub
 
@@ -356,7 +400,7 @@ End Sub
 Sub KeyInPGS(ByVal mydate As Date, ByVal pgs_total As Double)
 
 Set coll_rows = myfunc.getRowsByUser2("Diary", Format(mydate, "yyyy/mm/dd(aaa)"), 1, "報表日期")
-If coll_rows.Count <> 0 Then Sheets("Diary").Cells(coll_rows(1), 9) = pgs_total
+If coll_rows.Count <> 0 Then Sheets("Diary").Cells(coll_rows(1), 9) = WorksheetFunction.Round(pgs_total, 4)
 
 End Sub
 

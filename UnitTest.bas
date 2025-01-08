@@ -10,6 +10,22 @@ unittest_getMixItemsByChname ("¤g­í¤p±Æ2-5")
 
 End Sub
 
+Sub unittest_getCorrectPgs()
+
+Dim o As New clsReport
+
+Dim pgs_today As Double
+Dim pgs_total As Double
+
+rec_date = Sheets("Report").Range("C2")
+
+Call o.getCorrectPgs(rec_date, pgs_today, pgs_total)
+
+Debug.Assert pgs_today = 0
+Debug.Assert pgs_total = 0.0111
+
+End Sub
+
 
 Sub unittest_getCustomOrder()
 

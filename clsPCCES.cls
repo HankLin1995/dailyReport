@@ -23,7 +23,7 @@ If f = "" Then f = Application.GetOpenFilename
 
 If f = "False" Then MsgBox "未取得檔案", vbCritical: End
 
-tmp = Split(f, "\")
+tmp = split(f, "\")
 
 wbname = tmp(UBound(tmp))
 
@@ -217,7 +217,7 @@ With Sheets("Budget")
     For r = 3 To lr
     
         item_num = .Cells(r, 1)
-        tmp = Split(item_num, ".")
+        tmp = split(item_num, ".")
         item_cont = .Cells(r, 2)
         item_amount = .Cells(r, 5)
         
@@ -301,7 +301,7 @@ For Each it In collSeconedName
                 item_name = .Cells(r, 2)
                 item_sum_cost = .Cells(r, 6)
             
-                tmp = Split(item_num, ".")
+                tmp = split(item_num, ".")
                 
                 If UBound(tmp) >= 1 Then
                 
@@ -331,7 +331,7 @@ Next
 
 End Sub
 
-Sub getPercentageItems_export(ByVal t_change As Integer)
+Sub getPercentageItems_export_Old(ByVal t_change As Integer)
 
 Set collSeconedName = getCollSeconedName
 
@@ -357,7 +357,7 @@ For Each it In collSeconedName
                 item_name = .Cells(r, 2)
                 item_sum_cost = .Cells(r, c + 2)
             
-                tmp = Split(item_num, ".")
+                tmp = split(item_num, ".")
                 
                 If UBound(tmp) >= 1 Then
                 
@@ -374,10 +374,9 @@ For Each it In collSeconedName
         Next
         
         If sum_cost <> 0 Then
-           ' Debug.Print it & ">" & sum_cost
+
             arr = Array(it, "式", "1", sum_cost, sum_cost)
             Call exportToMain(arr, 5, t_change)
-            'mark 2nd itemName font colorindex
             
             Set rng = .Columns("B").Find(it)
             rng.Font.ColorIndex = 5
@@ -403,7 +402,7 @@ With Sheets("Budget")
         item_num = .Cells(r, 1)
         item_name = .Cells(r, 2)
         
-        tmp = Split(item_num, ".")
+        tmp = split(item_num, ".")
         
         If UBound(tmp) = 1 Then
         
@@ -601,11 +600,24 @@ End Sub
 
 Sub ReArrangeTitle() '重整準則
 
+Dim font_colorindex_str As String
+Dim font_colorindex As Integer
+
 With Sheets("Budget")
 
 For r = 3 To .Cells(.Rows.Count, 1).End(xlUp).Row
 
-    .Cells(r, 1).Font.ColorIndex = .Cells(r, 7)
+    font_colorindex_str = .Cells(r, 7)
+    
+    Select Case font_colorindex_str
+    
+    Case 3, 5, 7: font_colorindex = CInt(font_colorindex_str)
+    Case "5A": font_colorindex = 5
+    Case Else: MsgBox font_colorindex_str & "..查無符合規則之準則!", vbCritical: End
+    
+    End Select
+    
+    .Cells(r, 1).Font.ColorIndex = font_colorindex
 
 Next
 
@@ -681,6 +693,122 @@ With Sheets("Budget")
     Next
 
     If prompt <> "" Then MsgBox prompt, vbCritical: End
+
+End With
+
+End Sub
+
+'20240207 add feature
+
+Sub getPercentageItems_export(ByVal t_change As Integer)
+
+Dim collPercentTitleRows As New Collection
+Dim myfunc As New clsMyfunction
+
+Call checkPercentageItems 'precheck
+
+With Sheets("Budget")
+
+    c = t_change_to_column(t_change)
+
+    lr = .Cells(.Rows.Count, 1).End(xlUp).Row
+    
+    For r = 3 To lr
+    
+        If .Cells(r, "G") Like "5A" Then
+        
+            collPercentTitleRows.Add r
+        
+        End If
+    
+    Next
+    
+    collPercentTitleRows.Add lr + 1
+    
+    '5A可以獨立，5如果獨立會發prompt
+    '5會集合到最上面那個5A
+    
+    For i = 1 To collPercentTitleRows.Count - 1
+    
+        r_head = collPercentTitleRows(i)
+        r_next_head = collPercentTitleRows(i + 1)
+        
+        item_name = .Cells(r_head, "B")
+        
+        Debug.Print r_head & ":" & r_next_head
+
+        If r_head + 1 = r_next_head Then
+        
+            sum_cost = .Cells(r_head, c + 2)
+            'item_name = .Cells(r_head, "B")
+            Debug.Print .Cells(r_head, "B") & ":" & cost
+            arr = Array(item_name, "式", "1", sum_cost, sum_cost)
+            Call exportToMain(arr, 5, t_change)
+
+        Else
+            
+            cnt = 0
+            sum_cost = 0
+            
+            For r_content = r_head + 1 To r_next_head - 1
+            
+                If .Cells(r_content, "G") = "5" Then
+                
+                    cnt = cnt + 1
+                    cost = .Cells(r_content, c + 2)
+                    sum_cost = sum_cost + cost
+                    
+                End If
+            
+            Next
+                    
+            If cnt = 0 Then '直接使用5A的金額(計算到lr)
+                
+                sum_cost = .Cells(r_head, c + 2)
+                Debug.Print .Cells(r_head, "B") & ":" & sum_cost
+    
+            Else '使用5的總和
+            
+                Debug.Print .Cells(r_head, "B") & ":" & sum_cost
+            
+            End If
+            
+            arr = Array(item_name, "式", "1", sum_cost, sum_cost)
+            Call exportToMain(arr, 5, t_change)
+    
+        End If
+    
+    Next
+
+End With
+
+End Sub
+
+Private Sub checkPercentageItems()
+
+With Sheets("Budget")
+
+    lr = .Cells(.Rows.Count, 1).End(xlUp).Row
+    
+    For r = 3 To lr
+    
+        If .Cells(r, "G") = "5A" Then
+        
+            IsStart = True
+        
+        End If
+        
+        If .Cells(r, "G") = "5" Then
+            
+            If IsStart = False Then
+            
+                MsgBox "第" & r & "列.【" & .Cells(r, "B") & "】.不具有《5A》項目!", vbCritical
+            
+            End If
+        
+        End If
+    
+    Next
 
 End With
 
@@ -773,7 +901,7 @@ End Function
 
 Function get2ndIndex(ByVal item_index As String)
 
-tmp = Split(item_index, ".")
+tmp = split(item_index, ".")
 
 ch = ""
 For j = LBound(tmp) To 1
